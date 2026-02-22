@@ -36,35 +36,35 @@
 #ifdef DBG_RTFL
 
 #define DBG_OBJ_MSG_S(aspect, prio, msg)         \
-   RTFL_OBJ_PRINT ("msg", "s:s:d:s", "<static>", aspect, prio, msg)
+    RTFL_OBJ_PRINT ("msg", "s:s:d:s", "<static>", aspect, prio, msg)
 
 #define DBG_OBJ_MSGF_S(aspect, prio, fmt, ...) \
-   STMT_START { \
-      char msg[256]; \
-      snprintf (msg, sizeof (msg), fmt, __VA_ARGS__); \
-      RTFL_OBJ_PRINT ("msg", "s:s:d:s", "<static>", aspect, prio, msg) \
-   } STMT_END
+    STMT_START { \
+        char msg[256]; \
+        snprintf (msg, sizeof (msg), fmt, __VA_ARGS__); \
+        RTFL_OBJ_PRINT ("msg", "s:s:d:s", "<static>", aspect, prio, msg) \
+    } STMT_END
 
 #define DBG_OBJ_ENTER0_S(aspect, prio, funname) \
-   RTFL_OBJ_PRINT ("enter", "s:s:d:s:", "<static>", aspect, prio, funname);
+    RTFL_OBJ_PRINT ("enter", "s:s:d:s:", "<static>", aspect, prio, funname);
 
 #define DBG_OBJ_ENTER_S(aspect, prio, funname, fmt, ...) \
-   STMT_START { \
-      char args[256]; \
-      snprintf (args, sizeof (args), fmt, __VA_ARGS__); \
-      RTFL_OBJ_PRINT ("enter", "s:s:d:s:s", "<static>", aspect, prio, funname, \
+    STMT_START { \
+        char args[256]; \
+        snprintf (args, sizeof (args), fmt, __VA_ARGS__); \
+        RTFL_OBJ_PRINT ("enter", "s:s:d:s:s", "<static>", aspect, prio, funname, \
                       args); \
-   } STMT_END
+    } STMT_END
 
 #define DBG_OBJ_LEAVE_S() \
-   RTFL_OBJ_PRINT ("leave", "s", "<static>");
+    RTFL_OBJ_PRINT ("leave", "s", "<static>");
 
 #define DBG_OBJ_LEAVE_VAL_S(fmt, ...) \
-   STMT_START { \
-      char vals[256]; \
-      snprintf (vals, sizeof (vals), fmt, __VA_ARGS__); \
-      RTFL_OBJ_PRINT ("leave", "s:s", "<static>", vals); \
-   } STMT_END
+    STMT_START { \
+        char vals[256]; \
+        snprintf (vals, sizeof (vals), fmt, __VA_ARGS__); \
+        RTFL_OBJ_PRINT ("leave", "s:s", "<static>", vals); \
+    } STMT_END
 
 #else /* DBG_RTFL */
 

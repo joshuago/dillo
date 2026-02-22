@@ -41,115 +41,115 @@ static int imgRow = 0;
 
 static void imageInitTimeout (void *data)
 {
-   const bool resize = true;
-   //imgbuf = layout->createImgbuf (Imgbuf::RGBA, 400, 200);
-   imgbuf = layout->createImgbuf (Imgbuf::RGB, 400, 200, 1);
-   image->setBuffer (imgbuf, resize);
+    const bool resize = true;
+    //imgbuf = layout->createImgbuf (Imgbuf::RGBA, 400, 200);
+    imgbuf = layout->createImgbuf (Imgbuf::RGB, 400, 200, 1);
+    image->setBuffer (imgbuf, resize);
 }
 
 /*
 static void imageDrawTimeout (void *data)
 {
-   if (imgbuf) {
-      for (int i = 0; i < 1; i++) {
-         byte buf[4 * 400];
-         for(int x = 0; x < 400; x++) {
-            buf[4 * x + 0] = x * 255 / 399;
-            buf[4 * x + 1] = (399 - x) * 255 / 399;
-            buf[4 * x + 2] = imgRow * 255 / 199;
-            buf[4 * x + 3] = (199 - imgRow) * 255 / 199;
-         }
+    if (imgbuf) {
+        for (int i = 0; i < 1; i++) {
+            byte buf[4 * 400];
+            for(int x = 0; x < 400; x++) {
+                buf[4 * x + 0] = x * 255 / 399;
+                buf[4 * x + 1] = (399 - x) * 255 / 399;
+                buf[4 * x + 2] = imgRow * 255 / 199;
+                buf[4 * x + 3] = (199 - imgRow) * 255 / 199;
+            }
 
-         imgbuf->copyRow (imgRow, buf);
-         image->drawRow (imgRow);
-         imgRow++;
-      }
-   }
+            imgbuf->copyRow (imgRow, buf);
+            image->drawRow (imgRow);
+            imgRow++;
+        }
+    }
 
-   if(imgRow < 200)
-      Fl::repeat_timeout (0.5, imageDrawTimeout, NULL);
+    if(imgRow < 200)
+        Fl::repeat_timeout (0.5, imageDrawTimeout, NULL);
 }
 */
 
 static void imageDrawTimeout (void *data)
 {
-   if (imgbuf) {
-      for (int i = 0; i < 1; i++) {
-         byte buf[3 * 400];
-         for(int x = 0; x < 400; x++) {
-            buf[3 * x + 0] = x * 255 / 399;
-            buf[3 * x + 1] = (399 - x) * 255 / 399;
-            buf[3 * x + 2] = imgRow * 255 / 199;
-         }
+    if (imgbuf) {
+        for (int i = 0; i < 1; i++) {
+            byte buf[3 * 400];
+            for(int x = 0; x < 400; x++) {
+                buf[3 * x + 0] = x * 255 / 399;
+                buf[3 * x + 1] = (399 - x) * 255 / 399;
+                buf[3 * x + 2] = imgRow * 255 / 199;
+            }
 
-         imgbuf->copyRow (imgRow, buf);
-         image->drawRow (imgRow);
-         imgRow++;
-      }
-   }
+            imgbuf->copyRow (imgRow, buf);
+            image->drawRow (imgRow);
+            imgRow++;
+        }
+    }
 
-   if(imgRow < 200)
-      Fl::repeat_timeout (0.5, imageDrawTimeout, NULL);
+    if(imgRow < 200)
+        Fl::repeat_timeout (0.5, imageDrawTimeout, NULL);
 }
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(410, 210, "Dw Simple Image");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(410, 210, "Dw Simple Image");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 410, 210);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 410, 210);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *widgetStyle = Style::create (&styleAttrs);
+    Style *widgetStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock = new Textblock (false);
-   textblock->setStyle (widgetStyle);
-   layout->setWidget (textblock);
+    Textblock *textblock = new Textblock (false);
+    textblock->setStyle (widgetStyle);
+    layout->setWidget (textblock);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.backgroundColor = NULL;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
 
-   Style *imageStyle = Style::create (&styleAttrs);
+    Style *imageStyle = Style::create (&styleAttrs);
 
-   image = new dw::Image ("");
-   textblock->addWidget (image, imageStyle);
-   textblock->addSpace (imageStyle);
+    image = new dw::Image ("");
+    textblock->addWidget (image, imageStyle);
+    textblock->addSpace (imageStyle);
 
-   imageStyle->unref();
+    imageStyle->unref();
 
-   textblock->flush ();
+    textblock->flush ();
 
-   window->resizable(viewport);
-   window->show();
+    window->resizable(viewport);
+    window->show();
 
-   Fl::add_timeout (2.0, imageInitTimeout, NULL);
-   Fl::add_timeout (0.1, imageDrawTimeout, NULL);
+    Fl::add_timeout (2.0, imageInitTimeout, NULL);
+    Fl::add_timeout (0.1, imageDrawTimeout, NULL);
 
-   int errorCode = Fl::run();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

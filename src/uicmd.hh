@@ -21,7 +21,7 @@ extern "C" {
 
 
 BrowserWindow *a_UIcmd_browser_window_new(int ww, int wh,
-                                          uint32_t xid, const void *v_bw);
+                                                        uint32_t xid, const void *v_bw);
 BrowserWindow *a_UIcmd_get_bw_by_widget(void *v_wid);
 BrowserWindow *a_UIcmd_get_first_active_bw(void);
 void a_UIcmd_send_event_to_tabs_by_wid(int e, void *v_wid);
@@ -70,7 +70,7 @@ void a_UIcmd_link_popup(void *vbw, const DilloUrl *url, const DilloUrl *page_url
 void a_UIcmd_image_popup(void *vbw, const DilloUrl *url, bool_t loaded_img,
                          DilloUrl *page_url, DilloUrl *link_url);
 void a_UIcmd_form_popup(void *vbw, const DilloUrl *url, void *vform,
-                        bool_t showing_hiddens);
+                                bool_t showing_hiddens);
 void a_UIcmd_file_popup(void *vbw, void *v_wid);
 void a_UIcmd_copy_urlstr(BrowserWindow *bw, const char *urlstr, int destination);
 void a_UIcmd_view_page_source(BrowserWindow *bw, const DilloUrl *url);

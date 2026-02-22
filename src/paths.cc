@@ -30,32 +30,32 @@ static char* oldWorkingDir = NULL;
  */
 void Paths::init(void)
 {
-   char *path;
-   struct stat st;
-   int rc = 0;
+    char *path;
+    struct stat st;
+    int rc = 0;
 
-   dFree(oldWorkingDir);
-   oldWorkingDir = dGetcwd();
-   rc = chdir("/tmp");
-   if (rc == -1) {
-      MSG("paths: Error changing directory to /tmp: %s\n",
+    dFree(oldWorkingDir);
+    oldWorkingDir = dGetcwd();
+    rc = chdir("/tmp");
+    if (rc == -1) {
+        MSG("paths: Error changing directory to /tmp: %s\n",
           dStrerror(errno));
-   }
+    }
 
-   path = dStrconcat(dGethomedir(), "/.dillo", NULL);
-   if (stat(path, &st) == -1) {
-      if (errno == ENOENT) {
-         MSG("paths: Creating directory '%s/'\n", path);
-         if (mkdir(path, 0700) < 0) {
-            MSG("paths: Error creating directory %s: %s\n",
+    path = dStrconcat(dGethomedir(), "/.dillo", NULL);
+    if (stat(path, &st) == -1) {
+        if (errno == ENOENT) {
+            MSG("paths: Creating directory '%s/'\n", path);
+            if (mkdir(path, 0700) < 0) {
+                MSG("paths: Error creating directory %s: %s\n",
                 path, dStrerror(errno));
-         }
-      } else {
-         MSG("Dillo: error reading %s: %s\n", path, dStrerror(errno));
-      }
-   }
+            }
+        } else {
+            MSG("Dillo: error reading %s: %s\n", path, dStrerror(errno));
+        }
+    }
 
-   dFree(path);
+    dFree(path);
 }
 
 /**
@@ -63,7 +63,7 @@ void Paths::init(void)
  */
 char *Paths::getOldWorkingDir(void)
 {
-   return oldWorkingDir;
+    return oldWorkingDir;
 }
 
 /**
@@ -71,7 +71,7 @@ char *Paths::getOldWorkingDir(void)
  */
 void Paths::free(void)
 {
-   dFree(oldWorkingDir);
+    dFree(oldWorkingDir);
 }
 
 /**
@@ -79,23 +79,23 @@ void Paths::free(void)
  */
 FILE *Paths::getPrefsFP(const char *rcFile)
 {
-   FILE *fp;
-   char *path = dStrconcat(dGethomedir(), "/.dillo/", rcFile, NULL);
+    FILE *fp;
+    char *path = dStrconcat(dGethomedir(), "/.dillo/", rcFile, NULL);
 
-   if (!(fp = fopen(path, "r"))) {
-      MSG("paths: Cannot open file '%s': %s\n", path, dStrerror(errno));
+    if (!(fp = fopen(path, "r"))) {
+        MSG("paths: Cannot open file '%s': %s\n", path, dStrerror(errno));
 
-      char *path2 = dStrconcat(DILLO_SYSCONF, rcFile, NULL);
-      if (!(fp = fopen(path2, "r"))) {
-         MSG("paths: Cannot open file '%s': %s\n", path2, dStrerror(errno));
-         MSG("paths: Using internal defaults...\n");
-      } else {
-         MSG("paths: Using %s\n", path2);
-      }
-      dFree(path2);
-   }
+        char *path2 = dStrconcat(DILLO_SYSCONF, rcFile, NULL);
+        if (!(fp = fopen(path2, "r"))) {
+            MSG("paths: Cannot open file '%s': %s\n", path2, dStrerror(errno));
+            MSG("paths: Using internal defaults...\n");
+        } else {
+            MSG("paths: Using %s\n", path2);
+        }
+        dFree(path2);
+    }
 
-   dFree(path);
-   return fp;
+    dFree(path);
+    return fp;
 }
 

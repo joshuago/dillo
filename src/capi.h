@@ -1,3 +1,13 @@
+/*
+ * File: capi.h
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __CAPI_H__
 #define __CAPI_H__
 
@@ -27,7 +37,7 @@ int a_Capi_get_buf(const DilloUrl *Url, char **PBuf, int *BufSize);
 void a_Capi_unref_buf(const DilloUrl *Url);
 const char *a_Capi_get_content_type(const DilloUrl *url);
 const char *a_Capi_set_content_type(const DilloUrl *url, const char *ctype,
-                                    const char *from);
+                                                const char *from);
 int a_Capi_get_flags(const DilloUrl *Url);
 int a_Capi_get_flags_with_redirection(const DilloUrl *Url);
 int a_Capi_dpi_verify_request(BrowserWindow *bw, DilloUrl *url);

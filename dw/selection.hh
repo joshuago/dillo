@@ -198,60 +198,60 @@ namespace core {
 class SelectionState
 {
 public:
-   enum { END_OF_WORD = 1 << 30 };
+    enum { END_OF_WORD = 1 << 30 };
 
 private:
-   Layout *layout;
+    Layout *layout;
 
-   // selection
-   enum {
-      NONE,
-      SELECTING,
-      SELECTED
-   } selectionState;
+    // selection
+    enum {
+        NONE,
+        SELECTING,
+        SELECTED
+    } selectionState;
 
-   DeepIterator *from, *to;
-   int fromChar, toChar;
+    DeepIterator *from, *to;
+    int fromChar, toChar;
 
-   // link handling
-   enum {
-      LINK_NONE,
-      LINK_PRESSED
-   } linkState;
+    // link handling
+    enum {
+        LINK_NONE,
+        LINK_PRESSED
+    } linkState;
 
-   int linkButton;
-   DeepIterator *link;
-   int linkChar, linkNumber;
+    int linkButton;
+    DeepIterator *link;
+    int linkChar, linkNumber;
 
-   void resetSelection ();
-   void resetLink ();
-   void switchLinkToSelection (Iterator *it, int charPos);
-   void adjustSelection (Iterator *it, int charPos);
-   static int correctCharPos (DeepIterator *it, int charPos);
+    void resetSelection ();
+    void resetLink ();
+    void switchLinkToSelection (Iterator *it, int charPos);
+    void adjustSelection (Iterator *it, int charPos);
+    static int correctCharPos (DeepIterator *it, int charPos);
 
-   void highlight (bool fl, int dir)
-   { highlight0 (fl, from, fromChar, to, toChar, dir); }
+    void highlight (bool fl, int dir)
+    { highlight0 (fl, from, fromChar, to, toChar, dir); }
 
-   void highlight0 (bool fl, DeepIterator *from, int fromChar,
+    void highlight0 (bool fl, DeepIterator *from, int fromChar,
                     DeepIterator *to, int toChar, int dir);
 public:
-   enum EventType { BUTTON_PRESS, BUTTON_RELEASE, BUTTON_MOTION };
+    enum EventType { BUTTON_PRESS, BUTTON_RELEASE, BUTTON_MOTION };
 
-   SelectionState ();
-   ~SelectionState ();
+    SelectionState ();
+    ~SelectionState ();
 
-   inline void setLayout (Layout *layout) { this->layout = layout; }
-   void reset ();
-   void copy (int selection);
-   bool buttonPress (Iterator *it, int charPos, int linkNo,
-                     EventButton *event);
-   bool buttonRelease (Iterator *it, int charPos, int linkNo,
+    inline void setLayout (Layout *layout) { this->layout = layout; }
+    void reset ();
+    void copy (int selection);
+    bool buttonPress (Iterator *it, int charPos, int linkNo,
+                            EventButton *event);
+    bool buttonRelease (Iterator *it, int charPos, int linkNo,
                        EventButton *event);
-   bool buttonMotion (Iterator *it, int charPos, int linkNo,
+    bool buttonMotion (Iterator *it, int charPos, int linkNo,
                       EventMotion *event);
 
-   bool handleEvent (EventType eventType, Iterator *it, int charPos,
-                     int linkNo, MousePositionEvent *event);
+    bool handleEvent (EventType eventType, Iterator *it, int charPos,
+                            int linkNo, MousePositionEvent *event);
 };
 
 } // namespace core

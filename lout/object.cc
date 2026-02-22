@@ -51,8 +51,8 @@ Object::~Object()
  */
 bool Object::equals(Object *other)
 {
-   misc::assertNotReached ();
-   return false;
+    misc::assertNotReached ();
+    return false;
 }
 
 /**
@@ -60,8 +60,8 @@ bool Object::equals(Object *other)
  */
 int Object::hashValue()
 {
-   fprintf (stderr, "Object::hashValue() should be implemented.\n");
-   return 0;
+    fprintf (stderr, "Object::hashValue() should be implemented.\n");
+    return 0;
 }
 
 /**
@@ -69,8 +69,8 @@ int Object::hashValue()
  */
 Object *Object::clone()
 {
-   misc::assertNotReached ();
-   return NULL;
+    misc::assertNotReached ();
+    return NULL;
 }
 
 /**
@@ -82,10 +82,10 @@ Object *Object::clone()
  */
 char *Object::toString()
 {
-   misc::StringBuffer sb;
-   intoStringBuffer(&sb);
-   char *s = dStrdup(sb.getChars());
-   return s;
+    misc::StringBuffer sb;
+    intoStringBuffer(&sb);
+    char *s = dStrdup(sb.getChars());
+    return s;
 }
 
 /**
@@ -95,9 +95,9 @@ char *Object::toString()
  */
 void Object::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append("<not further specified object ");
-   sb->appendPointer(this);
-   sb->append(">");
+    sb->append("<not further specified object ");
+    sb->appendPointer(this);
+    sb->append(">");
 }
 
 /**
@@ -105,8 +105,8 @@ void Object::intoStringBuffer(misc::StringBuffer *sb)
  */
 size_t Object::sizeOf()
 {
-   fprintf (stderr, "Object::sizeOf() should be implemented.\n");
-   return sizeof(Object*);
+    fprintf (stderr, "Object::sizeOf() should be implemented.\n");
+    return sizeof(Object*);
 }
 
 // ----------------
@@ -127,7 +127,7 @@ Comparator *Comparator::compareFunComparator = NULL;
  */
 int Comparator::compareFun(const void *p1, const void *p2)
 {
-   return compareFunComparator->compare (*(Object**)p1, *(Object**)p2);
+    return compareFunComparator->compare (*(Object**)p1, *(Object**)p2);
 }
 
 // ------------------------
@@ -136,14 +136,14 @@ int Comparator::compareFun(const void *p1, const void *p2)
 
 int StandardComparator::compare(Object *o1, Object *o2)
 {
-   if (o1 && o2)
-      return ((Comparable*)o1)->compareTo ((Comparable*)o2);
-   else if (o1)
-      return 1;
-   else if (o2)
-      return -1;
-   else
-      return 0;
+    if (o1 && o2)
+        return ((Comparable*)o1)->compareTo ((Comparable*)o2);
+    else if (o1)
+        return 1;
+    else if (o2)
+        return -1;
+    else
+        return 0;
 }
 
 StandardComparator standardComparator;
@@ -154,7 +154,7 @@ StandardComparator standardComparator;
 
 bool Pointer::equals(Object *other)
 {
-   return value == ((Pointer*)other)->value;
+    return value == ((Pointer*)other)->value;
 }
 
 int Pointer::hashValue()
@@ -167,23 +167,23 @@ int Pointer::hashValue()
  *     return ((int*)&value)[0] ^ ((int*)&value)[1];
  */
 #if SIZEOF_VOID_P == 4
-   // Assuming that sizeof(void*) == sizeof(int); on 32 bit systems.
-   return (int)value;
+    // Assuming that sizeof(void*) == sizeof(int); on 32 bit systems.
+    return (int)value;
 #else
-   // Assuming that sizeof(void*) == 2 * sizeof(int); on 64 bit
-   // systems (int is still 32 bit).
-   // Combine both parts of the pointer value *itself*, not what it
-   // points to, by first referencing it (operator "&"), then
-   // dereferencing it again (operator "[]").
-   return ((intptr_t)value >> 32) ^ ((intptr_t)value);
+    // Assuming that sizeof(void*) == 2 * sizeof(int); on 64 bit
+    // systems (int is still 32 bit).
+    // Combine both parts of the pointer value *itself*, not what it
+    // points to, by first referencing it (operator "&"), then
+    // dereferencing it again (operator "[]").
+    return ((intptr_t)value >> 32) ^ ((intptr_t)value);
 #endif
 }
 
 void Pointer::intoStringBuffer(misc::StringBuffer *sb)
 {
-   char buf[64];
-   snprintf(buf, sizeof(buf), "%p", value);
-   sb->append(buf);
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%p", value);
+    sb->append(buf);
 }
 
 // -------------
@@ -192,24 +192,24 @@ void Pointer::intoStringBuffer(misc::StringBuffer *sb)
 
 bool Integer::equals(Object *other)
 {
-   return value == ((Integer*)other)->value;
+    return value == ((Integer*)other)->value;
 }
 
 int Integer::hashValue()
 {
-   return (int)value;
+    return (int)value;
 }
 
 void Integer::intoStringBuffer(misc::StringBuffer *sb)
 {
-   char buf[64];
-   sprintf(buf, "%d", value);
-   sb->append(buf);
+    char buf[64];
+    sprintf(buf, "%d", value);
+    sb->append(buf);
 }
 
 int Integer::compareTo(Comparable *other)
 {
-   return value - ((Integer*)other)->value;
+    return value - ((Integer*)other)->value;
 }
 
 // -------------
@@ -218,24 +218,24 @@ int Integer::compareTo(Comparable *other)
 
 bool Boolean::equals(Object *other)
 {
-   bool value2 = ((Boolean*)other)->value;
-   // TODO Does "==" work?
-   return (value && value2) || (!value && value2);
+    bool value2 = ((Boolean*)other)->value;
+    // TODO Does "==" work?
+    return (value && value2) || (!value && value2);
 }
 
 int Boolean::hashValue()
 {
-   return value ? 1 : 0;
+    return value ? 1 : 0;
 }
 
 void Boolean::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append(value ? "true" : "false");
+    sb->append(value ? "true" : "false");
 }
 
 int Boolean::compareTo(Comparable *other)
 {
-   return (value ? 1 : 0) - (((Boolean*)other)->value ? 1 : 0);
+    return (value ? 1 : 0) - (((Boolean*)other)->value ? 1 : 0);
 }
 
 // -----------------
@@ -244,11 +244,11 @@ int Boolean::compareTo(Comparable *other)
 
 bool ConstString::equals(Object *other)
 {
-   ConstString *otherString = (ConstString*)other;
-   return
-      this == other ||
-      (str == NULL && otherString->str == NULL) ||
-      (str != NULL && otherString->str != NULL &&
+    ConstString *otherString = (ConstString*)other;
+    return
+        this == other ||
+        (str == NULL && otherString->str == NULL) ||
+        (str != NULL && otherString->str != NULL &&
        strcmp(str, otherString->str) == 0);
 }
 
@@ -260,32 +260,32 @@ int ConstString::hashValue()
 
 int ConstString::compareTo(Comparable *other)
 {
-   String *otherString = (String*)other;
-   if (str && otherString->str)
-      return strcmp(str, otherString->str);
-   else if (str)
-      return 1;
-   else if (otherString->str)
-      return -1;
-   else
-      return 0;
+    String *otherString = (String*)other;
+    if (str && otherString->str)
+        return strcmp(str, otherString->str);
+    else if (str)
+        return 1;
+    else if (otherString->str)
+        return -1;
+    else
+        return 0;
 }
 
 
 int ConstString::hashValue(const char *str)
 {
-   if (str) {
-      int h = 0;
-      for (int i = 0; str[i]; i++)
-         h = (h * 256 + str[i]);
-      return h;
-   } else
-      return 0;
+    if (str) {
+        int h = 0;
+        for (int i = 0; str[i]; i++)
+            h = (h * 256 + str[i]);
+        return h;
+    } else
+        return 0;
 }
 
 void ConstString::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append(str);
+    sb->append(str);
 }
 
 // ------------
@@ -308,77 +308,77 @@ String::~String ()
 
 PairBase::PairBase(Object *first, Object *second)
 {
-   this->first = first;
-   this->second = second;
+    this->first = first;
+    this->second = second;
 }
 
 PairBase::~PairBase()
 {
-   if (first)
-      delete first;
-   if (second)
-      delete second;
+    if (first)
+        delete first;
+    if (second)
+        delete second;
 }
 
 bool PairBase::equals(Object *other)
 {
-   PairBase *otherPair = (PairBase*)other;
+    PairBase *otherPair = (PairBase*)other;
 
-   return
-      // Identical?
-      this == other || (
-      (// Both first parts are NULL, ...
-         (first == NULL && otherPair->first == NULL) ||
-         // ... or both first parts are not NULL and equal
-         (first != NULL && otherPair->first != NULL
+    return
+        // Identical?
+        this == other || (
+        (// Both first parts are NULL, ...
+            (first == NULL && otherPair->first == NULL) ||
+            // ... or both first parts are not NULL and equal
+            (first != NULL && otherPair->first != NULL
           && first->equals (otherPair->first))) &&
-      // Same with second part.
-      ((second == NULL && otherPair->second == NULL) ||
+        // Same with second part.
+        ((second == NULL && otherPair->second == NULL) ||
        (second != NULL && otherPair->second != NULL
         && second->equals (otherPair->second))));
 }
 
 int PairBase::hashValue()
 {
-   int value = 0;
+    int value = 0;
 
-   if (first)
-      value ^= first->hashValue();
-   if (second)
-      value ^= second->hashValue();
+    if (first)
+        value ^= first->hashValue();
+    if (second)
+        value ^= second->hashValue();
 
-   return value;
+    return value;
 }
 
 void PairBase::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append("<pair: ");
+    sb->append("<pair: ");
 
-   if (first)
-      first->intoStringBuffer(sb);
-   else
-      sb->append("(nil)");
+    if (first)
+        first->intoStringBuffer(sb);
+    else
+        sb->append("(nil)");
 
-   sb->append(",");
+    sb->append(",");
 
-   if (second)
-      second->intoStringBuffer(sb);
-   else
-      sb->append("(nil)");
+    if (second)
+        second->intoStringBuffer(sb);
+    else
+        sb->append("(nil)");
 
-   sb->append(">");
+    sb->append(">");
 }
 
 size_t PairBase::sizeOf()
 {
-   size_t size = 0;
+    size_t size = 0;
 
-   if (first)
-      size += first->sizeOf();
-   if (second)
-      size += second->sizeOf();
+    if (first)
+        size += first->sizeOf();
+    if (second)
+        size += second->sizeOf();
 
-   return size;
+    return size;
 }
 
 } // namespace object

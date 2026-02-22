@@ -12,7 +12,7 @@
 
 /* Some systems may not have this one... */
 #ifndef AF_LOCAL
-   #define AF_LOCAL AF_UNIX
+    #define AF_LOCAL AF_UNIX
 #endif
 
 /* This one is tricky, some sources state it should include the byte
@@ -21,18 +21,18 @@
  * but as dillo has used this for a long time successfully, here it goes.
  */
 # define D_SUN_LEN(ptr) ((size_t) (((struct sockaddr_un *) 0)->sun_path) \
-                        + strlen ((ptr)->sun_path))
+                                + strlen ((ptr)->sun_path))
 
 /*!
  * dpi commands
  */
 enum {
-   UNKNOWN_CMD,
-   AUTH_CMD, /* authentication */
-   BYE_CMD,  /* "DpiBye" */
-   CHECK_SERVER_CMD, /* "check_server" */
-   REGISTER_ALL_CMD, /* "register_all" */
-   REGISTER_SERVICE_CMD /* "register_service" */
+    UNKNOWN_CMD,
+    AUTH_CMD, /* authentication */
+    BYE_CMD,  /* "DpiBye" */
+    CHECK_SERVER_CMD, /* "check_server" */
+    REGISTER_ALL_CMD, /* "register_all" */
+    REGISTER_SERVICE_CMD /* "register_service" */
 };
 
 

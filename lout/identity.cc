@@ -34,46 +34,46 @@ using namespace container::typed;
 IdentifiableObject::Class::Class (IdentifiableObject::Class *parent, int id,
                                   const char *className)
 {
-   this->parent = parent;
-   this->id = id;
-   this->className = className;
+    this->parent = parent;
+    this->id = id;
+    this->className = className;
 }
 
 void IdentifiableObject::Class::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append ("<class ");
-   sb->append (className);
-   sb->append (" (");
-   sb->appendInt (id);
-   sb->append (")");
+    sb->append ("<class ");
+    sb->append (className);
+    sb->append (" (");
+    sb->appendInt (id);
+    sb->append (")");
 
-   if (parent) {
-      sb->append (", parent: ");
-      parent->intoStringBuffer (sb);
-   }
+    if (parent) {
+        sb->append (", parent: ");
+        parent->intoStringBuffer (sb);
+    }
 
-   sb->append (">");
+    sb->append (">");
 }
 
 HashTable <ConstString, IdentifiableObject::Class>
-   *IdentifiableObject::classesByName =
-      new HashTable<ConstString, IdentifiableObject::Class> (true, true);
+    *IdentifiableObject::classesByName =
+        new HashTable<ConstString, IdentifiableObject::Class> (true, true);
 Vector <IdentifiableObject::Class> *IdentifiableObject::classesById =
-   new Vector <IdentifiableObject::Class> (16, false);
+    new Vector <IdentifiableObject::Class> (16, false);
 IdentifiableObject::Class *IdentifiableObject::currentlyConstructedClass;
 
 IdentifiableObject::IdentifiableObject ()
 {
-   currentlyConstructedClass = NULL;
+    currentlyConstructedClass = NULL;
 }
 
 void IdentifiableObject::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append("<instance ");
-   sb->appendPointer(this);
-   sb->append(" of ");
-   sb->append(getClassName());
-   sb->append(">");
+    sb->append("<instance ");
+    sb->appendPointer(this);
+    sb->append(" of ");
+    sb->append(getClassName());
+    sb->append(">");
 }
 
 /**
@@ -82,20 +82,20 @@ void IdentifiableObject::intoStringBuffer(misc::StringBuffer *sb)
  */
 void IdentifiableObject::registerName (const char *className, int *classId)
 {
-   ConstString str (className);
-   Class *klass = classesByName->get (&str);
-   if (klass == NULL) {
-      klass = new Class (currentlyConstructedClass, classesById->size (),
+    ConstString str (className);
+    Class *klass = classesByName->get (&str);
+    if (klass == NULL) {
+        klass = new Class (currentlyConstructedClass, classesById->size (),
                          className);
-      ConstString *key = new ConstString (className);
-      classesByName->put (key, klass);
-      classesById->put (klass);
-      *classId = klass->id;
-   }
+        ConstString *key = new ConstString (className);
+        classesByName->put (key, klass);
+        classesById->put (klass);
+        *classId = klass->id;
+    }
 
-   this->classId = klass->id;
-   *classId = klass->id;
-   currentlyConstructedClass = klass;
+    this->classId = klass->id;
+    *classId = klass->id;
+    currentlyConstructedClass = klass;
 }
 
 /**
@@ -104,27 +104,27 @@ void IdentifiableObject::registerName (const char *className, int *classId)
  */
 bool IdentifiableObject::instanceOf (int otherClassId)
 {
-   if (otherClassId == -1)
-      // Other class has not been registered yet, while it should have been,
-      // if this class is an instance of it or of a sub-class.
-      return false;
+    if (otherClassId == -1)
+        // Other class has not been registered yet, while it should have been,
+        // if this class is an instance of it or of a sub-class.
+        return false;
 
-   Class *otherClass = classesById->get (otherClassId);
+    Class *otherClass = classesById->get (otherClassId);
 
-   if (otherClass == NULL) {
-      fprintf (stderr,
-               "WARNING: Something got wrong here, it seems that a "
-               "CLASS_ID was not initialized properly.\n");
-      return false;
-   }
+    if (otherClass == NULL) {
+        fprintf (stderr,
+                    "WARNING: Something got wrong here, it seems that a "
+                    "CLASS_ID was not initialized properly.\n");
+        return false;
+    }
 
-   for (Class *klass = classesById->get (classId); klass != NULL;
+    for (Class *klass = classesById->get (classId); klass != NULL;
         klass = klass->parent) {
-      if (klass == otherClass)
-         return true;
-   }
+        if (klass == otherClass)
+            return true;
+    }
 
-   return false;
+    return false;
 }
 
 } // namespace identity

@@ -33,19 +33,19 @@ extern int srs_fd;
 /*! plugin state information
  */
 struct dp {
-   char *id;
-   char *path;
-   int sock_fd;
-   int port;
-   pid_t pid;
-   int filter;
+    char *id;
+    char *path;
+    int sock_fd;
+    int port;
+    pid_t pid;
+    int filter;
 };
 
 /*! bind dpi with service
  */
 struct service {
-   char *name;
-   int dp_index;
+    char *name;
+    int dp_index;
 };
 
 /*! Number of available plugins */

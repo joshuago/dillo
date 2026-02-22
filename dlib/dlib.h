@@ -76,9 +76,9 @@ static inline int dIsascii(unsigned char c)  { return (c & ~0x7f) == 0; }
  *-- Memory -------------------------------------------------------------------
  */
 #define dNew(type, count) \
-   ((type *) dMalloc ((unsigned) sizeof (type) * (count)))
+    ((type *) dMalloc ((unsigned) sizeof (type) * (count)))
 #define dNew0(type, count) \
-   ((type *) dMalloc0 ((unsigned) sizeof (type) * (count)))
+    ((type *) dMalloc0 ((unsigned) sizeof (type) * (count)))
 
 void *dMalloc (size_t size);
 void *dRealloc (void *mem, size_t size);
@@ -91,21 +91,21 @@ void dFree (void *mem);
 #define D_STMT_START      do
 #define D_STMT_END        while (0)
 #define dReturn_if(expr)               \
-   D_STMT_START{                       \
-      if (expr) { return; };           \
-   }D_STMT_END
+    D_STMT_START{                       \
+        if (expr) { return; };           \
+    }D_STMT_END
 #define dReturn_val_if(expr,val)       \
-   D_STMT_START{                       \
-      if (expr) { return val; };       \
-   }D_STMT_END
+    D_STMT_START{                       \
+        if (expr) { return val; };       \
+    }D_STMT_END
 #define dReturn_if_fail(expr)          \
-   D_STMT_START{                       \
-      if (!(expr)) { return; };        \
-   }D_STMT_END
+    D_STMT_START{                       \
+        if (!(expr)) { return; };        \
+    }D_STMT_END
 #define dReturn_val_if_fail(expr,val)  \
-   D_STMT_START{                       \
-      if (!(expr)) { return val; };    \
-   }D_STMT_END
+    D_STMT_START{                       \
+        if (!(expr)) { return val; };    \
+    }D_STMT_END
 
 /*
  *- C strings -----------------------------------------------------------------
@@ -129,9 +129,9 @@ int dStrnAsciiCasecmp(const char *s1, const char *s2, size_t n);
 #define Dstr_char_t    char
 
 typedef struct {
-   int sz;          /* allocated size (private) */
-   int len;
-   Dstr_char_t *str;
+    int sz;          /* allocated size (private) */
+    int len;
+    Dstr_char_t *str;
 } Dstr;
 
 Dstr *dStr_new (const char *s);
@@ -159,9 +159,9 @@ void dStr_shorten(Dstr *dst, const char *src, int n);
  *-- dList --------------------------------------------------------------------
  */
 typedef struct {
-   int sz;          /* allocated size (private) */
-   int len;
-   void **list;
+    int sz;          /* allocated size (private) */
+    int len;
+    void **list;
 } Dlist;
 
 /* dCompareFunc:

@@ -22,8 +22,8 @@
 void a_IOwatch_add_fd(int fd, int when, Fl_FD_Handler Callback,
                       void *usr_data = 0)
 {
-   if (fd >= 0)
-      Fl::add_fd(fd, when, Callback, usr_data);
+    if (fd >= 0)
+        Fl::add_fd(fd, when, Callback, usr_data);
 }
 
 /**
@@ -31,7 +31,7 @@ void a_IOwatch_add_fd(int fd, int when, Fl_FD_Handler Callback,
  */
 void a_IOwatch_remove_fd(int fd, int when)
 {
-   if (fd >= 0)
-      Fl::remove_fd(fd, when);
+    if (fd >= 0)
+        Fl::remove_fd(fd, when);
 }
 

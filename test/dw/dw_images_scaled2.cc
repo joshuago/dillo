@@ -41,111 +41,111 @@ static int imgRow = 0;
 
 static void imageInitTimeout (void *data)
 {
-   imgbuf = layout->createImgbuf (Imgbuf::RGB, 400, 200, 1);
-   image1->setBuffer (imgbuf);
-   image2->setBuffer (imgbuf);
+    imgbuf = layout->createImgbuf (Imgbuf::RGB, 400, 200, 1);
+    image1->setBuffer (imgbuf);
+    image2->setBuffer (imgbuf);
 }
 
 static void imageDrawTimeout (void *data)
 {
-   if (imgbuf) {
-      for (int i = 0; i < 1; i++) {
-         byte buf[3 * 400];
-         for(int x = 0; x < 400; x++) {
-            buf[3 * x + 0] = x * 255 / 399;
-            buf[3 * x + 1] = (399 - x) * 255 / 399;
-            buf[3 * x + 2] = imgRow * 255 / 199;
-         }
+    if (imgbuf) {
+        for (int i = 0; i < 1; i++) {
+            byte buf[3 * 400];
+            for(int x = 0; x < 400; x++) {
+                buf[3 * x + 0] = x * 255 / 399;
+                buf[3 * x + 1] = (399 - x) * 255 / 399;
+                buf[3 * x + 2] = imgRow * 255 / 199;
+            }
 
-         imgbuf->copyRow (imgRow, buf);
-         image1->drawRow (imgRow);
-         image2->drawRow (imgRow);
-         imgRow++;
-      }
-   }
+            imgbuf->copyRow (imgRow, buf);
+            image1->drawRow (imgRow);
+            image2->drawRow (imgRow);
+            imgRow++;
+        }
+    }
 
-   if(imgRow < 200)
-      Fl::repeat_timeout (0.5, imageDrawTimeout, NULL);
+    if(imgRow < 200)
+        Fl::repeat_timeout (0.5, imageDrawTimeout, NULL);
 }
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(410, 210, "Dw Scaled Image 2");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(410, 210, "Dw Scaled Image 2");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 410, 210);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 410, 210);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *widgetStyle = Style::create (&styleAttrs);
+    Style *widgetStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock = new Textblock (false);
-   textblock->setStyle (widgetStyle);
-   layout->setWidget (textblock);
+    Textblock *textblock = new Textblock (false);
+    textblock->setStyle (widgetStyle);
+    layout->setWidget (textblock);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.borderWidth.setVal (0);
-   styleAttrs.padding.setVal (0);
-   styleAttrs.backgroundColor = NULL;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.borderWidth.setVal (0);
+    styleAttrs.padding.setVal (0);
+    styleAttrs.backgroundColor = NULL;
 
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   styleAttrs.borderWidth.setVal (1);
-   styleAttrs.setBorderColor (Color::create (layout, 0x000080));
-   styleAttrs.setBorderStyle (BORDER_SOLID);
-   styleAttrs.padding.setVal (1);
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.width = createPerLength (0.25);
-   styleAttrs.height = createPerLength (0.25);
+    styleAttrs.borderWidth.setVal (1);
+    styleAttrs.setBorderColor (Color::create (layout, 0x000080));
+    styleAttrs.setBorderStyle (BORDER_SOLID);
+    styleAttrs.padding.setVal (1);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.width = createPerLength (0.25);
+    styleAttrs.height = createPerLength (0.25);
 
-   Style *imageStyle1 = Style::create (&styleAttrs);
-   image1 = new dw::Image ("A longer ALT Text to demonstrate clipping.");
-   textblock->addWidget (image1, imageStyle1);
-   imageStyle1->unref();
+    Style *imageStyle1 = Style::create (&styleAttrs);
+    image1 = new dw::Image ("A longer ALT Text to demonstrate clipping.");
+    textblock->addWidget (image1, imageStyle1);
+    imageStyle1->unref();
 
-   textblock->addParbreak (10, wordStyle);
+    textblock->addParbreak (10, wordStyle);
 
-   styleAttrs.width = LENGTH_AUTO;
-   styleAttrs.height = LENGTH_AUTO;
+    styleAttrs.width = LENGTH_AUTO;
+    styleAttrs.height = LENGTH_AUTO;
 
-   Style *imageStyle2 = Style::create (&styleAttrs);
-   image2 = new dw::Image ("A longer ALT Text to demonstrate clipping.");
-   textblock->addWidget (image2, imageStyle2);
-   imageStyle2->unref();
+    Style *imageStyle2 = Style::create (&styleAttrs);
+    image2 = new dw::Image ("A longer ALT Text to demonstrate clipping.");
+    textblock->addWidget (image2, imageStyle2);
+    imageStyle2->unref();
 
-   wordStyle->unref ();
-   textblock->flush ();
+    wordStyle->unref ();
+    textblock->flush ();
 
-   window->resizable(viewport);
-   window->show();
+    window->resizable(viewport);
+    window->show();
 
-   Fl::add_timeout (3.0, imageInitTimeout, NULL);
-   Fl::add_timeout (0.1, imageDrawTimeout, NULL);
+    Fl::add_timeout (3.0, imageInitTimeout, NULL);
+    Fl::add_timeout (0.1, imageDrawTimeout, NULL);
 
-   int errorCode = Fl::run();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

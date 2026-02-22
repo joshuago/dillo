@@ -1,3 +1,13 @@
+/*
+ * File: menu.hh
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __MENU_HH__
 #define __MENU_HH__
 
@@ -12,8 +22,8 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
 void a_Menu_link_popup(BrowserWindow *bw, const DilloUrl *url,
                        const DilloUrl *page_url);
 void a_Menu_image_popup(BrowserWindow *bw, const DilloUrl *url,
-                        bool_t loaded_img, DilloUrl *page_url,
-                        DilloUrl *link_url);
+                                bool_t loaded_img, DilloUrl *page_url,
+                                DilloUrl *link_url);
 void a_Menu_form_popup(BrowserWindow *bw, const DilloUrl *page_url,
                        void *vform, bool_t showing_hiddens);
 void a_Menu_file_popup(BrowserWindow *bw, void *v_wid);

@@ -20,24 +20,24 @@ namespace dw {
 class Ruler: public RegardingBorder
 {
 protected:
-   void sizeRequestSimpl (core::Requisition *requisition);
-   void getExtremesSimpl (core::Extremes *extremes);
-   void containerSizeChangedForChildren ();
-   bool usesAvailWidth ();
-   void draw (core::View *view, core::Rectangle *area,
+    void sizeRequestSimpl (core::Requisition *requisition);
+    void getExtremesSimpl (core::Extremes *extremes);
+    void containerSizeChangedForChildren ();
+    bool usesAvailWidth ();
+    void draw (core::View *view, core::Rectangle *area,
               core::DrawingContext *context);
-   core::Widget *getWidgetAtPoint (int x, int y,
+    core::Widget *getWidgetAtPoint (int x, int y,
                                    core::GettingWidgetAtPointContext *context);
 
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   Ruler ();
-   ~Ruler ();
+    Ruler ();
+    ~Ruler ();
 
-   bool isBlockLevel ();
+    bool isBlockLevel ();
 
-   core::Iterator *iterator (core::Content::Type mask, bool atEnd);
+    core::Iterator *iterator (core::Content::Type mask, bool atEnd);
 };
 
 } // namespace dw

@@ -199,128 +199,128 @@ namespace core {
 namespace style {
 
 enum Cursor {
-   CURSOR_CROSSHAIR,
-   CURSOR_DEFAULT,
-   CURSOR_POINTER,
-   CURSOR_MOVE,
-   CURSOR_E_RESIZE,
-   CURSOR_NE_RESIZE,
-   CURSOR_NW_RESIZE,
-   CURSOR_N_RESIZE,
-   CURSOR_SE_RESIZE,
-   CURSOR_SW_RESIZE,
-   CURSOR_S_RESIZE,
-   CURSOR_W_RESIZE,
-   CURSOR_TEXT,
-   CURSOR_WAIT,
-   CURSOR_HELP
+    CURSOR_CROSSHAIR,
+    CURSOR_DEFAULT,
+    CURSOR_POINTER,
+    CURSOR_MOVE,
+    CURSOR_E_RESIZE,
+    CURSOR_NE_RESIZE,
+    CURSOR_NW_RESIZE,
+    CURSOR_N_RESIZE,
+    CURSOR_SE_RESIZE,
+    CURSOR_SW_RESIZE,
+    CURSOR_S_RESIZE,
+    CURSOR_W_RESIZE,
+    CURSOR_TEXT,
+    CURSOR_WAIT,
+    CURSOR_HELP
 };
 
 enum BorderCollapse {
-   BORDER_MODEL_SEPARATE,
-   BORDER_MODEL_COLLAPSE
+    BORDER_MODEL_SEPARATE,
+    BORDER_MODEL_COLLAPSE
 };
 
 enum BorderStyle {
-   BORDER_NONE,
-   BORDER_HIDDEN,
-   BORDER_DOTTED,
-   BORDER_DASHED,
-   BORDER_SOLID,
-   BORDER_DOUBLE,
-   BORDER_GROOVE,
-   BORDER_RIDGE,
-   BORDER_INSET,
-   BORDER_OUTSET
+    BORDER_NONE,
+    BORDER_HIDDEN,
+    BORDER_DOTTED,
+    BORDER_DASHED,
+    BORDER_SOLID,
+    BORDER_DOUBLE,
+    BORDER_GROOVE,
+    BORDER_RIDGE,
+    BORDER_INSET,
+    BORDER_OUTSET
 };
 
 enum BackgroundRepeat {
-   BACKGROUND_REPEAT,
-   BACKGROUND_REPEAT_X,
-   BACKGROUND_REPEAT_Y,
-   BACKGROUND_NO_REPEAT
+    BACKGROUND_REPEAT,
+    BACKGROUND_REPEAT_X,
+    BACKGROUND_REPEAT_Y,
+    BACKGROUND_NO_REPEAT
 };
 
 enum BackgroundAttachment {
-   BACKGROUND_ATTACHMENT_SCROLL,
-   BACKGROUND_ATTACHMENT_FIXED
+    BACKGROUND_ATTACHMENT_SCROLL,
+    BACKGROUND_ATTACHMENT_FIXED
 };
 
 enum TextAlignType {
-   TEXT_ALIGN_LEFT,
-   TEXT_ALIGN_RIGHT,
-   TEXT_ALIGN_CENTER,
-   TEXT_ALIGN_JUSTIFY,
-   TEXT_ALIGN_STRING
+    TEXT_ALIGN_LEFT,
+    TEXT_ALIGN_RIGHT,
+    TEXT_ALIGN_CENTER,
+    TEXT_ALIGN_JUSTIFY,
+    TEXT_ALIGN_STRING
 };
 
 enum VAlignType {
-   VALIGN_TOP,
-   VALIGN_BOTTOM,
-   VALIGN_MIDDLE,
-   VALIGN_BASELINE,
-   VALIGN_SUB,
-   VALIGN_SUPER,
-   VALIGN_TEXT_TOP,
-   VALIGN_TEXT_BOTTOM
+    VALIGN_TOP,
+    VALIGN_BOTTOM,
+    VALIGN_MIDDLE,
+    VALIGN_BASELINE,
+    VALIGN_SUB,
+    VALIGN_SUPER,
+    VALIGN_TEXT_TOP,
+    VALIGN_TEXT_BOTTOM
 };
 
 enum TextTransform {
-   TEXT_TRANSFORM_NONE,
-   TEXT_TRANSFORM_CAPITALIZE,
-   TEXT_TRANSFORM_UPPERCASE,
-   TEXT_TRANSFORM_LOWERCASE
+    TEXT_TRANSFORM_NONE,
+    TEXT_TRANSFORM_CAPITALIZE,
+    TEXT_TRANSFORM_UPPERCASE,
+    TEXT_TRANSFORM_LOWERCASE
 };
 
 /**
  * \todo Incomplete. Has to be completed for a CSS implementation.
  */
 enum DisplayType {
-   DISPLAY_BLOCK,
-   DISPLAY_INLINE,
-   DISPLAY_INLINE_BLOCK,
-   DISPLAY_LIST_ITEM,
-   DISPLAY_NONE,
-   DISPLAY_TABLE,
-   DISPLAY_TABLE_ROW_GROUP,
-   DISPLAY_TABLE_HEADER_GROUP,
-   DISPLAY_TABLE_FOOTER_GROUP,
-   DISPLAY_TABLE_ROW,
-   DISPLAY_TABLE_CELL
+    DISPLAY_BLOCK,
+    DISPLAY_INLINE,
+    DISPLAY_INLINE_BLOCK,
+    DISPLAY_LIST_ITEM,
+    DISPLAY_NONE,
+    DISPLAY_TABLE,
+    DISPLAY_TABLE_ROW_GROUP,
+    DISPLAY_TABLE_HEADER_GROUP,
+    DISPLAY_TABLE_FOOTER_GROUP,
+    DISPLAY_TABLE_ROW,
+    DISPLAY_TABLE_CELL
 };
 
 enum LineType {
-   LINE_NORMAL,
-   LINE_DOTTED,
-   LINE_DASHED
+    LINE_NORMAL,
+    LINE_DOTTED,
+    LINE_DASHED
 };
 
 enum ListStylePosition {
-   LIST_STYLE_POSITION_INSIDE,
-   LIST_STYLE_POSITION_OUTSIDE
+    LIST_STYLE_POSITION_INSIDE,
+    LIST_STYLE_POSITION_OUTSIDE
 };
 enum ListStyleType {
-   LIST_STYLE_TYPE_DISC,
-   LIST_STYLE_TYPE_CIRCLE,
-   LIST_STYLE_TYPE_SQUARE,
-   LIST_STYLE_TYPE_DECIMAL,
-   LIST_STYLE_TYPE_DECIMAL_LEADING_ZERO,
-   LIST_STYLE_TYPE_LOWER_ROMAN,
-   LIST_STYLE_TYPE_UPPER_ROMAN,
-   LIST_STYLE_TYPE_LOWER_GREEK,
-   LIST_STYLE_TYPE_LOWER_ALPHA,
-   LIST_STYLE_TYPE_LOWER_LATIN,
-   LIST_STYLE_TYPE_UPPER_ALPHA,
-   LIST_STYLE_TYPE_UPPER_LATIN,
-   LIST_STYLE_TYPE_HEBREW,
-   LIST_STYLE_TYPE_ARMENIAN,
-   LIST_STYLE_TYPE_GEORGIAN,
-   LIST_STYLE_TYPE_CJK_IDEOGRAPHIC,
-   LIST_STYLE_TYPE_HIRAGANA,
-   LIST_STYLE_TYPE_KATAKANA,
-   LIST_STYLE_TYPE_HIRAGANA_IROHA,
-   LIST_STYLE_TYPE_KATAKANA_IROHA,
-   LIST_STYLE_TYPE_NONE
+    LIST_STYLE_TYPE_DISC,
+    LIST_STYLE_TYPE_CIRCLE,
+    LIST_STYLE_TYPE_SQUARE,
+    LIST_STYLE_TYPE_DECIMAL,
+    LIST_STYLE_TYPE_DECIMAL_LEADING_ZERO,
+    LIST_STYLE_TYPE_LOWER_ROMAN,
+    LIST_STYLE_TYPE_UPPER_ROMAN,
+    LIST_STYLE_TYPE_LOWER_GREEK,
+    LIST_STYLE_TYPE_LOWER_ALPHA,
+    LIST_STYLE_TYPE_LOWER_LATIN,
+    LIST_STYLE_TYPE_UPPER_ALPHA,
+    LIST_STYLE_TYPE_UPPER_LATIN,
+    LIST_STYLE_TYPE_HEBREW,
+    LIST_STYLE_TYPE_ARMENIAN,
+    LIST_STYLE_TYPE_GEORGIAN,
+    LIST_STYLE_TYPE_CJK_IDEOGRAPHIC,
+    LIST_STYLE_TYPE_HIRAGANA,
+    LIST_STYLE_TYPE_KATAKANA,
+    LIST_STYLE_TYPE_HIRAGANA_IROHA,
+    LIST_STYLE_TYPE_KATAKANA_IROHA,
+    LIST_STYLE_TYPE_NONE
 };
 
 enum FontStyle {
@@ -330,62 +330,62 @@ enum FontStyle {
 };
 
 enum FontVariant {
-   FONT_VARIANT_NORMAL,
-   FONT_VARIANT_SMALL_CAPS
+    FONT_VARIANT_NORMAL,
+    FONT_VARIANT_SMALL_CAPS
 };
 
 enum Overflow {
-   OVERFLOW_VISIBLE,
-   OVERFLOW_HIDDEN,
-   OVERFLOW_SCROLL,
-   OVERFLOW_AUTO
+    OVERFLOW_VISIBLE,
+    OVERFLOW_HIDDEN,
+    OVERFLOW_SCROLL,
+    OVERFLOW_AUTO
 };
 
 enum Position {
-   POSITION_STATIC,
-   POSITION_RELATIVE,
-   POSITION_ABSOLUTE,
-   POSITION_FIXED
+    POSITION_STATIC,
+    POSITION_RELATIVE,
+    POSITION_ABSOLUTE,
+    POSITION_FIXED
 };
 
 enum TextDecoration {
-   TEXT_DECORATION_NONE         = 0,
-   TEXT_DECORATION_UNDERLINE    = 1 << 0,
-   TEXT_DECORATION_OVERLINE     = 1 << 1,
-   TEXT_DECORATION_LINE_THROUGH = 1 << 2,
-   TEXT_DECORATION_BLINK        = 1 << 3
+    TEXT_DECORATION_NONE         = 0,
+    TEXT_DECORATION_UNDERLINE    = 1 << 0,
+    TEXT_DECORATION_OVERLINE     = 1 << 1,
+    TEXT_DECORATION_LINE_THROUGH = 1 << 2,
+    TEXT_DECORATION_BLINK        = 1 << 3
 };
 
 enum WhiteSpace {
-   WHITE_SPACE_NORMAL,
-   WHITE_SPACE_PRE,
-   WHITE_SPACE_NOWRAP,
-   WHITE_SPACE_PRE_WRAP,
-   WHITE_SPACE_PRE_LINE
+    WHITE_SPACE_NORMAL,
+    WHITE_SPACE_PRE,
+    WHITE_SPACE_NOWRAP,
+    WHITE_SPACE_PRE_WRAP,
+    WHITE_SPACE_PRE_LINE
 };
 
 enum FloatType {
-   FLOAT_NONE,
-   FLOAT_LEFT,
-   FLOAT_RIGHT
+    FLOAT_NONE,
+    FLOAT_LEFT,
+    FLOAT_RIGHT
 };
 
 enum ClearType {
-   CLEAR_LEFT,
-   CLEAR_RIGHT,
-   CLEAR_BOTH,
-   CLEAR_NONE
+    CLEAR_LEFT,
+    CLEAR_RIGHT,
+    CLEAR_BOTH,
+    CLEAR_NONE
 };
 
 enum {
-   /**
+    /**
     * \brief 'z-index' is stored as int; use this for the value 'auto'.
     *
     * Only some random value, which has to be checked explicitly; do
     * not compare this (less or greater) to integer values of
     * 'z-index'.
     */
-   Z_INDEX_AUTO = INT_MAX
+    Z_INDEX_AUTO = INT_MAX
 };
 
 /**
@@ -433,11 +433,11 @@ inline Length createAbsLength(int n) { return (n << 2) | 1; }
 
 /** \brief Returns a percentage, \em v is relative to 1, not to 100. */
 inline Length createPerLength(double v) {
-   return ((int)(v * (1 << 18)) & ~3) | 2; }
+    return ((int)(v * (1 << 18)) & ~3) | 2; }
 
 /** \brief Returns a relative length. */
 inline Length createRelLength(double v) {
-   return ((int)(v * (1 << 18)) & ~3) | 3; }
+    return ((int)(v * (1 << 18)) & ~3) | 3; }
 
 /** \brief Returns true if \em l is an absolute length. */
 inline bool isAbsLength(Length l) { return (l & 3) == 1; }
@@ -472,7 +472,7 @@ inline double relLengthVal(Length l) { return (double)(l & ~3) / (1 << 18); }
  * Use this instead of perLengthVal, when possible.
  */
 inline int multiplyWithPerLength(int x, Length l) {
-   return (int) round((double) x * perLengthVal_useThisOnlyForDebugging (l));
+    return (int) round((double) x * perLengthVal_useThisOnlyForDebugging (l));
 }
 
 /**
@@ -482,17 +482,17 @@ inline int multiplyWithPerLength(int x, Length l) {
  * (This function exists for backward compatibility.)
  */
 inline int multiplyWithPerLengthRounded(int x, Length l) {
-   return lout::misc::roundInt (x * perLengthVal_useThisOnlyForDebugging (l));
+    return lout::misc::roundInt (x * perLengthVal_useThisOnlyForDebugging (l));
 }
 
 inline int multiplyWithRelLength(int x, Length l) {
-   return x * relLengthVal(l);
+    return x * relLengthVal(l);
 }
 
 
 enum {
-   /** \brief Represents "auto" lengths. */
-   LENGTH_AUTO = 0
+    /** \brief Represents "auto" lengths. */
+    LENGTH_AUTO = 0
 };
 
 /**
@@ -504,19 +504,19 @@ enum {
 class Box
 {
 public:
-   /* in future also percentages */
-   int top, right, bottom, left;
+    /* in future also percentages */
+    int top, right, bottom, left;
 
-   inline void setVal(int val) { top = right = bottom = left = val; }
-   inline bool equals (Box *other) {
-      return top == other->top &&
-         right == other->right &&
-         bottom == other->bottom &&
-         left == other->left;
-   }
-   inline int hashValue () {
-      return top + right + bottom + left;
-   }
+    inline void setVal(int val) { top = right = bottom = left = val; }
+    inline bool equals (Box *other) {
+        return top == other->top &&
+            right == other->right &&
+            bottom == other->bottom &&
+            left == other->left;
+    }
+    inline int hashValue () {
+        return top + right + bottom + left;
+    }
 };
 
 class Tooltip;
@@ -530,81 +530,81 @@ class StyleImage;
 class StyleAttrs : public lout::object::Object
 {
 public:
-   Font *font;
-   int textDecoration; /* No TextDecoration because of problems converting
-                        * TextDecoration <-> int */
-   Color *color, *backgroundColor;
-   StyleImage *backgroundImage;
-   BackgroundRepeat backgroundRepeat;
-   BackgroundAttachment backgroundAttachment;
-   Length backgroundPositionX; // "left" defined by "0%" etc. (see CSS spec)
-   Length backgroundPositionY; // "top" defined by "0%" etc. (see CSS spec)
+    Font *font;
+    int textDecoration; /* No TextDecoration because of problems converting
+                                * TextDecoration <-> int */
+    Color *color, *backgroundColor;
+    StyleImage *backgroundImage;
+    BackgroundRepeat backgroundRepeat;
+    BackgroundAttachment backgroundAttachment;
+    Length backgroundPositionX; // "left" defined by "0%" etc. (see CSS spec)
+    Length backgroundPositionY; // "top" defined by "0%" etc. (see CSS spec)
 
-   TextAlignType textAlign;
-   VAlignType valign;
-   char textAlignChar; /* In future, strings will be supported. */
-   TextTransform textTransform;
+    TextAlignType textAlign;
+    VAlignType valign;
+    char textAlignChar; /* In future, strings will be supported. */
+    TextTransform textTransform;
 
-   FloatType vloat; /* "float" is a keyword. */
-   ClearType clear;
+    FloatType vloat; /* "float" is a keyword. */
+    ClearType clear;
 
-   Overflow overflow;
+    Overflow overflow;
 
-   Position position;
-   Length top, bottom, left, right;
+    Position position;
+    Length top, bottom, left, right;
 
-   int hBorderSpacing, vBorderSpacing, wordSpacing;
-   Length width, height, lineHeight, textIndent;
-   Length minWidth, maxWidth, minHeight, maxHeight;
+    int hBorderSpacing, vBorderSpacing, wordSpacing;
+    Length width, height, lineHeight, textIndent;
+    Length minWidth, maxWidth, minHeight, maxHeight;
 
-   Box margin, borderWidth, padding;
-   BorderCollapse borderCollapse;
-   struct { Color *top, *right, *bottom, *left; } borderColor;
-   struct { BorderStyle top, right, bottom, left; } borderStyle;
+    Box margin, borderWidth, padding;
+    BorderCollapse borderCollapse;
+    struct { Color *top, *right, *bottom, *left; } borderColor;
+    struct { BorderStyle top, right, bottom, left; } borderStyle;
 
-   DisplayType display;
-   WhiteSpace whiteSpace;
-   ListStylePosition listStylePosition;
-   ListStyleType listStyleType;
-   Cursor cursor;
-   int zIndex;
+    DisplayType display;
+    WhiteSpace whiteSpace;
+    ListStylePosition listStylePosition;
+    ListStyleType listStyleType;
+    Cursor cursor;
+    int zIndex;
 
-   int x_link;
-   int x_img;
-   Tooltip *x_tooltip;
-   char x_lang[2]; /* Either x_lang[0] == x_lang[1] == 0 (no language
+    int x_link;
+    int x_img;
+    Tooltip *x_tooltip;
+    char x_lang[2]; /* Either x_lang[0] == x_lang[1] == 0 (no language
                       set), or x_lang contains the RFC 1766 country
                       code in lower case letters. (Only two letters
                       allowed, currently.) */
 
-   void initValues ();
-   void resetValues ();
+    void initValues ();
+    void resetValues ();
 
-   bool sizeDiffs (StyleAttrs *otherStyleAttrs);
+    bool sizeDiffs (StyleAttrs *otherStyleAttrs);
 
-   inline void setBorderColor(Color *val) {
-      borderColor.top = borderColor.right = borderColor.bottom
-         = borderColor.left = val; }
-   inline void setBorderStyle(BorderStyle val) {
-      borderStyle.top = borderStyle.right = borderStyle.bottom
-         = borderStyle.left = val; }
+    inline void setBorderColor(Color *val) {
+        borderColor.top = borderColor.right = borderColor.bottom
+            = borderColor.left = val; }
+    inline void setBorderStyle(BorderStyle val) {
+        borderStyle.top = borderStyle.right = borderStyle.bottom
+            = borderStyle.left = val; }
 
-   inline int boxOffsetX ()
-   { return margin.left + borderWidth.left + padding.left; }
-   inline int boxRestWidth ()
-   { return margin.right + borderWidth.right + padding.right; }
-   inline int boxDiffWidth () { return boxOffsetX () + boxRestWidth (); }
-   inline int boxOffsetY ()
-   { return margin.top + borderWidth.top + padding.top; }
-   inline int boxRestHeight ()
-   { return margin.bottom + borderWidth.bottom + padding.bottom; }
-   inline int boxDiffHeight () { return boxOffsetY () + boxRestHeight (); }
+    inline int boxOffsetX ()
+    { return margin.left + borderWidth.left + padding.left; }
+    inline int boxRestWidth ()
+    { return margin.right + borderWidth.right + padding.right; }
+    inline int boxDiffWidth () { return boxOffsetX () + boxRestWidth (); }
+    inline int boxOffsetY ()
+    { return margin.top + borderWidth.top + padding.top; }
+    inline int boxRestHeight ()
+    { return margin.bottom + borderWidth.bottom + padding.bottom; }
+    inline int boxDiffHeight () { return boxOffsetY () + boxRestHeight (); }
 
-   inline bool hasBackground ()
-   { return backgroundColor != NULL || backgroundImage != NULL; }
+    inline bool hasBackground ()
+    { return backgroundColor != NULL || backgroundImage != NULL; }
 
-   bool equals (lout::object::Object *other);
-   int hashValue ();
+    bool equals (lout::object::Object *other);
+    int hashValue ();
 };
 
 
@@ -614,32 +614,32 @@ public:
 class Style: public StyleAttrs
 {
 private:
-   static int totalRef;
-   int refCount;
-   static lout::container::typed::HashTable <StyleAttrs, Style> *styleTable;
+    static int totalRef;
+    int refCount;
+    static lout::container::typed::HashTable <StyleAttrs, Style> *styleTable;
 
-   Style (StyleAttrs *attrs);
+    Style (StyleAttrs *attrs);
 
 protected:
-   ~Style();
+    ~Style();
 
-   void copyAttrs (StyleAttrs *attrs);
+    void copyAttrs (StyleAttrs *attrs);
 
 public:
-   inline static Style *create (StyleAttrs *attrs)
-   {
-      Style *style = styleTable->get (attrs);
-      if (style) {
-         style->ref ();
-      } else {
-         style = new Style (attrs);
-         styleTable->put(style, style);
-      }
-      return style;
-   }
+    inline static Style *create (StyleAttrs *attrs)
+    {
+        Style *style = styleTable->get (attrs);
+        if (style) {
+            style->ref ();
+        } else {
+            style = new Style (attrs);
+            styleTable->put(style, style);
+        }
+        return style;
+    }
 
-   inline void ref () { refCount++; }
-   inline void unref () { if (--refCount == 0) delete this; }
+    inline void ref () { refCount++; }
+    inline void unref () { if (--refCount == 0) delete this; }
 };
 
 
@@ -649,7 +649,7 @@ public:
 class TooltipAttrs: public lout::object::String
 {
 public:
-   TooltipAttrs(const char *text): lout::object::String(text) { }
+    TooltipAttrs(const char *text): lout::object::String(text) { }
 };
 
 /**
@@ -658,20 +658,20 @@ public:
 class Tooltip: public TooltipAttrs
 {
 private:
-   int refCount;
+    int refCount;
 
 protected:
-   Tooltip (const char *text): TooltipAttrs(text) { refCount = 0; }
+    Tooltip (const char *text): TooltipAttrs(text) { refCount = 0; }
 
 public:
-   static Tooltip *create (dw::core::Layout *layout, const char *text);
-   inline void ref () { refCount++; }
-   inline void unref ()
-   { if (--refCount == 0) delete this; }
+    static Tooltip *create (dw::core::Layout *layout, const char *text);
+    inline void ref () { refCount++; }
+    inline void unref ()
+    { if (--refCount == 0) delete this; }
 
-   inline virtual void onEnter () { }
-   inline virtual void onLeave () { }
-   inline virtual void onMotion () { }
+    inline virtual void onEnter () { }
+    inline virtual void onLeave () { }
+    inline virtual void onMotion () { }
 };
 
 
@@ -681,15 +681,15 @@ public:
 class FontAttrs: public lout::object::Object
 {
 public:
-   const char *name;
-   int size;
-   int weight;
-   int letterSpacing;
-   FontVariant fontVariant;
-   FontStyle style;
+    const char *name;
+    int size;
+    int weight;
+    int letterSpacing;
+    FontVariant fontVariant;
+    FontStyle style;
 
-   bool equals(lout::object::Object *other);
-   int hashValue();
+    bool equals(lout::object::Object *other);
+    int hashValue();
 };
 
 
@@ -699,30 +699,30 @@ public:
 class Font: public FontAttrs
 {
 private:
-   int refCount;
+    int refCount;
 
-   static Font *create0 (Layout *layout, FontAttrs *attrs, bool tryEverything);
+    static Font *create0 (Layout *layout, FontAttrs *attrs, bool tryEverything);
 
 protected:
-   inline Font () {
-      DBG_OBJ_CREATE ("dw::core::style::Font");
-      refCount = 0;
-   }
-   virtual ~Font ();
+    inline Font () {
+        DBG_OBJ_CREATE ("dw::core::style::Font");
+        refCount = 0;
+    }
+    virtual ~Font ();
 
-   void copyAttrs (FontAttrs *attrs);
+    void copyAttrs (FontAttrs *attrs);
 
 public:
-   int ascent, descent;
-   int spaceWidth;
-   int xHeight;
-   int zeroWidth;
+    int ascent, descent;
+    int spaceWidth;
+    int xHeight;
+    int zeroWidth;
 
-   static Font *create (Layout *layout, FontAttrs *attrs);
-   static bool exists (Layout *layout, const char *name);
+    static Font *create (Layout *layout, FontAttrs *attrs);
+    static bool exists (Layout *layout, const char *name);
 
-   inline void ref () { refCount++; }
-   inline void unref () { if (--refCount == 0) delete this; }
+    inline void ref () { refCount++; }
+    inline void unref () { if (--refCount == 0) delete this; }
 };
 
 
@@ -732,18 +732,18 @@ public:
 class ColorAttrs: public lout::object::Object
 {
 protected:
-   int color;
+    int color;
 
 public:
-   inline ColorAttrs(int color)
-   {
-      this->color = color;
-   }
+    inline ColorAttrs(int color)
+    {
+        this->color = color;
+    }
 
-   inline int getColor () { return color; }
+    inline int getColor () { return color; }
 
-   bool equals(lout::object::Object *other);
-   int hashValue();
+    bool equals(lout::object::Object *other);
+    int hashValue();
 };
 
 
@@ -753,159 +753,159 @@ public:
 class Color: public ColorAttrs
 {
 private:
-   int refCount;
+    int refCount;
 
-   void remove(dw::core::Layout *layout);
-   int shadeColor (int color, int d);
-
-protected:
-   inline Color (int color): ColorAttrs (color) {
-      DBG_OBJ_CREATE ("dw::core::style::Color");
-      refCount = 0;
-   }
-   virtual ~Color ();
-
-public:
-   enum Shading { SHADING_NORMAL, SHADING_INVERSE, SHADING_DARK, SHADING_LIGHT,
-                  SHADING_NUM };
+    void remove(dw::core::Layout *layout);
+    int shadeColor (int color, int d);
 
 protected:
-   int shadeColor (int color, Shading shading);
+    inline Color (int color): ColorAttrs (color) {
+        DBG_OBJ_CREATE ("dw::core::style::Color");
+        refCount = 0;
+    }
+    virtual ~Color ();
 
 public:
-   static Color *create (Layout *layout, int color);
+    enum Shading { SHADING_NORMAL, SHADING_INVERSE, SHADING_DARK, SHADING_LIGHT,
+                        SHADING_NUM };
 
-   inline void ref () { refCount++; }
-   inline void unref ()
-   { if (--refCount == 0) delete this; }
+protected:
+    int shadeColor (int color, Shading shading);
+
+public:
+    static Color *create (Layout *layout, int color);
+
+    inline void ref () { refCount++; }
+    inline void unref ()
+    { if (--refCount == 0) delete this; }
 };
 
 
 class StyleImage: public lout::signal::ObservedObject
 {
 private:
-   class StyleImgRenderer: public ImgRenderer
-   {
-   private:
-      StyleImage *image;
+    class StyleImgRenderer: public ImgRenderer
+    {
+    private:
+        StyleImage *image;
 
-   public:
-      inline StyleImgRenderer (StyleImage *image) { this->image = image; }
+    public:
+        inline StyleImgRenderer (StyleImage *image) { this->image = image; }
 
-      void setBuffer (core::Imgbuf *buffer, bool resize);
-      void drawRow (int row);
-      void finish ();
-      void fatal ();
-   };
+        void setBuffer (core::Imgbuf *buffer, bool resize);
+        void drawRow (int row);
+        void finish ();
+        void fatal ();
+    };
 
-   int refCount, tilesX, tilesY;
-   Imgbuf *imgbufSrc, *imgbufTiled;
-   ImgRendererDist *imgRendererDist;
-   StyleImgRenderer *styleImgRenderer;
+    int refCount, tilesX, tilesY;
+    Imgbuf *imgbufSrc, *imgbufTiled;
+    ImgRendererDist *imgRendererDist;
+    StyleImgRenderer *styleImgRenderer;
 
-   StyleImage ();
-   ~StyleImage ();
+    StyleImage ();
+    ~StyleImage ();
 
 public:
-   /**
+    /**
     * \brief Useful (but not mandatory) base class for updates of
     *    areas with background images.
     */
-   class ExternalImgRenderer: public ImgRenderer
-   {
-   public:
-      void setBuffer (core::Imgbuf *buffer, bool resize);
-      void drawRow (int row);
-      void finish ();
-      void fatal ();
+    class ExternalImgRenderer: public ImgRenderer
+    {
+    public:
+        void setBuffer (core::Imgbuf *buffer, bool resize);
+        void drawRow (int row);
+        void finish ();
+        void fatal ();
 
-      /**
+        /**
        * \brief If this method returns false, nothing is done at all.
        */
-      virtual bool readyToDraw () = 0;
+        virtual bool readyToDraw () = 0;
 
-      /**
+        /**
        * \brief Return the area covered by the background image.
        */
-      virtual void getBgArea (int *x, int *y, int *width, int *height) = 0;
+        virtual void getBgArea (int *x, int *y, int *width, int *height) = 0;
 
-      /**
+        /**
        * \brief Return the "reference area".
        *
        * See comment of "drawBackground".
        */
-      virtual void getRefArea (int *xRef, int *yRef, int *widthRef,
+        virtual void getRefArea (int *xRef, int *yRef, int *widthRef,
                                int *heightRef) = 0;
 
-      virtual StyleImage *getBackgroundImage () = 0;
-      virtual BackgroundRepeat getBackgroundRepeat () = 0;
-      virtual BackgroundAttachment getBackgroundAttachment () = 0;
-      virtual Length getBackgroundPositionX () = 0;
-      virtual Length getBackgroundPositionY () = 0;
+        virtual StyleImage *getBackgroundImage () = 0;
+        virtual BackgroundRepeat getBackgroundRepeat () = 0;
+        virtual BackgroundAttachment getBackgroundAttachment () = 0;
+        virtual Length getBackgroundPositionX () = 0;
+        virtual Length getBackgroundPositionY () = 0;
 
-      /**
+        /**
        * \brief Draw (or queue for drawing) an area, which is given in
        *    canvas coordinates.
        */
-      virtual void draw (int x, int y, int width, int height) = 0;
-   };
+        virtual void draw (int x, int y, int width, int height) = 0;
+    };
 
-   /**
+    /**
     * \brief Suitable for widgets and parts of widgets.
     */
-   class ExternalWidgetImgRenderer: public ExternalImgRenderer
-   {
-   public:
-      void getPaddingArea (int *x, int *y, int *width, int *height);
+    class ExternalWidgetImgRenderer: public ExternalImgRenderer
+    {
+    public:
+        void getPaddingArea (int *x, int *y, int *width, int *height);
 
-      StyleImage *getBackgroundImage ();
-      BackgroundRepeat getBackgroundRepeat ();
-      BackgroundAttachment getBackgroundAttachment ();
-      Length getBackgroundPositionX ();
-      Length getBackgroundPositionY ();
+        StyleImage *getBackgroundImage ();
+        BackgroundRepeat getBackgroundRepeat ();
+        BackgroundAttachment getBackgroundAttachment ();
+        Length getBackgroundPositionX ();
+        Length getBackgroundPositionY ();
 
-      /**
+        /**
        * \brief Return the style this background image is part of.
        */
-      virtual Style *getStyle () = 0;
-   };
+        virtual Style *getStyle () = 0;
+    };
 
-   static StyleImage *create () { return new StyleImage (); }
+    static StyleImage *create () { return new StyleImage (); }
 
-   inline void ref () { refCount++; }
-   inline void unref ()
-   { if (--refCount == 0) delete this; }
+    inline void ref () { refCount++; }
+    inline void unref ()
+    { if (--refCount == 0) delete this; }
 
-   inline Imgbuf *getImgbufSrc () { return imgbufSrc; }
-   inline Imgbuf *getImgbufTiled (bool repeatX, bool repeatY)
-   { return (imgbufTiled && repeatX && repeatY) ? imgbufTiled : imgbufSrc; }
-   inline int getTilesX (bool repeatX, bool repeatY)
-   { return (imgbufTiled && repeatX && repeatY) ? tilesX : 1; }
-   inline int getTilesY (bool repeatX, bool repeatY)
-   { return (imgbufTiled && repeatX && repeatY) ? tilesY : 1; }
-   inline ImgRenderer *getMainImgRenderer () { return imgRendererDist; }
+    inline Imgbuf *getImgbufSrc () { return imgbufSrc; }
+    inline Imgbuf *getImgbufTiled (bool repeatX, bool repeatY)
+    { return (imgbufTiled && repeatX && repeatY) ? imgbufTiled : imgbufSrc; }
+    inline int getTilesX (bool repeatX, bool repeatY)
+    { return (imgbufTiled && repeatX && repeatY) ? tilesX : 1; }
+    inline int getTilesY (bool repeatX, bool repeatY)
+    { return (imgbufTiled && repeatX && repeatY) ? tilesY : 1; }
+    inline ImgRenderer *getMainImgRenderer () { return imgRendererDist; }
 
-   /**
+    /**
     * \brief Add an additional ImgRenderer, especially used for
     *    drawing.
     */
-   inline void putExternalImgRenderer (ImgRenderer *ir)
-   { imgRendererDist->put (ir); }
+    inline void putExternalImgRenderer (ImgRenderer *ir)
+    { imgRendererDist->put (ir); }
 
-   /**
+    /**
     * \brief Remove a previously added additional ImgRenderer.
     */
-   inline void removeExternalImgRenderer (ImgRenderer *ir)
-   { imgRendererDist->remove (ir); }
+    inline void removeExternalImgRenderer (ImgRenderer *ir)
+    { imgRendererDist->remove (ir); }
 };
 
 void drawBorder (View *view, Layout *layout, Rectangle *area,
                  int x, int y, int width, int height,
                  Style *style, bool inverse);
 void drawBackground (View *view, Layout *layout, Rectangle *area,
-                     int x, int y, int width, int height,
-                     int xRef, int yRef, int widthRef, int heightRef,
-                     Style *style, Color *bgColor, bool inverse, bool atTop);
+                            int x, int y, int width, int height,
+                            int xRef, int yRef, int widthRef, int heightRef,
+                            Style *style, Color *bgColor, bool inverse, bool atTop);
 void drawBackgroundImage (View *view, StyleImage *backgroundImage,
                           BackgroundRepeat backgroundRepeat,
                           BackgroundAttachment backgroundAttachment,

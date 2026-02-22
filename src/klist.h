@@ -1,3 +1,13 @@
+/*
+ * File: klist.h
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __KLIST_H__
 #define __KLIST_H__
 
@@ -9,14 +19,14 @@ extern "C" {
 #endif /* __cplusplus */
 
 typedef struct {
-   int Key;        /**< primary key */
-   void *Data;     /**< data reference */
+    int Key;        /**< primary key */
+    void *Data;     /**< data reference */
 } KlistNode_t;
 
 typedef struct {
-   Dlist *List;
-   int Clean;      /**< check flag */
-   int Counter;    /**< counter (for making keys) */
+    Dlist *List;
+    int Clean;      /**< check flag */
+    int Counter;    /**< counter (for making keys) */
 } Klist_t;
 
 

@@ -1,3 +1,15 @@
+/*
+ * File: list.h
+ *
+ * Copyright (C) 2000-2007 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
 /**
  * @file
  * Fast list methods.
@@ -14,21 +26,21 @@
  *  list size --to make it faster)
  */
 #define a_List_resize(list,num_items,alloc_step) \
-   if (!list) { \
-      list = dMalloc(alloc_step * sizeof(*list)); \
-   } \
-   if (num_items >= alloc_step){ \
-      while ( num_items >= alloc_step ) \
-         alloc_step <<= 1; \
-      list = dRealloc(list, alloc_step * sizeof(*list)); \
-   }
+    if (!list) { \
+        list = dMalloc(alloc_step * sizeof(*list)); \
+    } \
+    if (num_items >= alloc_step){ \
+        while ( num_items >= alloc_step ) \
+            alloc_step <<= 1; \
+        list = dRealloc(list, alloc_step * sizeof(*list)); \
+    }
 
 
 /**
  * Make sure there's space for one more item within the list.
  */
 #define a_List_add(list,num_items,alloc_step) \
-   a_List_resize(list,num_items,alloc_step)
+    a_List_resize(list,num_items,alloc_step)
 
 
 /**
@@ -36,9 +48,9 @@
  * ==> We preserve relative position, but not the element index <==
  */
 #define a_List_remove(list, item, num_items) \
-   if (list && item < num_items) { \
-      list[item] = list[--num_items]; \
-   }
+    if (list && item < num_items) { \
+        list[item] = list[--num_items]; \
+    }
 
 
 #endif /* __LIST_H__ */

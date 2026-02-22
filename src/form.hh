@@ -1,3 +1,13 @@
+/*
+ * File: form.hh
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __FORM_HH__
 #define __FORM_HH__
 
@@ -8,14 +18,14 @@
  */
 
 typedef enum {
-   DILLO_HTML_METHOD_UNKNOWN,
-   DILLO_HTML_METHOD_GET,
-   DILLO_HTML_METHOD_POST
+    DILLO_HTML_METHOD_UNKNOWN,
+    DILLO_HTML_METHOD_GET,
+    DILLO_HTML_METHOD_POST
 } DilloHtmlMethod;
 
 typedef enum {
-   DILLO_HTML_ENC_URLENCODED,
-   DILLO_HTML_ENC_MULTIPART
+    DILLO_HTML_ENC_URLENCODED,
+    DILLO_HTML_ENC_MULTIPART
 } DilloHtmlEnc;
 
 /*

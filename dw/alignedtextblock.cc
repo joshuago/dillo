@@ -27,81 +27,81 @@ namespace dw {
 
 AlignedTextblock::List::List ()
 {
-   textblocks = new lout::misc::SimpleVector <AlignedTextblock*> (4);
-   values = new lout::misc::SimpleVector <int> (4);
-   maxValue = 0;
-   refCount = 0;
+    textblocks = new lout::misc::SimpleVector <AlignedTextblock*> (4);
+    values = new lout::misc::SimpleVector <int> (4);
+    maxValue = 0;
+    refCount = 0;
 }
 
 AlignedTextblock::List::~List ()
 {
-   delete textblocks;
-   delete values;
+    delete textblocks;
+    delete values;
 }
 
 int AlignedTextblock::List::add(AlignedTextblock *textblock)
 {
-   textblocks->increase ();
-   values->increase ();
-   textblocks->set (textblocks->size () - 1, textblock);
-   refCount++;
-   return textblocks->size () - 1;
+    textblocks->increase ();
+    values->increase ();
+    textblocks->set (textblocks->size () - 1, textblock);
+    refCount++;
+    return textblocks->size () - 1;
 }
 
 void AlignedTextblock::List::unref(int pos)
 {
-   assert (textblocks->get (pos) != NULL);
-   textblocks->set (pos, NULL);
-   refCount--;
+    assert (textblocks->get (pos) != NULL);
+    textblocks->set (pos, NULL);
+    refCount--;
 
-   if (refCount == 0)
-      delete this;
+    if (refCount == 0)
+        delete this;
 }
 
 int AlignedTextblock::CLASS_ID = -1;
 
 AlignedTextblock::AlignedTextblock (bool limitTextWidth):
-   Textblock (limitTextWidth)
+    Textblock (limitTextWidth)
 {
-   DBG_OBJ_CREATE ("dw::AlignedTextblock");
-   registerName ("dw::AlignedTextblock", &CLASS_ID);
+    DBG_OBJ_CREATE ("dw::AlignedTextblock");
+    registerName ("dw::AlignedTextblock", &CLASS_ID);
 }
 
 void AlignedTextblock::setRefTextblock (AlignedTextblock *ref)
 {
-   if (ref == NULL)
-      list = new List();
-   else
-      list = ref->list;
+    if (ref == NULL)
+        list = new List();
+    else
+        list = ref->list;
 
-   listPos = list->add (this);
-   updateValue ();
+    listPos = list->add (this);
+    updateValue ();
 }
 
 AlignedTextblock::~AlignedTextblock()
 {
-   list->unref (listPos);
-   DBG_OBJ_DELETE ();
+    list->unref (listPos);
+    DBG_OBJ_DELETE ();
 }
 
 void AlignedTextblock::updateValue ()
 {
-   if (list) {
-      list->setValue (listPos, getValue ());
+    if (list) {
+        list->setValue (listPos, getValue ());
 
-      if (list->getValue (listPos) > list->getMaxValue ()) {
-         // New value greater than current maximum -> apply it to others.
-         list->setMaxValue (list->getValue (listPos));
+        if (list->getValue (listPos) > list->getMaxValue ()) {
+            // New value greater than current maximum -> apply it to others.
+            list->setMaxValue (list->getValue (listPos));
 
-         for (int i = 0; i < list->size (); i++)
-            if (list->getTextblock (i))
-               list->getTextblock (i)->setMaxValue (list->getMaxValue (),
+            for (int i = 0; i < list->size (); i++)
+                if (list->getTextblock (i))
+                    list->getTextblock (i)->setMaxValue (list->getMaxValue (),
                                                     list->getValue (i));
-      } else {
-         /* No change, apply old max_value only to this page. */
-         setMaxValue (list->getMaxValue (), list->getValue (listPos));
-      }
-   }
+        } else {
+            /* No change, apply old max_value only to this page. */
+            setMaxValue (list->getMaxValue (), list->getValue (listPos));
+        }
+    }
 }
 
 } // namespace dw

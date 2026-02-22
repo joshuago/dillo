@@ -27,66 +27,66 @@ namespace dw {
 
 Bullet::Bullet ()
 {
-   DBG_OBJ_CREATE ("dw::Bullet");
+    DBG_OBJ_CREATE ("dw::Bullet");
 }
 
 Bullet::~Bullet ()
 {
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 void Bullet::sizeRequestSimpl (core::Requisition *requisition)
 {
-   requisition->width = lout::misc::max (getStyle()->font->xHeight * 4 / 5, 1);
-   requisition->ascent = lout::misc::max (getStyle()->font->xHeight, 1);
-   requisition->descent = 0;
+    requisition->width = lout::misc::max (getStyle()->font->xHeight * 4 / 5, 1);
+    requisition->ascent = lout::misc::max (getStyle()->font->xHeight, 1);
+    requisition->descent = 0;
 }
 
 void Bullet::getExtremesSimpl (core::Extremes *extremes)
 {
-   extremes->minWidth = extremes->maxWidth = extremes->adjustmentWidth =
-      extremes->minWidthIntrinsic = extremes->maxWidthIntrinsic =
-      lout::misc::max (getStyle()->font->xHeight * 4 / 5, 1);
+    extremes->minWidth = extremes->maxWidth = extremes->adjustmentWidth =
+        extremes->minWidthIntrinsic = extremes->maxWidthIntrinsic =
+        lout::misc::max (getStyle()->font->xHeight * 4 / 5, 1);
 }
 
 void Bullet::containerSizeChangedForChildren ()
 {
-   DBG_OBJ_ENTER0 ("resize", 0, "containerSizeChangedForChildren");
-   // Nothing to do.
-   DBG_OBJ_LEAVE ();
+    DBG_OBJ_ENTER0 ("resize", 0, "containerSizeChangedForChildren");
+    // Nothing to do.
+    DBG_OBJ_LEAVE ();
 }
 
 void Bullet::draw (core::View *view, core::Rectangle *area,
                    core::DrawingContext *context)
 {
-   int x, y, l;
-   bool filled = true;
+    int x, y, l;
+    bool filled = true;
 
-   l = lout::misc::min (allocation.width, allocation.ascent);
-   x = allocation.x;
-   y = allocation.y + allocation.ascent - getStyle()->font->xHeight;
+    l = lout::misc::min (allocation.width, allocation.ascent);
+    x = allocation.x;
+    y = allocation.y + allocation.ascent - getStyle()->font->xHeight;
 
-   switch (getStyle()->listStyleType) {
-   case core::style::LIST_STYLE_TYPE_SQUARE:
-      view->drawRectangle (getStyle()->color,
-                           core::style::Color::SHADING_NORMAL,
-                           false, x, y, l, l);
-      break;
-   case core::style::LIST_STYLE_TYPE_CIRCLE:
-      filled = false;
-      // Fall Through
-   case core::style::LIST_STYLE_TYPE_DISC:
-   default:
-      view->drawArc (getStyle()->color, core::style::Color::SHADING_NORMAL,
-                     filled, x + l/2, y + l/2, l, l, 0, 360);
-   }
+    switch (getStyle()->listStyleType) {
+    case core::style::LIST_STYLE_TYPE_SQUARE:
+        view->drawRectangle (getStyle()->color,
+                                    core::style::Color::SHADING_NORMAL,
+                                    false, x, y, l, l);
+        break;
+    case core::style::LIST_STYLE_TYPE_CIRCLE:
+        filled = false;
+        // Fall Through
+    case core::style::LIST_STYLE_TYPE_DISC:
+    default:
+        view->drawArc (getStyle()->color, core::style::Color::SHADING_NORMAL,
+                            filled, x + l/2, y + l/2, l, l, 0, 360);
+    }
 }
 
 core::Iterator *Bullet::iterator (core::Content::Type mask, bool atEnd)
 {
-   //return new core::TextIterator (this, mask, atEnd, "*");
-   /** \bug Not implemented. */
-   return new core::EmptyIterator (this, mask, atEnd);
+    //return new core::TextIterator (this, mask, atEnd, "*");
+    /** \bug Not implemented. */
+    return new core::EmptyIterator (this, mask, atEnd);
 }
 
 } // namespace dw

@@ -43,42 +43,42 @@ namespace dw {
 class ImageMapsList
 {
 private:
-   class ImageMap: public lout::object::Object {
-      private:
-         class ShapeAndLink: public lout::object::Object {
-         public:
-            core::Shape *shape;
-            int link;
+    class ImageMap: public lout::object::Object {
+        private:
+            class ShapeAndLink: public lout::object::Object {
+            public:
+                core::Shape *shape;
+                int link;
 
-            ~ShapeAndLink () { if (shape) delete shape; };
-         };
+                ~ShapeAndLink () { if (shape) delete shape; };
+            };
 
-         lout::container::typed::List <ShapeAndLink> *shapesAndLinks;
-         int defaultLink;
-      public:
-         ImageMap ();
-         ~ImageMap ();
+            lout::container::typed::List <ShapeAndLink> *shapesAndLinks;
+            int defaultLink;
+        public:
+            ImageMap ();
+            ~ImageMap ();
 
-         void draw (core::View *view, core::style::Style *style, int x, int y);
-         void add (core::Shape *shape, int link);
-         void setDefaultLink (int link) { defaultLink = link; };
-         int link (int x, int y);
-   };
+            void draw (core::View *view, core::style::Style *style, int x, int y);
+            void add (core::Shape *shape, int link);
+            void setDefaultLink (int link) { defaultLink = link; };
+            int link (int x, int y);
+    };
 
-   lout::container::typed::HashTable <lout::object::Object, ImageMap>
-      *imageMaps;
-   ImageMap *currentMap;
+    lout::container::typed::HashTable <lout::object::Object, ImageMap>
+        *imageMaps;
+    ImageMap *currentMap;
 
 public:
-   ImageMapsList ();
-   ~ImageMapsList ();
+    ImageMapsList ();
+    ~ImageMapsList ();
 
-   void startNewMap (lout::object::Object *key);
-   void addShapeToCurrentMap (core::Shape *shape, int link);
-   void setCurrentMapDefaultLink (int link);
-   void drawMap(lout::object::Object *key, core::View *view,
+    void startNewMap (lout::object::Object *key);
+    void addShapeToCurrentMap (core::Shape *shape, int link);
+    void setCurrentMapDefaultLink (int link);
+    void drawMap(lout::object::Object *key, core::View *view,
                 core::style::Style *style, int x, int y);
-   int link (lout::object::Object *key, int x, int y);
+    int link (lout::object::Object *key, int x, int y);
 };
 
 /**
@@ -139,69 +139,69 @@ public:
 class Image: public core::Widget, public core::ImgRenderer
 {
 private:
-   char *altText;
-   core::Imgbuf *buffer;
-   int bufWidth, bufHeight;
-   int altTextWidth;
-   bool clicking;
-   int currLink;
-   ImageMapsList *mapList;
-   Object *mapKey;
-   bool isMap;
+    char *altText;
+    core::Imgbuf *buffer;
+    int bufWidth, bufHeight;
+    int altTextWidth;
+    bool clicking;
+    int currLink;
+    ImageMapsList *mapList;
+    Object *mapKey;
+    bool isMap;
 
-   bool markEmpty;
-   bool useAltStyle;
-   core::style::Style *altStyle;
-   core::style::Style *savedStyle;
+    bool markEmpty;
+    bool useAltStyle;
+    core::style::Style *altStyle;
+    core::style::Style *savedStyle;
 
 protected:
-   void sizeRequestSimpl (core::Requisition *requisition);
-   void getExtremesSimpl (core::Extremes *extremes);
-   void sizeAllocateImpl (core::Allocation *allocation);
-   void containerSizeChangedForChildren ();
-   
-   void draw (core::View *view, core::Rectangle *area,
+    void sizeRequestSimpl (core::Requisition *requisition);
+    void getExtremesSimpl (core::Extremes *extremes);
+    void sizeAllocateImpl (core::Allocation *allocation);
+    void containerSizeChangedForChildren ();
+    
+    void draw (core::View *view, core::Rectangle *area,
               core::DrawingContext *context);
 
-   bool buttonPressImpl (core::EventButton *event);
-   bool buttonReleaseImpl (core::EventButton *event);
-   void enterNotifyImpl (core::EventCrossing *event);
-   void leaveNotifyImpl (core::EventCrossing *event);
-   bool motionNotifyImpl (core::EventMotion *event);
-   int contentX (core::MousePositionEvent *event);
-   int contentY (core::MousePositionEvent *event);
+    bool buttonPressImpl (core::EventButton *event);
+    bool buttonReleaseImpl (core::EventButton *event);
+    void enterNotifyImpl (core::EventCrossing *event);
+    void leaveNotifyImpl (core::EventCrossing *event);
+    bool motionNotifyImpl (core::EventMotion *event);
+    int contentX (core::MousePositionEvent *event);
+    int contentY (core::MousePositionEvent *event);
 
-   //core::Iterator *iterator (Content::Type mask, bool atEnd);
+    //core::Iterator *iterator (Content::Type mask, bool atEnd);
 
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   Image(const char *altText, bool markEmpty = false);
-   ~Image();
+    Image(const char *altText, bool markEmpty = false);
+    ~Image();
 
-   // For images, the minimal width is not well defined, and
-   // correction of the size makes not much sense.
-   virtual bool getAdjustMinWidth () { return false; }
+    // For images, the minimal width is not well defined, and
+    // correction of the size makes not much sense.
+    virtual bool getAdjustMinWidth () { return false; }
 
-   core::Iterator *iterator (core::Content::Type mask, bool atEnd);
+    core::Iterator *iterator (core::Content::Type mask, bool atEnd);
 
-   inline core::Imgbuf *getBuffer () { return buffer; }
-   void setBuffer (core::Imgbuf *buffer, bool resize = false);
+    inline core::Imgbuf *getBuffer () { return buffer; }
+    void setBuffer (core::Imgbuf *buffer, bool resize = false);
 
-   void drawRow (int row);
+    void drawRow (int row);
 
-   void finish ();
-   void fatal ();
+    void finish ();
+    void fatal ();
 
-   void setIsMap ();
-   void setUseMap (ImageMapsList *list, Object *key);
+    void setIsMap ();
+    void setUseMap (ImageMapsList *list, Object *key);
 
-   /* This is a hack for the perhaps frivolous feature of drawing image map
+    /* This is a hack for the perhaps frivolous feature of drawing image map
     * shapes when there is no image to display. If the map is defined after
     * an image using an image map, and the actual image data has not been
     * loaded, tell the image to redraw.
     */
-   void forceMapRedraw () { if (mapKey && ! buffer) queueDraw (); };
+    void forceMapRedraw () { if (mapKey && ! buffer) queueDraw (); };
 };
 
 } // namespace dw

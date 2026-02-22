@@ -325,59 +325,59 @@ namespace dw {
 class Table: public oof::OOFAwareWidget
 {
 private:
-   struct Cell {
-      core::Widget *widget;
-      int colspanOrig, colspanEff, rowspan;
-   };
-   struct SpanSpace {
-      int startCol, startRow;  // where the cell starts
-   };
+    struct Cell {
+        core::Widget *widget;
+        int colspanOrig, colspanEff, rowspan;
+    };
+    struct SpanSpace {
+        int startCol, startRow;  // where the cell starts
+    };
 
-   struct Child
-   {
-      enum {
-         CELL,       // cell starts here
-         SPAN_SPACE  // part of a spanning cell
-      } type;
-      union {
-         struct Cell cell;
-         struct SpanSpace spanSpace;
-      };
-   };
+    struct Child
+    {
+        enum {
+            CELL,       // cell starts here
+            SPAN_SPACE  // part of a spanning cell
+        } type;
+        union {
+            struct Cell cell;
+            struct SpanSpace spanSpace;
+        };
+    };
 
-   class TableIterator: public OOFAwareWidgetIterator
-   {
-   protected:
-      int numContentsInFlow ();
-      void getContentInFlow (int index, core::Content *content);
+    class TableIterator: public OOFAwareWidgetIterator
+    {
+    protected:
+        int numContentsInFlow ();
+        void getContentInFlow (int index, core::Content *content);
 
-   public:
-      TableIterator (Table *table, core::Content::Type mask, bool atEnd);
+    public:
+        TableIterator (Table *table, core::Content::Type mask, bool atEnd);
 
-      lout::object::Object *clone();
+        lout::object::Object *clone();
 
-      void highlight (int start, int end, core::HighlightLayer layer);
-      void unhighlight (int direction, core::HighlightLayer layer);
-      void getAllocation (int start, int end, core::Allocation *allocation);
-   };
+        void highlight (int start, int end, core::HighlightLayer layer);
+        void unhighlight (int direction, core::HighlightLayer layer);
+        void getAllocation (int start, int end, core::Allocation *allocation);
+    };
 
-   friend class TableIterator;
+    friend class TableIterator;
 
-   static bool adjustTableMinWidth;
+    static bool adjustTableMinWidth;
 
-   bool limitTextWidth, rowClosed;
+    bool limitTextWidth, rowClosed;
 
-   int numRows, numCols, curRow, curCol;
-   lout::misc::SimpleVector<Child*> *children;
+    int numRows, numCols, curRow, curCol;
+    lout::misc::SimpleVector<Child*> *children;
 
-   int redrawX, redrawY;
+    int redrawX, redrawY;
 
-   /**
+    /**
     * \brief The extremes of all columns.
     */
-   lout::misc::SimpleVector<core::Extremes> *colExtremes;
+    lout::misc::SimpleVector<core::Extremes> *colExtremes;
 
-   /**
+    /**
     * \brief Whether the column itself (in the future?) or at least one
     *    cell in this column or spanning over this column has CSS
     *    'width' specified.
@@ -385,10 +385,10 @@ private:
     * Filled by forceCalcColumnExtremes(), since it is needed to
     * calculate the column widths.
     */
-   lout::misc::SimpleVector<bool> *colWidthSpecified;
-   int numColWidthSpecified;
+    lout::misc::SimpleVector<bool> *colWidthSpecified;
+    int numColWidthSpecified;
 
-   /**
+    /**
     * \brief Whether the column itself (in the future?) or at least one
     *    cell in this column or spanning over this column has CSS
     *    'width' specified *as percentage value*.
@@ -396,121 +396,121 @@ private:
     * Filled by forceCalcColumnExtremes(), since it is needed to
     * calculate the column widths.
     */
-   lout::misc::SimpleVector<bool> *colWidthPercentage;
-   int numColWidthPercentage;
+    lout::misc::SimpleVector<bool> *colWidthPercentage;
+    int numColWidthPercentage;
 
-   /**
+    /**
     * \brief The widths of all columns.
     */
-   lout::misc::SimpleVector<int> *colWidths;
+    lout::misc::SimpleVector<int> *colWidths;
 
-   /**
+    /**
     * Row cumulative height array: cumHeight->size() is numRows + 1,
     * cumHeight->get(0) is 0, cumHeight->get(numRows) is the total table
     * height.
     */
-   lout::misc::SimpleVector<int> *cumHeight;
-   /**
+    lout::misc::SimpleVector<int> *cumHeight;
+    /**
     * If a Cell has rowspan > 1, it goes into this array
     */
-   lout::misc::SimpleVector<int> *rowSpanCells;
-   lout::misc::SimpleVector<int> *baseline;
+    lout::misc::SimpleVector<int> *rowSpanCells;
+    lout::misc::SimpleVector<int> *baseline;
 
-   lout::misc::SimpleVector<core::style::Style*> *rowStyle;
+    lout::misc::SimpleVector<core::style::Style*> *rowStyle;
 
-   bool colWidthsUpToDateWidthColExtremes;
+    bool colWidthsUpToDateWidthColExtremes;
 
-   enum ExtrMod { MIN, MIN_INTR, MIN_MIN, MAX_MIN, MAX, MAX_INTR, DATA };
+    enum ExtrMod { MIN, MIN_INTR, MIN_MIN, MAX_MIN, MAX, MAX_INTR, DATA };
 
-   const char *getExtrModName (ExtrMod mod);
-   int getExtreme (core::Extremes *extremes, ExtrMod mod);
-   void setExtreme (core::Extremes *extremes, ExtrMod mod, int value);
-   int getColExtreme (int col, ExtrMod mod, void *data);
-   inline void setColExtreme (int col, ExtrMod mod, void *data, int value);
+    const char *getExtrModName (ExtrMod mod);
+    int getExtreme (core::Extremes *extremes, ExtrMod mod);
+    void setExtreme (core::Extremes *extremes, ExtrMod mod, int value);
+    int getColExtreme (int col, ExtrMod mod, void *data);
+    inline void setColExtreme (int col, ExtrMod mod, void *data, int value);
 
-   inline bool childDefined(int n)
-   {
-      return n < children->size() && children->get(n) != NULL &&
-         children->get(n)->type != Child::SPAN_SPACE;
-   }
+    inline bool childDefined(int n)
+    {
+        return n < children->size() && children->get(n) != NULL &&
+            children->get(n)->type != Child::SPAN_SPACE;
+    }
 
-   int calcAvailWidthForDescendant (Widget *child);
+    int calcAvailWidthForDescendant (Widget *child);
 
-   void reallocChildren (int newNumCols, int newNumRows);
+    void reallocChildren (int newNumCols, int newNumRows);
 
-   void calcCellSizes (bool calcHeights);
-   void forceCalcCellSizes (bool calcHeights);
-   void actuallyCalcCellSizes (bool calcHeights);
-   void apportionRowSpan ();
+    void calcCellSizes (bool calcHeights);
+    void forceCalcCellSizes (bool calcHeights);
+    void actuallyCalcCellSizes (bool calcHeights);
+    void apportionRowSpan ();
 
-   void forceCalcColumnExtremes ();
-   void calcExtremesSpanMultiCols (int col, int cs,
+    void forceCalcColumnExtremes ();
+    void calcExtremesSpanMultiCols (int col, int cs,
                                    core::Extremes *cellExtremes,
                                    ExtrMod minExtrMod, ExtrMod maxExtrMod,
                                    void *extrData);
-   void calcAdjustmentWidthSpanMultiCols (int col, int cs,
-                                          core::Extremes *cellExtremes);
+    void calcAdjustmentWidthSpanMultiCols (int col, int cs,
+                                                        core::Extremes *cellExtremes);
 
-   void apportion2 (int totalWidth, int firstCol, int lastCol,
+    void apportion2 (int totalWidth, int firstCol, int lastCol,
                     ExtrMod minExtrMod, ExtrMod maxExtrMod, void *extrData,
                     lout::misc::SimpleVector<int> *dest, int destOffset);
 
-   void setCumHeight (int row, int value)
-   {
-      if (value != cumHeight->get (row)) {
-         redrawY = lout::misc::min ( redrawY, value );
-         cumHeight->set (row, value);
-      }
-   }
+    void setCumHeight (int row, int value)
+    {
+        if (value != cumHeight->get (row)) {
+            redrawY = lout::misc::min ( redrawY, value );
+            cumHeight->set (row, value);
+        }
+    }
 
 protected:
-   void sizeRequestSimpl (core::Requisition *requisition);
-   void getExtremesSimpl (core::Extremes *extremes);
-   void sizeAllocateImpl (core::Allocation *allocation);
-   void resizeDrawImpl ();
+    void sizeRequestSimpl (core::Requisition *requisition);
+    void getExtremesSimpl (core::Extremes *extremes);
+    void sizeAllocateImpl (core::Allocation *allocation);
+    void resizeDrawImpl ();
 
-   bool getAdjustMinWidth () { return Table::adjustTableMinWidth; }
+    bool getAdjustMinWidth () { return Table::adjustTableMinWidth; }
 
-   int getAvailWidthOfChild (Widget *child, bool forceValue);
+    int getAvailWidthOfChild (Widget *child, bool forceValue);
 
-   void containerSizeChangedForChildren ();
-   bool affectsSizeChangeContainerChild (Widget *child);
-   bool usesAvailWidth ();
+    void containerSizeChangedForChildren ();
+    bool affectsSizeChangeContainerChild (Widget *child);
+    bool usesAvailWidth ();
 
-   bool isBlockLevel ();
+    bool isBlockLevel ();
 
-   void drawLevel (core::View *view, core::Rectangle *area, int level,
+    void drawLevel (core::View *view, core::Rectangle *area, int level,
                    core::DrawingContext *context);
 
-   Widget *getWidgetAtPointLevel (int x, int y, int level,
+    Widget *getWidgetAtPointLevel (int x, int y, int level,
                                   core::GettingWidgetAtPointContext *context);
 
-   //bool buttonPressImpl (core::EventButton *event);
-   //bool buttonReleaseImpl (core::EventButton *event);
-   //bool motionNotifyImpl (core::EventMotion *event);
+    //bool buttonPressImpl (core::EventButton *event);
+    //bool buttonReleaseImpl (core::EventButton *event);
+    //bool motionNotifyImpl (core::EventMotion *event);
 
-   void removeChild (Widget *child);
+    void removeChild (Widget *child);
 
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   inline static void setAdjustTableMinWidth (bool adjustTableMinWidth)
-   { Table::adjustTableMinWidth = adjustTableMinWidth; }
+    inline static void setAdjustTableMinWidth (bool adjustTableMinWidth)
+    { Table::adjustTableMinWidth = adjustTableMinWidth; }
 
-   inline static bool getAdjustTableMinWidth ()
-   { return Table::adjustTableMinWidth; }
+    inline static bool getAdjustTableMinWidth ()
+    { return Table::adjustTableMinWidth; }
 
-   Table(bool limitTextWidth);
-   ~Table();
+    Table(bool limitTextWidth);
+    ~Table();
 
-   int applyPerWidth (int containerWidth, core::style::Length perWidth);
-   int applyPerHeight (int containerHeight, core::style::Length perHeight);
+    int applyPerWidth (int containerWidth, core::style::Length perWidth);
+    int applyPerHeight (int containerHeight, core::style::Length perHeight);
 
-   core::Iterator *iterator (core::Content::Type mask, bool atEnd);
+    core::Iterator *iterator (core::Content::Type mask, bool atEnd);
 
-   void addCell (Widget *widget, int colspan, int rowspan);
-   void addRow (core::style::Style *style);
-   AlignedTableCell *getCellRef ();
+    void addCell (Widget *widget, int colspan, int rowspan);
+    void addRow (core::style::Style *style);
+    AlignedTableCell *getCellRef ();
 };
 
 } // namespace dw

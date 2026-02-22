@@ -35,130 +35,130 @@ using namespace dw::fltk;
 
 class LinkTestReceiver: public Layout::LinkReceiver
 {
-   bool enter (Widget *widget, int link, int img, int x, int y);
-   bool press (Widget *widget, int link, int img, int x, int y,
-               EventButton *event);
-   bool release (Widget *widget, int link, int img, int x, int y,
+    bool enter (Widget *widget, int link, int img, int x, int y);
+    bool press (Widget *widget, int link, int img, int x, int y,
+                    EventButton *event);
+    bool release (Widget *widget, int link, int img, int x, int y,
                  EventButton *event);
-   bool click (Widget *widget, int link, int img,
-               int x, int y, EventButton *event);
+    bool click (Widget *widget, int link, int img,
+                    int x, int y, EventButton *event);
 };
 
 bool LinkTestReceiver::enter (Widget *widget, int link, int img, int x, int y)
 {
-   printf ("enter: %d\n", link);
-   return true;
+    printf ("enter: %d\n", link);
+    return true;
 }
 
 bool LinkTestReceiver::press (Widget *widget, int link, int img, int x, int y,
-                              EventButton *event)
+                                        EventButton *event)
 {
-   printf ("press: %d\n", link);
-   return true;
+    printf ("press: %d\n", link);
+    return true;
 }
 
 bool LinkTestReceiver::release (Widget *widget, int link, int img, int x,int y,
                                 EventButton *event)
 {
-   printf ("release: %d\n", link);
-   return true;
+    printf ("release: %d\n", link);
+    return true;
 }
 
 bool LinkTestReceiver::click (Widget *widget, int link, int img, int x, int y,
-                              EventButton *event)
+                                        EventButton *event)
 {
-   printf ("click: %d\n", link);
-   return true;
+    printf ("click: %d\n", link);
+    return true;
 }
 
 int main(int argc, char **argv)
 {
-   LinkTestReceiver linkTestReceiver;
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    LinkTestReceiver linkTestReceiver;
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(200, 300, "Dw Links");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(200, 300, "Dw Links");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *widgetStyle = Style::create (&styleAttrs);
+    Style *widgetStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock = new Textblock (false);
-   textblock->setStyle (widgetStyle);
-   layout->setWidget (textblock);
+    Textblock *textblock = new Textblock (false);
+    textblock->setStyle (widgetStyle);
+    layout->setWidget (textblock);
 
-   layout->connectLink (&linkTestReceiver);
+    layout->connectLink (&linkTestReceiver);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.cursor = CURSOR_TEXT;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.cursor = CURSOR_TEXT;
 
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x0000ff);
-   styleAttrs.textDecoration = TEXT_DECORATION_UNDERLINE;
-   styleAttrs.cursor = CURSOR_POINTER;
+    styleAttrs.color = Color::create (layout, 0x0000ff);
+    styleAttrs.textDecoration = TEXT_DECORATION_UNDERLINE;
+    styleAttrs.cursor = CURSOR_POINTER;
 
-   for(int i = 1; i <= 10; i++) {
-      char buf[4];
-      sprintf(buf, "%d.", i);
+    for(int i = 1; i <= 10; i++) {
+        char buf[4];
+        sprintf(buf, "%d.", i);
 
-      const char *words1[] = {
-         "This", "is", "the", buf, "paragraph.",
-         "Here", "comes", "some", "more", "text",
-         "to", "demonstrate", "word", "wrapping.",
-         NULL };
-      const char *words2[] = {
-         "Click", "here", "for", "more..", NULL };
+        const char *words1[] = {
+            "This", "is", "the", buf, "paragraph.",
+            "Here", "comes", "some", "more", "text",
+            "to", "demonstrate", "word", "wrapping.",
+            NULL };
+        const char *words2[] = {
+            "Click", "here", "for", "more..", NULL };
 
-      for(int j = 0; words1[j]; j++) {
-         textblock->addText(words1[j], wordStyle);
-         textblock->addSpace(wordStyle);
-      }
+        for(int j = 0; words1[j]; j++) {
+            textblock->addText(words1[j], wordStyle);
+            textblock->addSpace(wordStyle);
+        }
 
-      styleAttrs.x_link = i;
-      Style *linkStyle = Style::create (&styleAttrs);
+        styleAttrs.x_link = i;
+        Style *linkStyle = Style::create (&styleAttrs);
 
-      for(int j = 0; words2[j]; j++) {
-         textblock->addText(words2[j], linkStyle);
-         textblock->addSpace(wordStyle);
-      }
+        for(int j = 0; words2[j]; j++) {
+            textblock->addText(words2[j], linkStyle);
+            textblock->addSpace(wordStyle);
+        }
 
-      linkStyle->unref ();
+        linkStyle->unref ();
 
-      textblock->addParbreak(10, wordStyle);
-   }
+        textblock->addParbreak(10, wordStyle);
+    }
 
-   wordStyle->unref();
+    wordStyle->unref();
 
-   textblock->flush ();
+    textblock->flush ();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

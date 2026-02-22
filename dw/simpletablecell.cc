@@ -30,56 +30,56 @@ namespace dw {
 int SimpleTableCell::CLASS_ID = -1;
 
 SimpleTableCell::SimpleTableCell (bool limitTextWidth):
-   Textblock (limitTextWidth)
+    Textblock (limitTextWidth)
 {
-   DBG_OBJ_CREATE ("dw::SimpleTableCell");
-   registerName ("dw::SimpleTableCell", &CLASS_ID);
+    DBG_OBJ_CREATE ("dw::SimpleTableCell");
+    registerName ("dw::SimpleTableCell", &CLASS_ID);
 }
 
 SimpleTableCell::~SimpleTableCell()
 {
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 bool SimpleTableCell::getAdjustMinWidth ()
 {
-   return tablecell::getAdjustMinWidth ();
+    return tablecell::getAdjustMinWidth ();
 }
 
 bool SimpleTableCell::isBlockLevel ()
 {
-   return tablecell::isBlockLevel ();
+    return tablecell::isBlockLevel ();
 }
 
 bool SimpleTableCell::usesMaxGeneratorWidth ()
 {
-   return tablecell::usesMaxGeneratorWidth ();
+    return tablecell::usesMaxGeneratorWidth ();
 }
 
 int SimpleTableCell::getAvailWidthOfChild (Widget *child, bool forceValue)
 {
-   DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::getAvailWidthOfChild",
-                  "%p, %s", child, forceValue ? "true" : "false");
+    DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::getAvailWidthOfChild",
+                        "%p, %s", child, forceValue ? "true" : "false");
 
-   int width = tablecell::correctAvailWidthOfChild
-      (this, child, Textblock::getAvailWidthOfChild (child, forceValue),
+    int width = tablecell::correctAvailWidthOfChild
+        (this, child, Textblock::getAvailWidthOfChild (child, forceValue),
        forceValue);
 
-   DBG_OBJ_LEAVE ();
-   return width;
+    DBG_OBJ_LEAVE ();
+    return width;
 }
 
 int SimpleTableCell::getAvailHeightOfChild (Widget *child, bool forceValue)
 {
-   DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::getAvailHeightOfChild",
-                  "%p, %s", child, forceValue ? "true" : "false");
+    DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::getAvailHeightOfChild",
+                        "%p, %s", child, forceValue ? "true" : "false");
 
-   int height = tablecell::correctAvailHeightOfChild
-      (this, child, Textblock::getAvailHeightOfChild (child, forceValue),
+    int height = tablecell::correctAvailHeightOfChild
+        (this, child, Textblock::getAvailHeightOfChild (child, forceValue),
        forceValue);
 
-   DBG_OBJ_LEAVE ();
-   return height;
+    DBG_OBJ_LEAVE ();
+    return height;
 }
 
 void SimpleTableCell::correctRequisitionOfChild (Widget *child,
@@ -90,54 +90,54 @@ void SimpleTableCell::correctRequisitionOfChild (Widget *child,
                                                  bool allowDecreaseWidth,
                                                  bool allowDecreaseHeight)
 {
-   DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::correctRequisitionOfChild",
-                  "%p, %d * (%d + %d), ..., %s, %s", child, requisition->width,
-                  requisition->ascent, requisition->descent,
-                  misc::boolToStr (allowDecreaseWidth),
-                  misc::boolToStr (allowDecreaseHeight));
+    DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::correctRequisitionOfChild",
+                        "%p, %d * (%d + %d), ..., %s, %s", child, requisition->width,
+                        requisition->ascent, requisition->descent,
+                        misc::boolToStr (allowDecreaseWidth),
+                        misc::boolToStr (allowDecreaseHeight));
 
-   Textblock::correctRequisitionOfChild (child, requisition, splitHeightFun,
+    Textblock::correctRequisitionOfChild (child, requisition, splitHeightFun,
                                          allowDecreaseWidth,
                                          allowDecreaseHeight);
-   tablecell::correctCorrectedRequisitionOfChild (this, child, requisition,
+    tablecell::correctCorrectedRequisitionOfChild (this, child, requisition,
                                                   splitHeightFun,
                                                   allowDecreaseWidth,
                                                   allowDecreaseHeight);
 
-   DBG_OBJ_LEAVE ();
+    DBG_OBJ_LEAVE ();
 }
 
 void SimpleTableCell::correctExtremesOfChild (Widget *child,
                                               core::Extremes *extremes,
                                               bool useAdjustmentWidth)
 {
-   DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::correctExtremesOfChild",
-                  "%p, %d (%d) / %d (%d)",
-                  child, extremes->minWidth, extremes->minWidthIntrinsic,
-                  extremes->maxWidth, extremes->maxWidthIntrinsic);
+    DBG_OBJ_ENTER ("resize", 0, "SimpleTableCell::correctExtremesOfChild",
+                        "%p, %d (%d) / %d (%d)",
+                        child, extremes->minWidth, extremes->minWidthIntrinsic,
+                        extremes->maxWidth, extremes->maxWidthIntrinsic);
 
-   Textblock::correctExtremesOfChild (child, extremes, useAdjustmentWidth); 
-   tablecell::correctCorrectedExtremesOfChild (this, child, extremes,
+    Textblock::correctExtremesOfChild (child, extremes, useAdjustmentWidth); 
+    tablecell::correctCorrectedExtremesOfChild (this, child, extremes,
                                                useAdjustmentWidth);
 
-   DBG_OBJ_LEAVE ();
+    DBG_OBJ_LEAVE ();
 }
 
 int SimpleTableCell::applyPerWidth (int containerWidth,
-                                    core::style::Length perWidth)
+                                                core::style::Length perWidth)
 {
-   return tablecell::applyPerWidth (this, containerWidth, perWidth);
+    return tablecell::applyPerWidth (this, containerWidth, perWidth);
 }
 
 int SimpleTableCell::applyPerHeight (int containerHeight,
                                      core::style::Length perHeight)
 {
-   return tablecell::applyPerHeight (this, containerHeight, perHeight);
+    return tablecell::applyPerHeight (this, containerHeight, perHeight);
 }
 
 bool SimpleTableCell::adjustExtraSpaceWhenCorrectingRequisitionByOOF ()
 {
-   return tablecell::adjustExtraSpaceWhenCorrectingRequisitionByOOF ();
+    return tablecell::adjustExtraSpaceWhenCorrectingRequisitionByOOF ();
 }
 
 } // namespace dw

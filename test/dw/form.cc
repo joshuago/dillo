@@ -28,118 +28,118 @@ using namespace dw::core::ui;
 
 Form::ResourceDecorator::ResourceDecorator (const char *name)
 {
-   this->name = dStrdup (name);
+    this->name = dStrdup (name);
 }
 
 Form::ResourceDecorator::~ResourceDecorator ()
 {
-   free((char *)name);
+    free((char *)name);
 }
 
 Form::TextResourceDecorator::TextResourceDecorator (const char *name,
                                                   TextResource *resource):
-   Form::ResourceDecorator (name)
+    Form::ResourceDecorator (name)
 {
-   this->resource = resource;
+    this->resource = resource;
 }
 
 const char *Form::TextResourceDecorator::getValue ()
 {
-   return resource->getText ();
+    return resource->getText ();
 }
 
 Form::RadioButtonResourceDecorator::RadioButtonResourceDecorator
-   (const char *name, RadioButtonResource *resource, const char **values):
-      Form::ResourceDecorator (name)
+    (const char *name, RadioButtonResource *resource, const char **values):
+        Form::ResourceDecorator (name)
 {
-   this->resource = resource;
+    this->resource = resource;
 
-   int n = 0;
-   while (values[n])
-      n++;
-   this->values = new const char*[n + 1];
-   for (int i = 0; i < n; i++)
-      this->values[i] = dStrdup (values[i]);
-   this->values[n] = 0;
+    int n = 0;
+    while (values[n])
+        n++;
+    this->values = new const char*[n + 1];
+    for (int i = 0; i < n; i++)
+        this->values[i] = dStrdup (values[i]);
+    this->values[n] = 0;
 }
 
 Form::RadioButtonResourceDecorator::~RadioButtonResourceDecorator ()
 {
-   for (int i = 0; values[i]; i++)
-      free((char *)values[i]);
-   delete[] values;
+    for (int i = 0; values[i]; i++)
+        free((char *)values[i]);
+    delete[] values;
 }
 
 const char *Form::RadioButtonResourceDecorator::getValue ()
 {
-   RadioButtonResource::GroupIterator *it;
-   int i;
-   for (it = resource->groupIterator (), i = 0; it->hasNext (); i++) {
-      RadioButtonResource *resource = it->getNext ();
-      if(resource->isActivated ()) {
-         it->unref ();
-         return values[i];
-      }
-   }
+    RadioButtonResource::GroupIterator *it;
+    int i;
+    for (it = resource->groupIterator (), i = 0; it->hasNext (); i++) {
+        RadioButtonResource *resource = it->getNext ();
+        if(resource->isActivated ()) {
+            it->unref ();
+            return values[i];
+        }
+    }
 
-   it->unref ();
-   return NULL;
+    it->unref ();
+    return NULL;
 }
 
 Form::CheckButtonResourceDecorator::CheckButtonResourceDecorator
-   (const char *name, CheckButtonResource *resource):
-   Form::ResourceDecorator (name)
+    (const char *name, CheckButtonResource *resource):
+    Form::ResourceDecorator (name)
 {
-   this->resource = resource;
+    this->resource = resource;
 }
 
 const char *Form::CheckButtonResourceDecorator::getValue ()
 {
-   return resource->isActivated () ? "true" : NULL;
+    return resource->isActivated () ? "true" : NULL;
 }
 
 Form::SelectionResourceDecorator::SelectionResourceDecorator
-   (const char *name, SelectionResource *resource, const char **values):
-      Form::ResourceDecorator (name)
+    (const char *name, SelectionResource *resource, const char **values):
+        Form::ResourceDecorator (name)
 {
-   this->resource = resource;
+    this->resource = resource;
 
-   int n = 0;
-   while (values[n])
-      n++;
-   this->values = new const char*[n + 1];
-   for(int i = 0; i < n; i++)
-      this->values[i] = dStrdup (values[i]);
-   this->values[n] = 0;
+    int n = 0;
+    while (values[n])
+        n++;
+    this->values = new const char*[n + 1];
+    for(int i = 0; i < n; i++)
+        this->values[i] = dStrdup (values[i]);
+    this->values[n] = 0;
 }
 
 Form::SelectionResourceDecorator::~SelectionResourceDecorator ()
 {
-   for(int i = 0; values[i]; i++)
-      free((char *)values[i]);
-   delete[] values;
+    for(int i = 0; values[i]; i++)
+        free((char *)values[i]);
+    delete[] values;
 }
 
 const char *Form::SelectionResourceDecorator::getValue ()
 {
-   valueBuf.clear();
-   int n = resource->getNumberOfItems ();
-   bool first = true;
-   for (int i = 0; i < n; i++) {
-      if (resource->isSelected (i)) {
-         if (!first)
-            valueBuf.append (", ");
-         valueBuf.append (values[i]);
-         first = false;
-      }
-   }
+    valueBuf.clear();
+    int n = resource->getNumberOfItems ();
+    bool first = true;
+    for (int i = 0; i < n; i++) {
+        if (resource->isSelected (i)) {
+            if (!first)
+                valueBuf.append (", ");
+            valueBuf.append (values[i]);
+            first = false;
+        }
+    }
 
-   return valueBuf.getChars ();
+    return valueBuf.getChars ();
 }
 
 void Form::FormActivateReceiver::activate (Resource *resource)
 {
-   form->send (NULL, NULL, -1, -1);
+    form->send (NULL, NULL, -1, -1);
 }
 
 void Form::FormActivateReceiver::enter (Resource *resource)
@@ -151,38 +151,38 @@ void Form::FormActivateReceiver::leave (Resource *resource)
 }
 
 Form::FormClickedReceiver::FormClickedReceiver (Form *form, const char *name,
-                                          const char *value)
+                                                        const char *value)
 {
-   this->form = form;
-   this->name = dStrdup (name);
-   this->value = dStrdup (value);
+    this->form = form;
+    this->name = dStrdup (name);
+    this->value = dStrdup (value);
 }
 
 Form::FormClickedReceiver::~FormClickedReceiver ()
 {
-   free((char *)name);
-   free((char *)value);
+    free((char *)name);
+    free((char *)value);
 }
 
 void Form::FormClickedReceiver::clicked (Resource *resource,
                                          dw::core::EventButton *event)
 {
-   form->send (name, value, event->xCanvas, event->yCanvas);
+    form->send (name, value, event->xCanvas, event->yCanvas);
 }
 
 Form::Form ()
 {
-   resources = new lout::container::typed::List <ResourceDecorator> (true);
-   activateReceiver = new FormActivateReceiver (this);
-   clickedReceivers =
-      new lout::container::typed::List <FormClickedReceiver> (true);
+    resources = new lout::container::typed::List <ResourceDecorator> (true);
+    activateReceiver = new FormActivateReceiver (this);
+    clickedReceivers =
+        new lout::container::typed::List <FormClickedReceiver> (true);
 }
 
 Form::~Form ()
 {
-   delete resources;
-   delete activateReceiver;
-   delete clickedReceivers;
+    delete resources;
+    delete activateReceiver;
+    delete clickedReceivers;
 }
 
 /**
@@ -191,8 +191,8 @@ Form::~Form ()
 void Form::addTextResource (const char *name,
                             dw::core::ui::TextResource *resource)
 {
-   resources->append (new TextResourceDecorator (name, resource));
-   resource->connectActivate (activateReceiver);
+    resources->append (new TextResourceDecorator (name, resource));
+    resource->connectActivate (activateReceiver);
 }
 
 /**
@@ -204,9 +204,9 @@ void Form::addRadioButtonResource (const char *name,
                                    dw::core::ui::RadioButtonResource *resource,
                                    const char **values)
 {
-   resources->append (new RadioButtonResourceDecorator (name, resource,
+    resources->append (new RadioButtonResourceDecorator (name, resource,
                                                         values));
-   resource->connectActivate (activateReceiver);
+    resource->connectActivate (activateReceiver);
 }
 
 /**
@@ -215,32 +215,32 @@ void Form::addRadioButtonResource (const char *name,
 void Form::addCheckButtonResource (const char *name,
                                    dw::core::ui::CheckButtonResource *resource)
 {
-   resources->append (new CheckButtonResourceDecorator (name, resource));
-   resource->connectActivate (activateReceiver);
+    resources->append (new CheckButtonResourceDecorator (name, resource));
+    resource->connectActivate (activateReceiver);
 }
 
 /**
  * \brief Adds an instance of dw::core::ui::SelectionResource.
  */
 void Form::addSelectionResource (const char *name,
-                                 dw::core::ui::SelectionResource *resource,
-                                 const char **values)
+                                            dw::core::ui::SelectionResource *resource,
+                                            const char **values)
 {
-   resources->append (new SelectionResourceDecorator (name, resource, values));
-   resource->connectActivate (activateReceiver);
+    resources->append (new SelectionResourceDecorator (name, resource, values));
+    resource->connectActivate (activateReceiver);
 }
 
 /**
  * \todo Comment this;
  */
 void Form::addButtonResource (const char *name,
-                              dw::core::ui::ButtonResource *resource,
-                              const char *value)
+                                        dw::core::ui::ButtonResource *resource,
+                                        const char *value)
 {
-   FormClickedReceiver *receiver =
-      new FormClickedReceiver (this, name, value);
-   resource->connectClicked (receiver);
-   clickedReceivers->append (receiver);
+    FormClickedReceiver *receiver =
+        new FormClickedReceiver (this, name, value);
+    resource->connectClicked (receiver);
+    clickedReceivers->append (receiver);
 }
 
 /**
@@ -248,17 +248,17 @@ void Form::addButtonResource (const char *name,
  */
 void Form::send (const char *buttonName, const char *buttonValue, int x, int y)
 {
-   for (lout::container::typed::Iterator <ResourceDecorator> it =
+    for (lout::container::typed::Iterator <ResourceDecorator> it =
            resources->iterator ();
         it.hasNext (); ) {
-      ResourceDecorator *resource = it.getNext ();
-      const char *value = resource->getValue ();
-      if (value)
-         printf ("%s = %s; x=%d y=%d\n", resource->getName (), value, x, y);
-   }
+        ResourceDecorator *resource = it.getNext ();
+        const char *value = resource->getValue ();
+        if (value)
+            printf ("%s = %s; x=%d y=%d\n", resource->getName (), value, x, y);
+    }
 
-   if(buttonName && buttonValue)
-      printf ("%s = %s\n", buttonName, buttonValue);
+    if(buttonName && buttonValue)
+        printf ("%s = %s\n", buttonName, buttonValue);
 }
 
 } // namespace form

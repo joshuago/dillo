@@ -1,3 +1,13 @@
+/*
+ * File: chain.h
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __CHAIN_H__
 #define __CHAIN_H__
 
@@ -35,24 +45,24 @@ typedef void (*ChainFunction_t)(int Op, int Branch, int Dir, ChainLink *Info,
 
 /** Main data structure for CCC nodes */
 struct ChainLink {
-   void *LocalKey;
+    void *LocalKey;
 
-   int Flags;
+    int Flags;
 
-   ChainLink *FcbInfo;
-   ChainFunction_t Fcb;
-   int FcbBranch;
+    ChainLink *FcbInfo;
+    ChainFunction_t Fcb;
+    int FcbBranch;
 
-   ChainLink *BcbInfo;
-   ChainFunction_t Bcb;
-   int BcbBranch;
+    ChainLink *BcbInfo;
+    ChainFunction_t Bcb;
+    int BcbBranch;
 };
 
 /** A convenience data structure for passing data chunks between nodes */
 typedef struct {
-   char *Buf;
-   int Size;
-   int Code;
+    char *Buf;
+    int Size;
+    int Code;
 } DataBuf;
 
 
@@ -69,7 +79,7 @@ int a_Chain_fcb(int Op, ChainLink *Info, void *Data1, void *Data2);
 int a_Chain_bcb(int Op, ChainLink *Info, void *Data1, void *Data2);
 int a_Chain_bfcb(int Op, ChainLink *Info, void *Data1, void *Data2);
 int a_Chain_check(char *FuncStr, int Op, int Branch, int Dir,
-                  ChainLink *Info);
+                        ChainLink *Info);
 
 DataBuf *a_Chain_dbuf_new(void *buf, int size, int code);
 

@@ -10,14 +10,14 @@ namespace oof {
 class OOFPosAbsMgr: public OOFPosAbsLikeMgr
 {
 protected:
-   int containerBoxOffsetX ();
-   int containerBoxOffsetY ();
-   int containerBoxRestWidth ();
-   int containerBoxRestHeight ();
+    int containerBoxOffsetX ();
+    int containerBoxOffsetY ();
+    int containerBoxRestWidth ();
+    int containerBoxRestHeight ();
 
 public:
-   OOFPosAbsMgr (OOFAwareWidget *container);
-   ~OOFPosAbsMgr ();
+    OOFPosAbsMgr (OOFAwareWidget *container);
+    ~OOFPosAbsMgr ();
 };
 
 } // namespace oof

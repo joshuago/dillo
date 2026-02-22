@@ -1,18 +1,18 @@
 /*
-   Copyright (C) 2003  Ferdi Franceschini <ferdif@optusnet.com.au>
+    Copyright (C) 2003  Ferdi Franceschini <ferdif@optusnet.com.au>
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*! \file
@@ -33,10 +33,10 @@
  */
 char *a_Dpi_sockdir_file(void)
 {
-   char *dpi_socket_dir, *dirfile_path = "/.dillo/dpi_socket_dir";
+    char *dpi_socket_dir, *dirfile_path = "/.dillo/dpi_socket_dir";
 
-   dpi_socket_dir = dStrconcat(dGethomedir(), dirfile_path, NULL);
-   return dpi_socket_dir;
+    dpi_socket_dir = dStrconcat(dGethomedir(), dirfile_path, NULL);
+    return dpi_socket_dir;
 }
 
 /*! Read socket directory path from ~/.dillo/dpi_socket_dir
@@ -50,32 +50,32 @@ char *a_Dpi_sockdir_file(void)
 
 char *a_Dpi_rd_dpi_socket_dir(char *dirname)
 {
-   FILE *dir;
-   char *sockdir = NULL, *rcpath;
+    FILE *dir;
+    char *sockdir = NULL, *rcpath;
 
-   rcpath = dStrconcat(dGethomedir(), "/.dillo", NULL);
+    rcpath = dStrconcat(dGethomedir(), "/.dillo", NULL);
 
-   /* If .dillo does not exist it is an unrecoverable error */
-   if (access(rcpath, F_OK) == -1) {
-      ERRMSG("a_Dpi_rd_dpi_socket_dir", "access", errno);
-      MSG_ERR(" - %s\n", rcpath);
-      exit(1);
-   }
-   dFree(rcpath);
+    /* If .dillo does not exist it is an unrecoverable error */
+    if (access(rcpath, F_OK) == -1) {
+        ERRMSG("a_Dpi_rd_dpi_socket_dir", "access", errno);
+        MSG_ERR(" - %s\n", rcpath);
+        exit(1);
+    }
+    dFree(rcpath);
 
-   if ((dir = fopen(dirname, "r")) != NULL) {
-      sockdir = dGetline(dir);
-      fclose(dir);
-   } else if (errno == ENOENT) {
-      ERRMSG("a_Dpi_rd_dpi_socket_dir", "fopen", errno);
-      MSG_ERR(" - %s\n", dirname);
-   } else if (errno != ENOENT) {
-      ERRMSG("a_Dpi_rd_dpi_socket_dir", "fopen", errno);
-      MSG_ERR(" - %s\n", dirname);
-      exit(1);
-   }
+    if ((dir = fopen(dirname, "r")) != NULL) {
+        sockdir = dGetline(dir);
+        fclose(dir);
+    } else if (errno == ENOENT) {
+        ERRMSG("a_Dpi_rd_dpi_socket_dir", "fopen", errno);
+        MSG_ERR(" - %s\n", dirname);
+    } else if (errno != ENOENT) {
+        ERRMSG("a_Dpi_rd_dpi_socket_dir", "fopen", errno);
+        MSG_ERR(" - %s\n", dirname);
+        exit(1);
+    }
 
-   return sockdir;
+    return sockdir;
 }
 
 /*!
@@ -86,12 +86,12 @@ char *a_Dpi_rd_dpi_socket_dir(char *dirname)
  */
 char *a_Dpi_srs(void)
 {
-   char *dirfile_path, *sockdir, *srs_name;
+    char *dirfile_path, *sockdir, *srs_name;
 
-   dirfile_path = a_Dpi_sockdir_file();
-   sockdir = dStrstrip(a_Dpi_rd_dpi_socket_dir(dirfile_path));
-   srs_name = dStrconcat(sockdir, "/", "dpid.srs", NULL);
-   dFree(sockdir);
-   dFree(dirfile_path);
-   return (srs_name);
+    dirfile_path = a_Dpi_sockdir_file();
+    sockdir = dStrstrip(a_Dpi_rd_dpi_socket_dir(dirfile_path));
+    srs_name = dStrconcat(sockdir, "/", "dpid.srs", NULL);
+    dFree(sockdir);
+    dFree(dirfile_path);
+    return (srs_name);
 }

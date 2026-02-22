@@ -86,20 +86,20 @@ extern "C" {
 #endif /* __cplusplus */
 
 typedef struct {
-   Dstr  *url_string;
-   const char *buffer;
-   const char *scheme;            /**/
-   const char *authority;         /**/
-   const char *path;              /* These are references only */
-   const char *query;             /* (no need to free them) */
-   const char *fragment;          /**/
-   const char *hostname;          /**/
-   int port;
-   int flags;
-   Dstr *data;                    /**< POST */
-   int ismap_url_len;             /**< Used by server side image maps */
-   int illegal_chars;             /**< number of illegal chars */
-   int illegal_chars_spc;         /**< number of illegal space chars */
+    Dstr  *url_string;
+    const char *buffer;
+    const char *scheme;            /**/
+    const char *authority;         /**/
+    const char *path;              /* These are references only */
+    const char *query;             /* (no need to free them) */
+    const char *fragment;          /**/
+    const char *hostname;          /**/
+    int port;
+    int flags;
+    Dstr *data;                    /**< POST */
+    int ismap_url_len;             /**< Used by server side image maps */
+    int illegal_chars;             /**< number of illegal chars */
+    int illegal_chars_spc;         /**< number of illegal space chars */
 } DilloUrl;
 
 

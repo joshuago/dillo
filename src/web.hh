@@ -1,5 +1,16 @@
-#ifndef __WEB_H__
-#define __WEB_H__
+/*
+ * File: web.hh
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+#ifndef __WEB_HH__
+#define __WEB_HH__
 
 #include <stdio.h>     /* for FILE */
 #include "bw.h"        /* for BrowserWindow */
@@ -38,7 +49,7 @@ struct _DilloWeb {
 
 void a_Web_init(void);
 DilloWeb* a_Web_new (BrowserWindow *bw, const DilloUrl* url,
-                     const DilloUrl *requester);
+                            const DilloUrl *requester);
 int a_Web_valid(DilloWeb *web);
 void a_Web_free (DilloWeb*);
 int a_Web_dispatch_by_type (const char *Type, DilloWeb *web,
@@ -47,4 +58,4 @@ int a_Web_dispatch_by_type (const char *Type, DilloWeb *web,
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __WEB_H__ */
+#endif /* __WEB_HH__ */

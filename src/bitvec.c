@@ -22,11 +22,11 @@
  */
 bitvec_t *a_Bitvec_new(int num_bits)
 {
-   bitvec_t *bvec = dNew(bitvec_t, 1);
+    bitvec_t *bvec = dNew(bitvec_t, 1);
 
-   bvec->vec = dNew0(uchar_t, num_bits/BVEC_SIZE + 1);
-   bvec->len = num_bits;
-   return bvec;
+    bvec->vec = dNew0(uchar_t, num_bits/BVEC_SIZE + 1);
+    bvec->len = num_bits;
+    return bvec;
 }
 
 /**
@@ -34,7 +34,7 @@ bitvec_t *a_Bitvec_new(int num_bits)
  */
 void a_Bitvec_clear(bitvec_t *bvec)
 {
-   memset(bvec->vec, 0, sizeof(uchar_t) * bvec->len/BVEC_SIZE + 1);
+    memset(bvec->vec, 0, sizeof(uchar_t) * bvec->len/BVEC_SIZE + 1);
 }
 
 /**
@@ -42,10 +42,10 @@ void a_Bitvec_clear(bitvec_t *bvec)
  */
 void a_Bitvec_free(bitvec_t *bvec)
 {
-   if (bvec) {
-      dFree(bvec->vec);
-      dFree(bvec);
-   }
+    if (bvec) {
+        dFree(bvec->vec);
+        dFree(bvec);
+    }
 }
 
 /**
@@ -53,8 +53,8 @@ void a_Bitvec_free(bitvec_t *bvec)
  */
 int a_Bitvec_get_bit(bitvec_t *bvec, int pos)
 {
-   dReturn_val_if_fail (pos < bvec->len, 0);
-   return (bvec->vec[pos/BVEC_SIZE] & 1 << pos % BVEC_SIZE);
+    dReturn_val_if_fail (pos < bvec->len, 0);
+    return (bvec->vec[pos/BVEC_SIZE] & 1 << pos % BVEC_SIZE);
 }
 
 /**
@@ -62,6 +62,6 @@ int a_Bitvec_get_bit(bitvec_t *bvec, int pos)
  */
 void a_Bitvec_set_bit(bitvec_t *bvec, int pos)
 {
-   dReturn_if_fail (pos < bvec->len);
-   bvec->vec[pos/BVEC_SIZE] |= 1 << (pos % BVEC_SIZE);
+    dReturn_if_fail (pos < bvec->len);
+    bvec->vec[pos/BVEC_SIZE] |= 1 << (pos % BVEC_SIZE);
 }

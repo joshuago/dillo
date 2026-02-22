@@ -15,8 +15,8 @@
 
 
 typedef struct {
-   const char *Name;   /* MIME type name */
-   Viewer_t Data;      /* Pointer to a function */
+    const char *Name;   /* MIME type name */
+    Viewer_t Data;      /* Pointer to a function */
 } MimeItem_t;
 
 
@@ -37,11 +37,11 @@ static MimeItem_t *MimeMajItems = NULL;
  */
 static int Mime_add_minor_type(const char *Key, Viewer_t Method)
 {
-   a_List_add(MimeMinItems, MimeMinItemsSize, MimeMinItemsMax);
-   MimeMinItems[MimeMinItemsSize].Name = Key;
-   MimeMinItems[MimeMinItemsSize].Data = Method;
-   MimeMinItemsSize++;
-   return 0;
+    a_List_add(MimeMinItems, MimeMinItemsSize, MimeMinItemsMax);
+    MimeMinItems[MimeMinItemsSize].Name = Key;
+    MimeMinItems[MimeMinItemsSize].Data = Method;
+    MimeMinItemsSize++;
+    return 0;
 }
 
 /**
@@ -51,11 +51,11 @@ static int Mime_add_minor_type(const char *Key, Viewer_t Method)
  */
 static int Mime_add_major_type(const char *Key, Viewer_t Method)
 {
-   a_List_add(MimeMajItems, MimeMajItemsSize, MimeMajItemsMax);
-   MimeMajItems[MimeMajItemsSize].Name = Key;
-   MimeMajItems[MimeMajItemsSize].Data = Method;
-   MimeMajItemsSize++;
-   return 0;
+    a_List_add(MimeMajItems, MimeMajItemsSize, MimeMajItemsMax);
+    MimeMajItems[MimeMajItemsSize].Name = Key;
+    MimeMajItems[MimeMajItemsSize].Data = Method;
+    MimeMajItemsSize++;
+    return 0;
 }
 
 /**
@@ -64,14 +64,14 @@ static int Mime_add_major_type(const char *Key, Viewer_t Method)
  */
 static Viewer_t Mime_minor_type_fetch(const char *Key, uint_t Size)
 {
-   int i;
+    int i;
 
-   if (Size) {
-      for ( i = 0; i < MimeMinItemsSize; ++i )
-         if (dStrnAsciiCasecmp(Key, MimeMinItems[i].Name, Size) == 0)
-            return MimeMinItems[i].Data;
-   }
-   return NULL;
+    if (Size) {
+        for ( i = 0; i < MimeMinItemsSize; ++i )
+            if (dStrnAsciiCasecmp(Key, MimeMinItems[i].Name, Size) == 0)
+                return MimeMinItems[i].Data;
+    }
+    return NULL;
 }
 
 /**
@@ -80,14 +80,14 @@ static Viewer_t Mime_minor_type_fetch(const char *Key, uint_t Size)
  */
 static Viewer_t Mime_major_type_fetch(const char *Key, uint_t Size)
 {
-   int i;
+    int i;
 
-   if (Size) {
-      for ( i = 0; i < MimeMajItemsSize; ++i )
-         if (dStrnAsciiCasecmp(Key, MimeMajItems[i].Name, Size) == 0)
-            return MimeMajItems[i].Data;
-   }
-   return NULL;
+    if (Size) {
+        for ( i = 0; i < MimeMajItemsSize; ++i )
+            if (dStrnAsciiCasecmp(Key, MimeMajItems[i].Name, Size) == 0)
+                return MimeMajItems[i].Data;
+    }
+    return NULL;
 }
 
 
@@ -97,32 +97,32 @@ static Viewer_t Mime_major_type_fetch(const char *Key, uint_t Size)
 void a_Mime_init(void)
 {
 #ifdef ENABLE_GIF
-   Mime_add_minor_type("image/gif", a_Dicache_gif_image);
+    Mime_add_minor_type("image/gif", a_Dicache_gif_image);
 #endif
 #ifdef ENABLE_JPEG
-   Mime_add_minor_type("image/jpeg", a_Dicache_jpeg_image);
-   Mime_add_minor_type("image/pjpeg", a_Dicache_jpeg_image);
-   Mime_add_minor_type("image/jpg", a_Dicache_jpeg_image);
+    Mime_add_minor_type("image/jpeg", a_Dicache_jpeg_image);
+    Mime_add_minor_type("image/pjpeg", a_Dicache_jpeg_image);
+    Mime_add_minor_type("image/jpg", a_Dicache_jpeg_image);
 #endif
 #ifdef ENABLE_PNG
-   Mime_add_minor_type("image/png", a_Dicache_png_image);
-   Mime_add_minor_type("image/x-png", a_Dicache_png_image);    /* deprecated */
+    Mime_add_minor_type("image/png", a_Dicache_png_image);
+    Mime_add_minor_type("image/x-png", a_Dicache_png_image);    /* deprecated */
 #endif
 #ifdef ENABLE_WEBP
-   Mime_add_minor_type("image/webp", a_Dicache_webp_image);
+    Mime_add_minor_type("image/webp", a_Dicache_webp_image);
 #endif
 #ifdef ENABLE_SVG
-   Mime_add_minor_type("image/svg+xml", a_Dicache_svg_image);
+    Mime_add_minor_type("image/svg+xml", a_Dicache_svg_image);
 #endif
-   Mime_add_minor_type("text/html", a_Html_text);
-   Mime_add_minor_type("application/xhtml+xml", a_Html_text);
-   Mime_add_minor_type("application/xml", a_Plain_text);
-   Mime_add_minor_type("application/rss+xml", a_Plain_text);
-   Mime_add_minor_type("application/atom+xml", a_Plain_text);
-   Mime_add_minor_type("application/json", a_Plain_text);
+    Mime_add_minor_type("text/html", a_Html_text);
+    Mime_add_minor_type("application/xhtml+xml", a_Html_text);
+    Mime_add_minor_type("application/xml", a_Plain_text);
+    Mime_add_minor_type("application/rss+xml", a_Plain_text);
+    Mime_add_minor_type("application/atom+xml", a_Plain_text);
+    Mime_add_minor_type("application/json", a_Plain_text);
 
-   /* Add a major type to handle all the text stuff */
-   Mime_add_major_type("text", a_Plain_text);
+    /* Add a major type to handle all the text stuff */
+    Mime_add_major_type("text", a_Plain_text);
 }
 
 
@@ -135,20 +135,20 @@ void a_Mime_init(void)
  */
 Viewer_t a_Mime_get_viewer(const char *content_type)
 {
-   Viewer_t viewer;
-   uint_t MinSize, MajSize, i;
-   const char *str = content_type;
+    Viewer_t viewer;
+    uint_t MinSize, MajSize, i;
+    const char *str = content_type;
 
-   MajSize = 0;
-   for (i = 0; str[i] && str[i] != ' ' && str[i] != ';'; ++i) {
-      if (str[i] == '/' && !MajSize)
-         MajSize = i;
-   }
-   MinSize = i;
+    MajSize = 0;
+    for (i = 0; str[i] && str[i] != ' ' && str[i] != ';'; ++i) {
+        if (str[i] == '/' && !MajSize)
+            MajSize = i;
+    }
+    MinSize = i;
 
-   viewer = Mime_minor_type_fetch(content_type, MinSize);
-   if (!viewer)
-      viewer = Mime_major_type_fetch(content_type, MajSize);
+    viewer = Mime_minor_type_fetch(content_type, MinSize);
+    if (!viewer)
+        viewer = Mime_major_type_fetch(content_type, MajSize);
 
-   return viewer;
+    return viewer;
 }

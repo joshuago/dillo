@@ -1,3 +1,13 @@
+/*
+ * File: tipwin.hh
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __TIPWIN_HH__
 #define __TIPWIN_HH__
 
@@ -10,20 +20,20 @@
  * Custom tooltip window
  */
 class TipWin : public Fl_Menu_Window {
-   char tip[256];
-   int bgcolor, recent;
-   void *cur_widget;
+    char tip[256];
+    int bgcolor, recent;
+    void *cur_widget;
 public:
-   TipWin();
-   void draw();
-   void value(const char *s);
-   void do_show(void *wid);
-   void do_hide();
-   void recent_tooltip(int val);
+    TipWin();
+    void draw();
+    void value(const char *s);
+    void do_show(void *wid);
+    void do_hide();
+    void recent_tooltip(int val);
 
-   void cancel(void *wid) {
-      if (wid == cur_widget) { cur_widget = NULL; do_hide(); }
-   }
+    void cancel(void *wid) {
+        if (wid == cur_widget) { cur_widget = NULL; do_hide(); }
+    }
 };
 
 extern TipWin *my_tipwin(void);
@@ -33,25 +43,25 @@ extern TipWin *my_tipwin(void);
  * A Button sharing a custom tooltip window
  */
 class TipWinButton : public Fl_Button {
-   char *mytooltip;
-   TipWin *tipwin;
+    char *mytooltip;
+    TipWin *tipwin;
  public:
-   TipWinButton(int x, int y, int w, int h, const char *l = 0);
-   ~TipWinButton();
-   virtual int handle(int e);
+    TipWinButton(int x, int y, int w, int h, const char *l = 0);
+    ~TipWinButton();
+    virtual int handle(int e);
 
-   void set_tooltip(const char *s);
+    void set_tooltip(const char *s);
 };
 
 /**
  * A button that highlights on mouse over
  */
 class CustButton : public TipWinButton {
-   Fl_Color norm_color, light_color;
+    Fl_Color norm_color, light_color;
 public:
-   CustButton(int x, int y, int w, int h, const char *l=0);
-   virtual int handle(int e);
-   void hl_color(Fl_Color col);
+    CustButton(int x, int y, int w, int h, const char *l=0);
+    virtual int handle(int e);
+    void hl_color(Fl_Color col);
 };
 
 
@@ -59,14 +69,14 @@ public:
  * An Input with custom tooltip window
  */
 class TipWinInput : public Fl_Input {
-   char *mytooltip;
-   TipWin *tipwin;
+    char *mytooltip;
+    TipWin *tipwin;
 public:
-   TipWinInput (int x, int y, int w, int h, const char* l=0);
-   ~TipWinInput(void);
-   virtual int handle(int e);
+    TipWinInput (int x, int y, int w, int h, const char* l=0);
+    ~TipWinInput(void);
+    virtual int handle(int e);
 
-   void set_tooltip(const char *s);
+    void set_tooltip(const char *s);
 };
 
 

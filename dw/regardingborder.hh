@@ -13,10 +13,10 @@ namespace dw {
 class RegardingBorder: public oof::OOFAwareWidget
 {
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   RegardingBorder ();
-   ~RegardingBorder ();
+    RegardingBorder ();
+    ~RegardingBorder ();
 };
 
 } // namespace dw

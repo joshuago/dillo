@@ -25,25 +25,25 @@ using namespace lout::misc;
 
 int main()
 {
-	Polygon poly;
-	poly.addPoint(50, 10);
-	poly.addPoint(90, 90);
-	poly.addPoint(10, 90);
+    Polygon poly;
+    poly.addPoint(50, 10);
+    poly.addPoint(90, 90);
+    poly.addPoint(10, 90);
 
-	if (!poly.isPointWithin(50, 50)) {
-		printf("poly.isPointWithin(50, 50) failed\n");
-		exit(1);
-	}
+    if (!poly.isPointWithin(50, 50)) {
+        printf("poly.isPointWithin(50, 50) failed\n");
+        exit(1);
+    }
 
-	if (poly.isPointWithin(10, 10)) {
-		printf("!poly.isPointWithin(10, 10) failed\n");
-		exit(1);
-	}
+    if (poly.isPointWithin(10, 10)) {
+        printf("!poly.isPointWithin(10, 10) failed\n");
+        exit(1);
+    }
 
-	if (poly.isPointWithin(90, 50)) {
-		printf("!poly.isPointWithin(90, 50) failed\n");
-		exit(1);
-	}
+    if (poly.isPointWithin(90, 50)) {
+        printf("!poly.isPointWithin(90, 50) failed\n");
+        exit(1);
+    }
 
-	return 0;
+    return 0;
 }

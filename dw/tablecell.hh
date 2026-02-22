@@ -13,7 +13,7 @@ bool getAdjustMinWidth ();
 bool isBlockLevel ();
 
 int correctAvailWidthOfChild (core::Widget *widget, core::Widget *child,
-                              int width, bool forceValue);
+                                        int width, bool forceValue);
 int correctAvailHeightOfChild (core::Widget *widget, core::Widget *child,
                                int height, bool forceValue);
 

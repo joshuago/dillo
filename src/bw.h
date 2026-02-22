@@ -25,53 +25,53 @@
 
 /** Contains the specific data for a single window */
 typedef struct {
-   /** Pointer to the UI object this bw belongs to */
-   void *ui;
+    /** Pointer to the UI object this bw belongs to */
+    void *ui;
 
-   /** All the rendering is done by this.
+    /** All the rendering is done by this.
     * It is defined as a void pointer to avoid C++ in this structure.
     * C++ sources have to include "dw/core.hh" and cast it into an object. */
-   void *render_layout;
+    void *render_layout;
 
-   /** Root document(s). Currently only used by DilloHtml */
-   Dlist *Docs;
+    /** Root document(s). Currently only used by DilloHtml */
+    Dlist *Docs;
 
-   /** A list of active cache clients in the window (The primary Key) */
-   Dlist *RootClients;
-   /** Image Keys for all active connections in the window */
-   Dlist *ImageClients;
-   /** Number of images in the page */
-   int NumImages;
-   /** Number of images already loaded */
-   int NumImagesGot;
-   /** Number of not yet arrived style sheets */
-   int NumPendingStyleSheets;
-   /** List of all Urls requested by this page (and its types) */
-   Dlist *PageUrls;
+    /** A list of active cache clients in the window (The primary Key) */
+    Dlist *RootClients;
+    /** Image Keys for all active connections in the window */
+    Dlist *ImageClients;
+    /** Number of images in the page */
+    int NumImages;
+    /** Number of images already loaded */
+    int NumImagesGot;
+    /** Number of not yet arrived style sheets */
+    int NumPendingStyleSheets;
+    /** List of all Urls requested by this page (and its types) */
+    Dlist *PageUrls;
 
-   /** The navigation stack (holds indexes to history list) */
-   Dlist *nav_stack;
-   /** 'nav_stack_ptr' refers to what's being displayed */
-   int nav_stack_ptr;        /* [0 based; -1 = empty] */
-   /** When the user clicks a link, the URL isn't pushed directly to history;
+    /** The navigation stack (holds indexes to history list) */
+    Dlist *nav_stack;
+    /** 'nav_stack_ptr' refers to what's being displayed */
+    int nav_stack_ptr;        /* [0 based; -1 = empty] */
+    /** When the user clicks a link, the URL isn't pushed directly to history;
     * nav_expect_url holds it until a dw is assigned to it. Only then an entry
     * is made in history and referenced at the top of nav_stack */
-   DilloUrl *nav_expect_url;
+    DilloUrl *nav_expect_url;
 
-   /** Counter for the number of hops on a redirection. Used to stop
+    /** Counter for the number of hops on a redirection. Used to stop
     * redirection loops (accounts for WEB_RootUrl only) */
-   int redirect_level;
+    int redirect_level;
 
-   /** Url for zero-delay redirections in the META element */
-   int meta_refresh_status;
-   DilloUrl *meta_refresh_url;
+    /** Url for zero-delay redirections in the META element */
+    int meta_refresh_status;
+    DilloUrl *meta_refresh_url;
 
-   /** HTML-bugs detected at parse time */
-   int num_page_bugs;
-   Dstr *page_bugs;
+    /** HTML-bugs detected at parse time */
+    int num_page_bugs;
+    Dstr *page_bugs;
 
-   /* Zoom factor */
-   float zoom;
+    /* Zoom factor */
+    float zoom;
 } BrowserWindow;
 
 

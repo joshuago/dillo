@@ -1,3 +1,13 @@
+/*
+ * File: findbar.hh
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __FINDBAR_HH__
 #define __FINDBAR_HH__
 
@@ -14,20 +24,20 @@
  * Searchbar to find text in page.
  */
 class Findbar : public Fl_Group {
-   CustButton *hide_btn, *next_btn, *prev_btn;
-   Fl_Check_Button *check_btn;
-   Fl_Pixmap *hideImg;
-   Fl_Input *i;
+    CustButton *hide_btn, *next_btn, *prev_btn;
+    Fl_Check_Button *check_btn;
+    Fl_Pixmap *hideImg;
+    Fl_Input *i;
 
-   static void search_cb (Fl_Widget *, void *);
-   static void searchBackwards_cb (Fl_Widget *, void *);
-   static void hide_cb (Fl_Widget *, void *);
+    static void search_cb (Fl_Widget *, void *);
+    static void searchBackwards_cb (Fl_Widget *, void *);
+    static void hide_cb (Fl_Widget *, void *);
 
 public:
-   Findbar(int width, int height);
-   ~Findbar();
-   int handle(int event);
-   void show();
+    Findbar(int width, int height);
+    ~Findbar();
+    int handle(int event);
+    void show();
 };
 
 #endif // __FINDBAR_HH__

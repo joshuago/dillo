@@ -16,23 +16,23 @@
 
 
 #define MSG(...)                                   \
-   D_STMT_START {                                  \
-      if (prefs_show_msg){                         \
-         printf(__VA_ARGS__);                      \
-         fflush (stdout);                          \
-      }                                            \
-   } D_STMT_END
+    D_STMT_START {                                  \
+        if (prefs_show_msg){                         \
+            printf(__VA_ARGS__);                      \
+            fflush (stdout);                          \
+        }                                            \
+    } D_STMT_END
 
 #define MSG_WARN(...)                              \
-   D_STMT_START {                                  \
-      if (prefs_show_msg)                          \
-         printf("** WARNING **: " __VA_ARGS__);    \
-   } D_STMT_END
+    D_STMT_START {                                  \
+        if (prefs_show_msg)                          \
+            printf("** WARNING **: " __VA_ARGS__);    \
+    } D_STMT_END
 
 #define MSG_ERR(...)                               \
-   D_STMT_START {                                  \
-      if (prefs_show_msg)                          \
-         printf("** ERROR **: " __VA_ARGS__);      \
-   } D_STMT_END
+    D_STMT_START {                                  \
+        if (prefs_show_msg)                          \
+            printf("** ERROR **: " __VA_ARGS__);      \
+    } D_STMT_END
 
 #endif /* __MSG_H__ */

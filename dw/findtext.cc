@@ -29,120 +29,120 @@ namespace core {
 
 FindtextState::FindtextState ()
 {
-   DBG_OBJ_CREATE ("dw::core::FindtextState");
+    DBG_OBJ_CREATE ("dw::core::FindtextState");
 
-   key = NULL;
-   nexttab = NULL;
-   widget = NULL;
-   iterator = NULL;
-   hlIterator = NULL;
+    key = NULL;
+    nexttab = NULL;
+    widget = NULL;
+    iterator = NULL;
+    hlIterator = NULL;
 }
 
 FindtextState::~FindtextState ()
 {
-   if (key)
-      free(key);
-   if (nexttab)
-      delete[] nexttab;
-   if (iterator)
-      delete iterator;
-   if (hlIterator)
-      delete hlIterator;
+    if (key)
+        free(key);
+    if (nexttab)
+        delete[] nexttab;
+    if (iterator)
+        delete iterator;
+    if (hlIterator)
+        delete hlIterator;
 
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 void FindtextState::setWidget (Widget *widget)
 {
-   this->widget = widget;
+    this->widget = widget;
 
-   // A widget change will restart the search.
-   if (key)
-      free(key);
-   key = NULL;
-   if (nexttab)
-      delete[] nexttab;
-   nexttab = NULL;
+    // A widget change will restart the search.
+    if (key)
+        free(key);
+    key = NULL;
+    if (nexttab)
+        delete[] nexttab;
+    nexttab = NULL;
 
-   if (iterator)
-      delete iterator;
-   iterator = NULL;
-   if (hlIterator)
-      delete hlIterator;
-   hlIterator = NULL;
+    if (iterator)
+        delete iterator;
+    iterator = NULL;
+    if (hlIterator)
+        delete hlIterator;
+    hlIterator = NULL;
 }
 
 FindtextState::Result FindtextState::search (const char *key, bool caseSens,
-                                             bool backwards)
+                                                            bool backwards)
 {
-   if (!widget || *key == 0) // empty keys are not found
-      return NOT_FOUND;
+    if (!widget || *key == 0) // empty keys are not found
+        return NOT_FOUND;
 
-   bool wasHighlighted = unhighlight ();
-   bool newKey;
+    bool wasHighlighted = unhighlight ();
+    bool newKey;
 
-   // If the key (or the widget) changes (including case sensitivity),
-   // the search is started from the beginning.
-   if (this->key == NULL || this->caseSens != caseSens ||
+    // If the key (or the widget) changes (including case sensitivity),
+    // the search is started from the beginning.
+    if (this->key == NULL || this->caseSens != caseSens ||
        strcmp (this->key, key) != 0) {
-      newKey = true;
-      if (this->key)
-         free(this->key);
-      this->key = dStrdup (key);
-      this->caseSens = caseSens;
+        newKey = true;
+        if (this->key)
+            free(this->key);
+        this->key = dStrdup (key);
+        this->caseSens = caseSens;
 
-      if (nexttab)
-         delete[] nexttab;
-      nexttab = createNexttab (key, caseSens, backwards);
+        if (nexttab)
+            delete[] nexttab;
+        nexttab = createNexttab (key, caseSens, backwards);
 
-      if (iterator)
-         delete iterator;
-      iterator = new CharIterator (widget, true);
+        if (iterator)
+            delete iterator;
+        iterator = new CharIterator (widget, true);
 
-      if (backwards) {
-         /* Go to end */
-         while (iterator->next () ) ;
-         iterator->prev (); //We don't want to be at CharIterator::END.
-      } else {
-         iterator->next ();
-      }
-   } else
-      newKey = false;
-
-   bool firstTrial = !wasHighlighted || newKey;
-
-   if (search0 (backwards, firstTrial)) {
-      // Highlighting is done with a clone.
-      hlIterator = iterator->cloneCharIterator ();
-      for (int i = 0; key[i]; i++)
-         hlIterator->next ();
-      CharIterator::highlight (iterator, hlIterator, HIGHLIGHT_FINDTEXT);
-      CharIterator::scrollTo (iterator, hlIterator,
-                              HPOS_INTO_VIEW, VPOS_CENTER);
-
-      // The search will continue from the word after the found position.
-      iterator->next ();
-      return SUCCESS;
-   } else {
-      if (firstTrial) {
-         return NOT_FOUND;
-      } else {
-         // Nothing found anymore, reset the state for the next trial.
-         delete iterator;
-         iterator = new CharIterator (widget, true);
-         if (backwards) {
+        if (backwards) {
             /* Go to end */
-            while (iterator->next ()) ;
+            while (iterator->next () ) ;
             iterator->prev (); //We don't want to be at CharIterator::END.
-         } else {
+        } else {
             iterator->next ();
-         }
-         // We expect a success.
-         Result result2 = search (key, caseSens, backwards);
-         assert (result2 == SUCCESS);
-         return RESTART;
-      }
-   }
+        }
+    } else
+        newKey = false;
+
+    bool firstTrial = !wasHighlighted || newKey;
+
+    if (search0 (backwards, firstTrial)) {
+        // Highlighting is done with a clone.
+        hlIterator = iterator->cloneCharIterator ();
+        for (int i = 0; key[i]; i++)
+            hlIterator->next ();
+        CharIterator::highlight (iterator, hlIterator, HIGHLIGHT_FINDTEXT);
+        CharIterator::scrollTo (iterator, hlIterator,
+                                        HPOS_INTO_VIEW, VPOS_CENTER);
+
+        // The search will continue from the word after the found position.
+        iterator->next ();
+        return SUCCESS;
+    } else {
+        if (firstTrial) {
+            return NOT_FOUND;
+        } else {
+            // Nothing found anymore, reset the state for the next trial.
+            delete iterator;
+            iterator = new CharIterator (widget, true);
+            if (backwards) {
+                /* Go to end */
+                while (iterator->next ()) ;
+                iterator->prev (); //We don't want to be at CharIterator::END.
+            } else {
+                iterator->next ();
+            }
+            // We expect a success.
+            Result result2 = search (key, caseSens, backwards);
+            assert (result2 == SUCCESS);
+            return RESTART;
+        }
+    }
 }
 
 /**
@@ -150,11 +150,11 @@ FindtextState::Result FindtextState::search (const char *key, bool caseSens,
  */
 void FindtextState::resetSearch ()
 {
-   unhighlight ();
+    unhighlight ();
 
-   if (key)
-      free(key);
-   key = NULL;
+    if (key)
+        free(key);
+    key = NULL;
 }
 
 /*
@@ -162,44 +162,44 @@ void FindtextState::resetSearch ()
  */
 const char* FindtextState::rev(const char *str)
 {
-   if (!str)
-      return NULL;
+    if (!str)
+        return NULL;
 
-   int len = strlen(str);
-   char *nstr = new char[len+1];
-   for (int i = 0; i < len; ++i)
-      nstr[i] = str[len-1 -i];
-   nstr[len] = 0;
+    int len = strlen(str);
+    char *nstr = new char[len+1];
+    for (int i = 0; i < len; ++i)
+        nstr[i] = str[len-1 -i];
+    nstr[len] = 0;
 
-   return nstr;
+    return nstr;
 }
 
 int *FindtextState::createNexttab (const char *needle, bool caseSens,
                                    bool backwards)
 {
-   const char* key;
+    const char* key;
 
-   key = (backwards) ? rev(needle) : needle;
-   int i = 0;
-   int j = -1;
-   int l = strlen (key);
-   int *nexttab = new int[l + 1]; // + 1 is necessary for l == 1 case
-   nexttab[0] = -1;
+    key = (backwards) ? rev(needle) : needle;
+    int i = 0;
+    int j = -1;
+    int l = strlen (key);
+    int *nexttab = new int[l + 1]; // + 1 is necessary for l == 1 case
+    nexttab[0] = -1;
 
-   do {
-      if (j == -1 || charsEqual (key[i], key[j], caseSens)) {
-         i++;
-         j++;
-         nexttab[i] = j;
-         //_MSG ("nexttab[%d] = %d\n", i, j);
-      } else
-         j = nexttab[j];
-   } while (i < l - 1);
+    do {
+        if (j == -1 || charsEqual (key[i], key[j], caseSens)) {
+            i++;
+            j++;
+            nexttab[i] = j;
+            //_MSG ("nexttab[%d] = %d\n", i, j);
+        } else
+            j = nexttab[j];
+    } while (i < l - 1);
 
-   if (backwards)
-      delete [] key;
+    if (backwards)
+        delete [] key;
 
-   return nexttab;
+    return nexttab;
 }
 
 /**
@@ -207,36 +207,36 @@ int *FindtextState::createNexttab (const char *needle, bool caseSens,
  */
 bool FindtextState::unhighlight ()
 {
-   if (hlIterator) {
-      CharIterator *start = hlIterator->cloneCharIterator ();
-      for (int i = 0; key[i]; i++)
-         start->prev ();
+    if (hlIterator) {
+        CharIterator *start = hlIterator->cloneCharIterator ();
+        for (int i = 0; key[i]; i++)
+            start->prev ();
 
-      CharIterator::unhighlight (start, hlIterator, HIGHLIGHT_FINDTEXT);
-      delete start;
-      delete hlIterator;
-      hlIterator = NULL;
+        CharIterator::unhighlight (start, hlIterator, HIGHLIGHT_FINDTEXT);
+        delete start;
+        delete hlIterator;
+        hlIterator = NULL;
 
-      return true;
-   } else
-      return false;
+        return true;
+    } else
+        return false;
 }
 
 bool FindtextState::search0 (bool backwards, bool firstTrial)
 {
-   if (iterator->getChar () == CharIterator::END)
-      return false;
+    if (iterator->getChar () == CharIterator::END)
+        return false;
 
-   bool ret = false;
-   const char* searchKey = (backwards) ? rev(key) : key;
-   int j = 0;
-   bool nextit = true;
-   int l = strlen (key);
+    bool ret = false;
+    const char* searchKey = (backwards) ? rev(key) : key;
+    int j = 0;
+    bool nextit = true;
+    int l = strlen (key);
 
-   if (backwards && !firstTrial) {
-      _MSG("Having to do.");
-      /* Position correctly */
-      /* In order to achieve good results (i.e: find a word that ends within
+    if (backwards && !firstTrial) {
+        _MSG("Having to do.");
+        /* Position correctly */
+        /* In order to achieve good results (i.e: find a word that ends within
        * the previously searched word's limit) we have to position the
        * iterator in the semilast character of the previously searched word.
        *
@@ -252,46 +252,46 @@ bool FindtextState::search0 (bool backwards, bool firstTrial)
        * positive, we have to move forward. So, when l>=4, we start moving
        * the iterator forward. */
 
-      if (l==1) {
-         iterator->prev();
-         iterator->prev();
-      } else if (l==2) {
-         iterator->prev();
-      } else if (l>=4) {
-         for (int i=0; i<l-3; i++) {
+        if (l==1) {
+            iterator->prev();
+            iterator->prev();
+        } else if (l==2) {
+            iterator->prev();
+        } else if (l>=4) {
+            for (int i=0; i<l-3; i++) {
+                iterator->next();
+            }
+        }
+
+    } else if (backwards && l==1) {
+        /* Particular case where we can't find the last character */
+        iterator->next();
+    }
+
+    do {
+        if (j == -1 || charsEqual (iterator->getChar(),searchKey[j],caseSens)) {
+            j++;
+            nextit = backwards ? iterator->prev () : iterator->next ();
+        } else
+            j = nexttab[j];
+    } while (nextit && j < l);
+
+    if (j >= l) {
+        if (backwards) {
+            //This is the location of the key
             iterator->next();
-         }
-      }
+        } else {
+            // Go back to where the key was found.
+            for (int i = 0; i < l; i++)
+                iterator->prev ();
+        }
+        ret = true;
+    }
 
-   } else if (backwards && l==1) {
-      /* Particular case where we can't find the last character */
-      iterator->next();
-   }
+    if (backwards)
+        delete [] searchKey;
 
-   do {
-      if (j == -1 || charsEqual (iterator->getChar(),searchKey[j],caseSens)) {
-         j++;
-         nextit = backwards ? iterator->prev () : iterator->next ();
-      } else
-         j = nexttab[j];
-   } while (nextit && j < l);
-
-   if (j >= l) {
-      if (backwards) {
-         //This is the location of the key
-         iterator->next();
-      } else {
-         // Go back to where the key was found.
-         for (int i = 0; i < l; i++)
-            iterator->prev ();
-      }
-      ret = true;
-   }
-
-   if (backwards)
-      delete [] searchKey;
-
-   return ret;
+    return ret;
 }
 
 } // namespace core

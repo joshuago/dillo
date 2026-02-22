@@ -11,79 +11,79 @@ namespace fltk {
 class FltkImgbuf: public core::Imgbuf
 {
 private:
-   class GammaCorrectionTable: public lout::object::Object
-   {
-   public:
-      double gamma;
-      uchar map[256];
-   };
+    class GammaCorrectionTable: public lout::object::Object
+    {
+    public:
+        double gamma;
+        uchar map[256];
+    };
 
-   FltkImgbuf *root;
-   int refCount;
-   bool deleteOnUnref;
-   lout::container::typed::List <FltkImgbuf> *scaledBuffers;
+    FltkImgbuf *root;
+    int refCount;
+    bool deleteOnUnref;
+    lout::container::typed::List <FltkImgbuf> *scaledBuffers;
 
-   int width, height;
-   Type type;
-   double gamma;
+    int width, height;
+    Type type;
+    double gamma;
 
 //{
-   int bpp;
-   uchar *rawdata;
+    int bpp;
+    uchar *rawdata;
 //}
 
-   // This is just for testing drawing, it has to be replaced by
-   // the image buffer.
-   lout::misc::BitSet *copiedRows;
+    // This is just for testing drawing, it has to be replaced by
+    // the image buffer.
+    lout::misc::BitSet *copiedRows;
 
-   static lout::container::typed::Vector <GammaCorrectionTable>
-      *gammaCorrectionTables;
+    static lout::container::typed::Vector <GammaCorrectionTable>
+        *gammaCorrectionTables;
 
-   static uchar *findGammaCorrectionTable (double gamma);
-   static bool excessiveImageDimensions (int width, int height);
+    static uchar *findGammaCorrectionTable (double gamma);
+    static bool excessiveImageDimensions (int width, int height);
 
-   FltkImgbuf (Type type, int width, int height, double gamma,
-               FltkImgbuf *root);
-   void init (Type type, int width, int height, double gamma, FltkImgbuf *root);
-   int scaledY(int ySrc);
-   int backscaledY(int yScaled);
-   int isRoot() { return (root == NULL); }
-   void detachScaledBuf (FltkImgbuf *scaledBuf);
+    FltkImgbuf (Type type, int width, int height, double gamma,
+                    FltkImgbuf *root);
+    void init (Type type, int width, int height, double gamma, FltkImgbuf *root);
+    int scaledY(int ySrc);
+    int backscaledY(int yScaled);
+    int isRoot() { return (root == NULL); }
+    void detachScaledBuf (FltkImgbuf *scaledBuf);
 
 protected:
-   ~FltkImgbuf ();
+    ~FltkImgbuf ();
 
 public:
-   FltkImgbuf (Type type, int width, int height, double gamma);
+    FltkImgbuf (Type type, int width, int height, double gamma);
 
-   static void freeall ();
+    static void freeall ();
 
-   void setCMap (int *colors, int num_colors);
-   inline void scaleRow (int row, const core::byte *data);
-   inline void scaleRowSimple (int row, const core::byte *data);
-   inline void scaleRowBeautiful (int row, const core::byte *data);
-   inline static void scaleBuffer (const core::byte *src, int srcWidth,
+    void setCMap (int *colors, int num_colors);
+    inline void scaleRow (int row, const core::byte *data);
+    inline void scaleRowSimple (int row, const core::byte *data);
+    inline void scaleRowBeautiful (int row, const core::byte *data);
+    inline static void scaleBuffer (const core::byte *src, int srcWidth,
                                    int srcHeight, core::byte *dest,
                                    int destWidth, int destHeight, int bpp,
                                    double gamma);
 
-   void newScan ();
-   void copyRow (int row, const core::byte *data);
-   core::Imgbuf* getScaledBuf (int width, int height);
-   void getRowArea (int row, dw::core::Rectangle *area);
-   int  getRootWidth ();
-   int  getRootHeight ();
-   core::Imgbuf *createSimilarBuf (int width, int height);
-   void copyTo (Imgbuf *dest, int xDestRoot, int yDestRoot,
+    void newScan ();
+    void copyRow (int row, const core::byte *data);
+    core::Imgbuf* getScaledBuf (int width, int height);
+    void getRowArea (int row, dw::core::Rectangle *area);
+    int  getRootWidth ();
+    int  getRootHeight ();
+    core::Imgbuf *createSimilarBuf (int width, int height);
+    void copyTo (Imgbuf *dest, int xDestRoot, int yDestRoot,
                 int xSrc, int ySrc, int widthSrc, int heightSrc);
-   void ref ();
-   void unref ();
+    void ref ();
+    void unref ();
 
-   bool lastReference ();
-   void setDeleteOnUnref (bool deleteOnUnref);
-   bool isReferred ();
+    bool lastReference ();
+    void setDeleteOnUnref (bool deleteOnUnref);
+    bool isReferred ();
 
-   void draw (Fl_Widget *target, int xRoot, int yRoot,
+    void draw (Fl_Widget *target, int xRoot, int yRoot,
               int x, int y, int width, int height);
 };
 

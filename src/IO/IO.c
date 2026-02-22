@@ -33,13 +33,13 @@
 
 
 typedef struct {
-   int Key;               /* Primary Key (for klist) */
-   int Op;                /* IORead | IOWrite */
-   int FD;                /* Current File Descriptor */
-   int Status;            /* nonzero upon IO failure */
-   Dstr *Buf;             /* Internal buffer */
+    int Key;               /* Primary Key (for klist) */
+    int Op;                /* IORead | IOWrite */
+    int FD;                /* Current File Descriptor */
+    int Status;            /* nonzero upon IO failure */
+    Dstr *Buf;             /* Internal buffer */
 
-   void *Info;            /* CCC Info structure for this IO */
+    void *Info;            /* CCC Info structure for this IO */
 } IOData_t;
 
 
@@ -63,13 +63,13 @@ void a_IO_ccc(int Op, int Branch, int Dir, ChainLink *Info,
  */
 static IOData_t *IO_new(int op)
 {
-   IOData_t *io = dNew0(IOData_t, 1);
-   io->Op = op;
-   io->FD = -1;
-   io->Key = 0;
-   io->Buf = dStr_sized_new(IOBufLen);
+    IOData_t *io = dNew0(IOData_t, 1);
+    io->Op = op;
+    io->FD = -1;
+    io->Key = 0;
+    io->Buf = dStr_sized_new(IOBufLen);
 
-   return io;
+    return io;
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -79,10 +79,10 @@ static IOData_t *IO_new(int op)
  */
 static void IO_ins(IOData_t *io)
 {
-   if (io->Key == 0) {
-      io->Key = a_Klist_insert(&ValidIOs, io);
-   }
-   _MSG("IO_ins: io->Key=%d, Klist_length=%d\n",
+    if (io->Key == 0) {
+        io->Key = a_Klist_insert(&ValidIOs, io);
+    }
+    _MSG("IO_ins: io->Key=%d, Klist_length=%d\n",
        io->Key, a_Klist_length(ValidIOs));
 }
 
@@ -91,11 +91,11 @@ static void IO_ins(IOData_t *io)
  */
 static void IO_del(IOData_t *io)
 {
-   if (io->Key != 0) {
-      a_Klist_remove(ValidIOs, io->Key);
-   }
-   io->Key = 0;
-   _MSG(" -->ValidIOs: %d\n", a_Klist_length(ValidIOs));
+    if (io->Key != 0) {
+        a_Klist_remove(ValidIOs, io->Key);
+    }
+    io->Key = 0;
+    _MSG(" -->ValidIOs: %d\n", a_Klist_length(ValidIOs));
 }
 
 /**
@@ -103,7 +103,7 @@ static void IO_del(IOData_t *io)
  */
 static IOData_t *IO_get(int Key)
 {
-   return (IOData_t *)a_Klist_get_data(ValidIOs, Key);
+    return (IOData_t *)a_Klist_get_data(ValidIOs, Key);
 }
 
 /**
@@ -111,8 +111,8 @@ static IOData_t *IO_get(int Key)
  */
 static void IO_free(IOData_t *io)
 {
-   dStr_free(io->Buf, 1);
-   dFree(io);
+    dStr_free(io->Buf, 1);
+    dFree(io);
 }
 
 /**
@@ -124,31 +124,31 @@ static void IO_free(IOData_t *io)
  */
 static void IO_close_fd(IOData_t *io, int CloseCode)
 {
-   int events = 0;
+    int events = 0;
 
-   _MSG("====> begin IO_close_fd (%d) Key=%d CloseCode=%d ",
+    _MSG("====> begin IO_close_fd (%d) Key=%d CloseCode=%d ",
        io->FD, io->Key, CloseCode);
 
-   /* With HTTP, if we close the writing part, the reading one also gets
+    /* With HTTP, if we close the writing part, the reading one also gets
     * closed! */
-   if ((CloseCode == IO_StopRdWr) && io->FD != -1) {
-      dClose(io->FD);
-   } else {
-      _MSG(" NOT CLOSING ");
-   }
-   /* Remove this IOData_t reference, from our ValidIOs list
+    if ((CloseCode == IO_StopRdWr) && io->FD != -1) {
+        dClose(io->FD);
+    } else {
+        _MSG(" NOT CLOSING ");
+    }
+    /* Remove this IOData_t reference, from our ValidIOs list
     * We don't deallocate it here, just remove from the list.*/
-   IO_del(io);
+    IO_del(io);
 
-   /* Stop the polling on this FD */
-   if (CloseCode & IO_StopRd) {
+    /* Stop the polling on this FD */
+    if (CloseCode & IO_StopRd) {
      events |= DIO_READ;
-   }
-   if (CloseCode & IO_StopWr) {
+    }
+    if (CloseCode & IO_StopWr) {
      events |= DIO_WRITE;
-   }
-   a_IOwatch_remove_fd(io->FD, events);
-   _MSG(" end IO close (%d) <=====\n", io->FD);
+    }
+    a_IOwatch_remove_fd(io->FD, events);
+    _MSG(" end IO close (%d) <=====\n", io->FD);
 }
 
 /**
@@ -156,61 +156,61 @@ static void IO_close_fd(IOData_t *io, int CloseCode)
  */
 static bool_t IO_read(IOData_t *io)
 {
-   char Buf[IOBufLen];
-   ssize_t St;
-   bool_t ret = FALSE;
-   int io_key = io->Key;
-   void *conn = a_Tls_connection(io->FD);
+    char Buf[IOBufLen];
+    ssize_t St;
+    bool_t ret = FALSE;
+    int io_key = io->Key;
+    void *conn = a_Tls_connection(io->FD);
 
-   _MSG("  IO_read\n");
+    _MSG("  IO_read\n");
 
-   /* this is a new read-buffer */
-   dStr_truncate(io->Buf, 0);
-   io->Status = 0;
+    /* this is a new read-buffer */
+    dStr_truncate(io->Buf, 0);
+    io->Status = 0;
 
-   while (1) {
-      St = conn ? a_Tls_read(conn, Buf, IOBufLen)
+    while (1) {
+        St = conn ? a_Tls_read(conn, Buf, IOBufLen)
                 : read(io->FD, Buf, IOBufLen);
-      if (St > 0) {
-         dStr_append_l(io->Buf, Buf, St);
-         continue;
-      } else if (St < 0) {
-         if (errno == EINTR) {
+        if (St > 0) {
+            dStr_append_l(io->Buf, Buf, St);
             continue;
-         } else if (errno == EAGAIN) {
-            ret = TRUE;
-            break;
-         } else {
-            if (conn) {
-               io->Status = St;
-               break;
+        } else if (St < 0) {
+            if (errno == EINTR) {
+                continue;
+            } else if (errno == EAGAIN) {
+                ret = TRUE;
+                break;
             } else {
-               io->Status = errno;
-               MSG("READ Failed with %d: %s\n", (int)St, strerror(errno));
-               break;
+                if (conn) {
+                    io->Status = St;
+                    break;
+                } else {
+                    io->Status = errno;
+                    MSG("READ Failed with %d: %s\n", (int)St, strerror(errno));
+                    break;
+                }
             }
-         }
-      } else { /* St == 0 */
-         break;
-      }
-   }
+        } else { /* St == 0 */
+            break;
+        }
+    }
 
-   if (io->Buf->len > 0) {
-      /* send what we've got so far */
-      a_IO_ccc(OpSend, 2, FWD, io->Info, io, NULL);
-   }
-   if (St == 0) {
-      /* TODO: design a general way to avoid reentrancy problems with CCC. */
+    if (io->Buf->len > 0) {
+        /* send what we've got so far */
+        a_IO_ccc(OpSend, 2, FWD, io->Info, io, NULL);
+    }
+    if (St == 0) {
+        /* TODO: design a general way to avoid reentrancy problems with CCC. */
 
-      /* The following check is necessary because the above CCC operation
+        /* The following check is necessary because the above CCC operation
        * may abort the whole Chain. */
-      if ((io = IO_get(io_key))) {
-         /* All data read (EOF) */
-         _MSG("IO_read: io->Key=%d io_key=%d\n", io->Key, io_key);
-         a_IO_ccc(OpEnd, 2, FWD, io->Info, io, NULL);
-      }
-   }
-   return ret;
+        if ((io = IO_get(io_key))) {
+            /* All data read (EOF) */
+            _MSG("IO_read: io->Key=%d io_key=%d\n", io->Key, io_key);
+            a_IO_ccc(OpEnd, 2, FWD, io->Info, io, NULL);
+        }
+    }
+    return ret;
 }
 
 /**
@@ -218,44 +218,44 @@ static bool_t IO_read(IOData_t *io)
  */
 static bool_t IO_write(IOData_t *io)
 {
-   ssize_t St;
-   bool_t ret = FALSE;
-   void *conn = a_Tls_connection(io->FD);
+    ssize_t St;
+    bool_t ret = FALSE;
+    void *conn = a_Tls_connection(io->FD);
 
-   _MSG("  IO_write\n");
-   io->Status = 0;
+    _MSG("  IO_write\n");
+    io->Status = 0;
 
-   while (1) {
-      St = conn ? a_Tls_write(conn, io->Buf->str, io->Buf->len)
+    while (1) {
+        St = conn ? a_Tls_write(conn, io->Buf->str, io->Buf->len)
                 : write(io->FD, io->Buf->str, io->Buf->len);
-      if (St < 0) {
-         /* Error */
-         if (errno == EINTR) {
-            continue;
-         } else if (errno == EAGAIN) {
-            ret = TRUE;
-            break;
-         } else {
-            if (conn) {
-               io->Status = St;
-               break;
+        if (St < 0) {
+            /* Error */
+            if (errno == EINTR) {
+                continue;
+            } else if (errno == EAGAIN) {
+                ret = TRUE;
+                break;
             } else {
-               io->Status = errno;
-               MSG("WRITE Failed with %d: %s\n", (int)St, strerror(errno));
-               break;
+                if (conn) {
+                    io->Status = St;
+                    break;
+                } else {
+                    io->Status = errno;
+                    MSG("WRITE Failed with %d: %s\n", (int)St, strerror(errno));
+                    break;
+                }
             }
-         }
-      } else if (St < io->Buf->len) {
-         /* Not all data written */
-         dStr_erase (io->Buf, 0, St);
-      } else {
-         /* All data in buffer written */
-         dStr_truncate(io->Buf, 0);
-         break;
-      }
-   }
+        } else if (St < io->Buf->len) {
+            /* Not all data written */
+            dStr_erase (io->Buf, 0, St);
+        } else {
+            /* All data in buffer written */
+            dStr_truncate(io->Buf, 0);
+            break;
+        }
+    }
 
-   return ret;
+    return ret;
 }
 
 /**
@@ -264,17 +264,17 @@ static bool_t IO_write(IOData_t *io)
  */
 static int IO_callback(IOData_t *io)
 {
-   bool_t ret = FALSE;
+    bool_t ret = FALSE;
 
-   _MSG("IO_callback:: (%s) FD = %d\n",
+    _MSG("IO_callback:: (%s) FD = %d\n",
         (io->Op == IORead) ? "IORead" : "IOWrite", io->FD);
 
-   if (io->Op == IORead) {          /* Read */
-      ret = IO_read(io);
-   } else if (io->Op == IOWrite) {  /* Write */
-      ret = IO_write(io);
-   }
-   return (ret) ? 1 : 0;
+    if (io->Op == IORead) {          /* Read */
+        ret = IO_read(io);
+    } else if (io->Op == IOWrite) {  /* Write */
+        ret = IO_write(io);
+    }
+    return (ret) ? 1 : 0;
 }
 
 /**
@@ -282,22 +282,22 @@ static int IO_callback(IOData_t *io)
  */
 static void IO_fd_read_cb(int fd, void *data)
 {
-   int io_key = VOIDP2INT(data);
-   IOData_t *io = IO_get(io_key);
+    int io_key = VOIDP2INT(data);
+    IOData_t *io = IO_get(io_key);
 
-   /* There should be no more events on already closed FDs  --Jcid */
-   if (io == NULL) {
-      MSG_ERR("IO_fd_read_cb: call on already closed io!\n");
-      a_IOwatch_remove_fd(fd, DIO_READ);
+    /* There should be no more events on already closed FDs  --Jcid */
+    if (io == NULL) {
+        MSG_ERR("IO_fd_read_cb: call on already closed io!\n");
+        a_IOwatch_remove_fd(fd, DIO_READ);
 
-   } else {
-      if (IO_callback(io) == 0)
-         a_IOwatch_remove_fd(fd, DIO_READ);
-      if ((io = IO_get(io_key)) && io->Status) {
-         /* check io because IO_read OpSend could trigger abort */
-         a_IO_ccc(OpAbort, 2, FWD, io->Info, io, NULL);
-      }
-   }
+    } else {
+        if (IO_callback(io) == 0)
+            a_IOwatch_remove_fd(fd, DIO_READ);
+        if ((io = IO_get(io_key)) && io->Status) {
+            /* check io because IO_read OpSend could trigger abort */
+            a_IO_ccc(OpAbort, 2, FWD, io->Info, io, NULL);
+        }
+    }
 }
 
 /**
@@ -305,20 +305,20 @@ static void IO_fd_read_cb(int fd, void *data)
  */
 static void IO_fd_write_cb(int fd, void *data)
 {
-   int io_key = VOIDP2INT(data);
-   IOData_t *io = IO_get(io_key);
+    int io_key = VOIDP2INT(data);
+    IOData_t *io = IO_get(io_key);
 
-   if (io == NULL) {
-      /* There must be no more events on already closed FDs  --Jcid */
-      MSG_ERR("IO_fd_write_cb: call on already closed io!\n");
-      a_IOwatch_remove_fd(fd, DIO_WRITE);
+    if (io == NULL) {
+        /* There must be no more events on already closed FDs  --Jcid */
+        MSG_ERR("IO_fd_write_cb: call on already closed io!\n");
+        a_IOwatch_remove_fd(fd, DIO_WRITE);
 
-   } else {
-      if (IO_callback(io) == 0)
-         a_IOwatch_remove_fd(fd, DIO_WRITE);
-      if (io->Status)
-         a_IO_ccc(OpAbort, 1, FWD, io->Info, NULL, NULL);
-   }
+    } else {
+        if (IO_callback(io) == 0)
+            a_IOwatch_remove_fd(fd, DIO_WRITE);
+        if (io->Status)
+            a_IO_ccc(OpAbort, 1, FWD, io->Info, NULL, NULL);
+    }
 }
 
 /**
@@ -327,29 +327,29 @@ static void IO_fd_write_cb(int fd, void *data)
  */
 static void IO_submit(IOData_t *r_io)
 {
-   if (r_io->FD < 0) {
-      MSG_ERR("IO_submit: FD not initialized\n");
-      return;
-   }
+    if (r_io->FD < 0) {
+        MSG_ERR("IO_submit: FD not initialized\n");
+        return;
+    }
 
-   /* Insert this IO in ValidIOs */
-   IO_ins(r_io);
+    /* Insert this IO in ValidIOs */
+    IO_ins(r_io);
 
-   _MSG("IO_submit:: (%s) FD = %d\n",
+    _MSG("IO_submit:: (%s) FD = %d\n",
         (r_io->Op == IORead) ? "IORead" : "IOWrite", r_io->FD);
 
-   /* Set FD to background and to close on exec. */
-   fcntl(r_io->FD, F_SETFL, O_NONBLOCK | fcntl(r_io->FD, F_GETFL));
-   fcntl(r_io->FD, F_SETFD, FD_CLOEXEC | fcntl(r_io->FD, F_GETFD));
+    /* Set FD to background and to close on exec. */
+    fcntl(r_io->FD, F_SETFL, O_NONBLOCK | fcntl(r_io->FD, F_GETFL));
+    fcntl(r_io->FD, F_SETFD, FD_CLOEXEC | fcntl(r_io->FD, F_GETFD));
 
-   if (r_io->Op == IORead) {
-      a_IOwatch_add_fd(r_io->FD, DIO_READ,
+    if (r_io->Op == IORead) {
+        a_IOwatch_add_fd(r_io->FD, DIO_READ,
                        IO_fd_read_cb, INT2VOIDP(r_io->Key));
 
-   } else if (r_io->Op == IOWrite) {
-      a_IOwatch_add_fd(r_io->FD, DIO_WRITE,
+    } else if (r_io->Op == IOWrite) {
+        a_IOwatch_add_fd(r_io->FD, DIO_WRITE,
                        IO_fd_write_cb, INT2VOIDP(r_io->Key));
-   }
+    }
 }
 
 /**
@@ -359,113 +359,113 @@ static void IO_submit(IOData_t *r_io)
 void a_IO_ccc(int Op, int Branch, int Dir, ChainLink *Info,
               void *Data1, void *Data2)
 {
-   IOData_t *io;
-   DataBuf *dbuf;
+    IOData_t *io;
+    DataBuf *dbuf;
 
-   dReturn_if_fail( a_Chain_check("a_IO_ccc", Op, Branch, Dir, Info) );
+    dReturn_if_fail( a_Chain_check("a_IO_ccc", Op, Branch, Dir, Info) );
 
-   if (Branch == 1) {
-      if (Dir == BCK) {
-         /* Write data using select */
-         switch (Op) {
-         case OpStart:
-            io = IO_new(IOWrite);
-            io->Info = Info;
-            Info->LocalKey = io;
-            break;
-         case OpSend:
-            io = Info->LocalKey;
-            if (Data2 && !strcmp(Data2, "FD")) {
-               io->FD = *(int*)Data1; /* SockFD */
-            } else {
-               dbuf = Data1;
-               dStr_append_l(io->Buf, dbuf->Buf, dbuf->Size);
-               IO_submit(io);
-            }
-            break;
-         case OpEnd:
-         case OpAbort:
-            io = Info->LocalKey;
-            if (io->Buf->len > 0) {
-               char *newline = memchr(io->Buf->str, '\n', io->Buf->len);
-               int msglen = newline ? newline - io->Buf->str : 2048;
+    if (Branch == 1) {
+        if (Dir == BCK) {
+            /* Write data using select */
+            switch (Op) {
+            case OpStart:
+                io = IO_new(IOWrite);
+                io->Info = Info;
+                Info->LocalKey = io;
+                break;
+            case OpSend:
+                io = Info->LocalKey;
+                if (Data2 && !strcmp(Data2, "FD")) {
+                    io->FD = *(int*)Data1; /* SockFD */
+                } else {
+                    dbuf = Data1;
+                    dStr_append_l(io->Buf, dbuf->Buf, dbuf->Size);
+                    IO_submit(io);
+                }
+                break;
+            case OpEnd:
+            case OpAbort:
+                io = Info->LocalKey;
+                if (io->Buf->len > 0) {
+                    char *newline = memchr(io->Buf->str, '\n', io->Buf->len);
+                    int msglen = newline ? newline - io->Buf->str : 2048;
 
-               MSG("IO_write, closing with pending data not sent: \"%s\"\n",
+                    MSG("IO_write, closing with pending data not sent: \"%s\"\n",
                    dStr_printable(io->Buf, msglen));
+                }
+                /* close FD, remove from ValidIOs and remove its watch */
+                IO_close_fd(io, Op == OpEnd ? IO_StopWr : IO_StopRdWr);
+                IO_free(io);
+                dFree(Info);
+                break;
+            default:
+                MSG_WARN("Unused CCC IO 1B\n");
+                break;
             }
-            /* close FD, remove from ValidIOs and remove its watch */
-            IO_close_fd(io, Op == OpEnd ? IO_StopWr : IO_StopRdWr);
-            IO_free(io);
-            dFree(Info);
-            break;
-         default:
-            MSG_WARN("Unused CCC IO 1B\n");
-            break;
-         }
-      } else {  /* 1 FWD */
-         /* Write-data status */
-         switch (Op) {
-         case OpAbort:
-            io = Info->LocalKey;
-            IO_close_fd(io, IO_StopRdWr);
-            IO_free(io);
-            a_Chain_fcb(OpAbort, Info, NULL, NULL);
-            dFree(Info);
-            break;
-         default:
-            MSG_WARN("Unused CCC IO 1F\n");
-            break;
-         }
-      }
+        } else {  /* 1 FWD */
+            /* Write-data status */
+            switch (Op) {
+            case OpAbort:
+                io = Info->LocalKey;
+                IO_close_fd(io, IO_StopRdWr);
+                IO_free(io);
+                a_Chain_fcb(OpAbort, Info, NULL, NULL);
+                dFree(Info);
+                break;
+            default:
+                MSG_WARN("Unused CCC IO 1F\n");
+                break;
+            }
+        }
 
-   } else if (Branch == 2) {
-      if (Dir == BCK) {
-         /* This part catches the reader's messages */
-         switch (Op) {
-         case OpStart:
-            io = IO_new(IORead);
-            Info->LocalKey = io;
-            io->Info = Info;
-            break;
-         case OpSend:
-            io = Info->LocalKey;
-            if (Data2 && !strcmp(Data2, "FD")) {
-               io->FD = *(int*)Data1; /* SockFD */
-               IO_submit(io);
+    } else if (Branch == 2) {
+        if (Dir == BCK) {
+            /* This part catches the reader's messages */
+            switch (Op) {
+            case OpStart:
+                io = IO_new(IORead);
+                Info->LocalKey = io;
+                io->Info = Info;
+                break;
+            case OpSend:
+                io = Info->LocalKey;
+                if (Data2 && !strcmp(Data2, "FD")) {
+                    io->FD = *(int*)Data1; /* SockFD */
+                    IO_submit(io);
+                }
+                break;
+            case OpEnd:
+            case OpAbort:
+                io = Info->LocalKey;
+                IO_close_fd(io, Op == OpEnd ? IO_StopRd : IO_StopRdWr);
+                IO_free(io);
+                dFree(Info);
+                break;
+            default:
+                MSG_WARN("Unused CCC IO 2B\n");
+                break;
             }
-            break;
-         case OpEnd:
-         case OpAbort:
-            io = Info->LocalKey;
-            IO_close_fd(io, Op == OpEnd ? IO_StopRd : IO_StopRdWr);
-            IO_free(io);
-            dFree(Info);
-            break;
-         default:
-            MSG_WARN("Unused CCC IO 2B\n");
-            break;
-         }
-      } else {  /* 2 FWD */
-         /* Send read-data */
-         io = Data1;
-         switch (Op) {
-         case OpSend:
-            dbuf = a_Chain_dbuf_new(io->Buf->str, io->Buf->len, 0);
-            a_Chain_fcb(OpSend, Info, dbuf, NULL);
-            dFree(dbuf);
-            break;
-         case OpEnd:
-         case OpAbort:
-            a_Chain_fcb(Op, Info, NULL, NULL);
-            IO_close_fd(io, IO_StopRdWr); /* IO_StopRd would leak FDs */
-            IO_free(io);
-            dFree(Info);
-            break;
-         default:
-            MSG_WARN("Unused CCC IO 2F\n");
-            break;
-         }
-      }
-   }
+        } else {  /* 2 FWD */
+            /* Send read-data */
+            io = Data1;
+            switch (Op) {
+            case OpSend:
+                dbuf = a_Chain_dbuf_new(io->Buf->str, io->Buf->len, 0);
+                a_Chain_fcb(OpSend, Info, dbuf, NULL);
+                dFree(dbuf);
+                break;
+            case OpEnd:
+            case OpAbort:
+                a_Chain_fcb(Op, Info, NULL, NULL);
+                IO_close_fd(io, IO_StopRdWr); /* IO_StopRd would leak FDs */
+                IO_free(io);
+                dFree(Info);
+                break;
+            default:
+                MSG_WARN("Unused CCC IO 2F\n");
+                break;
+            }
+        }
+    }
 }
 

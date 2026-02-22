@@ -25,7 +25,7 @@ namespace fltk {
 
 inline void freeall ()
 {
-   FltkImgbuf::freeall ();
+    FltkImgbuf::freeall ();
 }
 
 } // namespace fltk

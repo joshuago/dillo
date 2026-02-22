@@ -44,13 +44,13 @@ namespace object {
 class Object
 {
 public:
-   virtual ~Object();
-   virtual bool equals(Object *other);
-   virtual int hashValue();
-   virtual Object *clone();
-   virtual void intoStringBuffer(misc::StringBuffer *sb);
-   char *toString();
-   virtual size_t sizeOf();
+    virtual ~Object();
+    virtual bool equals(Object *other);
+    virtual int hashValue();
+    virtual Object *clone();
+    virtual void intoStringBuffer(misc::StringBuffer *sb);
+    char *toString();
+    virtual size_t sizeOf();
 };
 
 /**
@@ -61,7 +61,7 @@ public:
 class Comparable: public Object
 {
 public:
-   /**
+    /**
     * \brief Compare two objects, this and other.
     *
     * Return a value < 0, when this is less than other, a value > 0,
@@ -75,7 +75,7 @@ public:
     * be differences (not relevant for sorting), which "equals" will
     * care about.
     */
-   virtual int compareTo(Comparable *other) = 0;
+    virtual int compareTo(Comparable *other) = 0;
 };
 
 /**
@@ -86,7 +86,7 @@ public:
 class Comparator: public Object
 {
 public:
-   /**
+    /**
     * \brief Compare two objects o1 and o2.
     *
     * Return a value < 0, when o1 is less than o2, a value > 0, when o1
@@ -99,16 +99,16 @@ public:
     * differences (not relevant for sorting), which "equals" will care
     * about.
     */
-   virtual int compare(Object *o1, Object *o2) = 0;
+    virtual int compare(Object *o1, Object *o2) = 0;
 
-   static Comparator *compareFunComparator;
-   static int compareFun(const void *p1, const void *p2);
+    static Comparator *compareFunComparator;
+    static int compareFun(const void *p1, const void *p2);
 };
 
 class StandardComparator: public Comparator
 {
 public:
-   int compare(Object *o1, Object *o2);
+    int compare(Object *o1, Object *o2);
 };
 
 extern StandardComparator standardComparator;
@@ -119,14 +119,14 @@ extern StandardComparator standardComparator;
 class Pointer: public Object
 {
 private:
-   void *value;
+    void *value;
 
 public:
-   Pointer(void *value) { this->value = value; }
-   bool equals(Object *other);
-   int hashValue();
-   void intoStringBuffer(misc::StringBuffer *sb);
-   inline void *getValue() { return value; }
+    Pointer(void *value) { this->value = value; }
+    bool equals(Object *other);
+    int hashValue();
+    void intoStringBuffer(misc::StringBuffer *sb);
+    inline void *getValue() { return value; }
 };
 
 /**
@@ -135,8 +135,8 @@ public:
 template <class T> class TypedPointer: public Pointer
 {
 public:
-   inline TypedPointer(T *value) : Pointer ((void*)value) { }
-   inline T *getTypedValue() { return (T*)getValue(); }
+    inline TypedPointer(T *value) : Pointer ((void*)value) { }
+    inline T *getTypedValue() { return (T*)getValue(); }
 };
 
 
@@ -145,15 +145,15 @@ public:
  */
 class Integer: public Comparable
 {
-   int value;
+    int value;
 
 public:
-   Integer(int value) { this->value = value; }
-   bool equals(Object *other);
-   int hashValue();
-   void intoStringBuffer(misc::StringBuffer *sb);
-   int compareTo(Comparable *other);
-   inline int getValue() { return value; }
+    Integer(int value) { this->value = value; }
+    bool equals(Object *other);
+    int hashValue();
+    void intoStringBuffer(misc::StringBuffer *sb);
+    int compareTo(Comparable *other);
+    inline int getValue() { return value; }
 };
 
 
@@ -162,15 +162,15 @@ public:
  */
 class Boolean: public Comparable
 {
-   bool value;
+    bool value;
 
 public:
-   Boolean(bool value) { this->value = value; }
-   bool equals(Object *other);
-   int hashValue();
-   void intoStringBuffer(misc::StringBuffer *sb);
-   int compareTo(Comparable *other);
-   inline bool getValue() { return value; }
+    Boolean(bool value) { this->value = value; }
+    bool equals(Object *other);
+    int hashValue();
+    void intoStringBuffer(misc::StringBuffer *sb);
+    int compareTo(Comparable *other);
+    inline bool getValue() { return value; }
 };
 
 
@@ -182,18 +182,18 @@ public:
 class ConstString: public Comparable
 {
 protected:
-   const char *str;
+    const char *str;
 
 public:
-   ConstString(const char *str) { this->str = str; }
-   bool equals(Object *other);
-   int hashValue();
-   int compareTo(Comparable *other);
-   void intoStringBuffer(misc::StringBuffer *sb);
+    ConstString(const char *str) { this->str = str; }
+    bool equals(Object *other);
+    int hashValue();
+    int compareTo(Comparable *other);
+    void intoStringBuffer(misc::StringBuffer *sb);
 
-   inline const char *chars() { return str; }
+    inline const char *chars() { return str; }
 
-   static int hashValue(const char *str);
+    static int hashValue(const char *str);
 };
 
 
@@ -205,8 +205,8 @@ public:
 class String: public ConstString
 {
 public:
-   String(const char *str);
-   ~String();
+    String(const char *str);
+    ~String();
 };
 
 /**
@@ -215,16 +215,16 @@ public:
 class PairBase: public Object
 {
 protected:
-   Object *first, *second;
+    Object *first, *second;
 
 public:
-   PairBase(Object *first, Object *second);
-   ~PairBase();
+    PairBase(Object *first, Object *second);
+    ~PairBase();
 
-   bool equals(Object *other);
-   int hashValue();
-   void intoStringBuffer(misc::StringBuffer *sb);
-   size_t sizeOf();
+    bool equals(Object *other);
+    int hashValue();
+    void intoStringBuffer(misc::StringBuffer *sb);
+    size_t sizeOf();
 };
 
 /**
@@ -233,10 +233,10 @@ public:
 class Pair: public PairBase
 {
 public:
-   Pair(Object *first, Object *second): PairBase (first, second) { }
+    Pair(Object *first, Object *second): PairBase (first, second) { }
 
-   inline Object *getFirst () { return first; }
-   inline Object *getSecond () { return second; }
+    inline Object *getFirst () { return first; }
+    inline Object *getSecond () { return second; }
 };
 
 /**
@@ -245,10 +245,10 @@ public:
 template <class F, class S> class TypedPair: public PairBase
 {
 public:
-   TypedPair(F *first, S *second): PairBase (first, second) { }
+    TypedPair(F *first, S *second): PairBase (first, second) { }
 
-   inline F *getFirst () { return first; }
-   inline S *getSecond () { return second; }
+    inline F *getFirst () { return first; }
+    inline S *getSecond () { return second; }
 };
 
 } // namespace object

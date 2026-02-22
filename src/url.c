@@ -54,9 +54,9 @@ static const char *HEX = "0123456789ABCDEF";
 
 /* URL-field compare methods */
 #define URL_STR_FIELD_CMP(s1,s2) \
-   (s1) && (s2) ? strcmp(s1,s2) : !(s1) && !(s2) ? 0 : (s1) ? 1 : -1
+    (s1) && (s2) ? strcmp(s1,s2) : !(s1) && !(s2) ? 0 : (s1) ? 1 : -1
 #define URL_STR_FIELD_I_CMP(s1,s2) \
-   (s1) && (s2) ? dStrAsciiCasecmp(s1,s2) : !(s1) && !(s2) ? 0 : (s1) ? 1 : -1
+    (s1) && (s2) ? dStrAsciiCasecmp(s1,s2) : !(s1) && !(s2) ? 0 : (s1) ? 1 : -1
 
 /**
  * Return the url as a string.
@@ -64,29 +64,29 @@ static const char *HEX = "0123456789ABCDEF";
  */
 char *a_Url_str(const DilloUrl *u)
 {
-   /* Internal url handling IS transparent to the caller */
-   DilloUrl *url = (DilloUrl *) u;
+    /* Internal url handling IS transparent to the caller */
+    DilloUrl *url = (DilloUrl *) u;
 
-   dReturn_val_if_fail (url != NULL, NULL);
+    dReturn_val_if_fail (url != NULL, NULL);
 
-   if (!url->url_string) {
-      url->url_string = dStr_sized_new(60);
-      dStr_sprintf(
-         url->url_string, "%s%s%s%s%s%s%s%s%s%s",
-         url->scheme    ? url->scheme : "",
-         url->scheme    ? ":" : "",
-         url->authority ? "//" : "",
-         url->authority ? url->authority : "",
-         // (url->path && url->path[0] != '/' && url->authority) ? "/" : "",
-         (url->authority && (!url->path || *url->path != '/')) ? "/" : "",
-         url->path      ? url->path : "",
-         url->query     ? "?" : "",
-         url->query     ? url->query : "",
-         url->fragment  ? "#" : "",
-         url->fragment  ? url->fragment : "");
-   }
+    if (!url->url_string) {
+        url->url_string = dStr_sized_new(60);
+        dStr_sprintf(
+            url->url_string, "%s%s%s%s%s%s%s%s%s%s",
+            url->scheme    ? url->scheme : "",
+            url->scheme    ? ":" : "",
+            url->authority ? "//" : "",
+            url->authority ? url->authority : "",
+            /* (url->path && url->path[0] != '/' && url->authority) ? "/" : "", */
+            (url->authority && (!url->path || *url->path != '/')) ? "/" : "",
+            url->path      ? url->path : "",
+            url->query     ? "?" : "",
+            url->query     ? url->query : "",
+            url->fragment  ? "#" : "",
+            url->fragment  ? url->fragment : "");
+    }
 
-   return url->url_string->str;
+    return url->url_string->str;
 }
 
 /**
@@ -96,37 +96,37 @@ char *a_Url_str(const DilloUrl *u)
  */
 const char *a_Url_hostname(const DilloUrl *u)
 {
-   char *p;
-   /* Internal url handling IS transparent to the caller */
-   DilloUrl *url = (DilloUrl *) u;
+    char *p;
+    /* Internal url handling IS transparent to the caller */
+    DilloUrl *url = (DilloUrl *) u;
 
-   if (!url->hostname && url->authority) {
-      if (url->authority[0] == '[' && (p = strchr(url->authority, ']'))) {
-         /* numeric ipv6 address, strip the brackets */
-         url->hostname = dStrndup(url->authority + 1,
+    if (!url->hostname && url->authority) {
+        if (url->authority[0] == '[' && (p = strchr(url->authority, ']'))) {
+            /* numeric ipv6 address, strip the brackets */
+            url->hostname = dStrndup(url->authority + 1,
                                   (uint_t)(p - url->authority - 1));
-         if ((p = strchr(p, ':'))) {
-            url->port = strtol(p + 1, NULL, 10);
-         }
-      } else {
-         /* numeric ipv4 or hostname */
-         if ((p = strchr(url->authority, ':'))) {
-            url->port = strtol(p + 1, NULL, 10);
-            url->hostname = dStrndup(url->authority,
+            if ((p = strchr(p, ':'))) {
+                url->port = strtol(p + 1, NULL, 10);
+            }
+        } else {
+            /* numeric ipv4 or hostname */
+            if ((p = strchr(url->authority, ':'))) {
+                url->port = strtol(p + 1, NULL, 10);
+                url->hostname = dStrndup(url->authority,
                                      (uint_t)(p - url->authority));
-         } else {
-            url->hostname = url->authority;
-         }
-      }
-   }
+            } else {
+                url->hostname = url->authority;
+            }
+        }
+    }
 
-   if (!url->port) {
-      if (!dStrAsciiCasecmp(url->scheme, "http"))
-         url->port = URL_HTTP_PORT;
-      else if (!dStrAsciiCasecmp(url->scheme, "https"))
-         url->port = URL_HTTPS_PORT;
-   }
-   return url->hostname;
+    if (!url->port) {
+        if (!dStrAsciiCasecmp(url->scheme, "http"))
+            url->port = URL_HTTP_PORT;
+        else if (!dStrAsciiCasecmp(url->scheme, "https"))
+            url->port = URL_HTTPS_PORT;
+    }
+    return url->hostname;
 }
 
 /**
@@ -135,69 +135,69 @@ const char *a_Url_hostname(const DilloUrl *u)
  */
 static DilloUrl *Url_object_new(const char *uri_str)
 {
-   DilloUrl *url;
-   char *s, *p;
+    DilloUrl *url;
+    char *s, *p;
 
-   dReturn_val_if_fail (uri_str != NULL, NULL);
+    dReturn_val_if_fail (uri_str != NULL, NULL);
 
-   url = dNew0(DilloUrl, 1);
+    url = dNew0(DilloUrl, 1);
 
-   /* url->buffer is given a little extra room in case HSTS needs to transform
+    /* url->buffer is given a little extra room in case HSTS needs to transform
     * a URL string ending in ":80" to ":443".
     */
-   int len = strlen(uri_str)+2;
-   s = dNew(char, len);
-   memcpy(s, uri_str, len-1);
-   s = dStrstrip(s);
+    int len = strlen(uri_str)+2;
+    s = dNew(char, len);
+    memcpy(s, uri_str, len-1);
+    s = dStrstrip(s);
 
-   /* remove leading & trailing space from buffer */
-   url->buffer = s;
+    /* remove leading & trailing space from buffer */
+    url->buffer = s;
 
-   p = strpbrk(s, ":/?#");
-   if (p && p[0] == ':' && p > s) {                /* scheme */
-      *p = 0;
-      url->scheme = s;
-      s = ++p;
-   }
-   /* p = strpbrk(s, "/"); */
-   if (p == s && p[0] == '/' && p[1] == '/') {     /* authority */
-      s = p + 2;
-      p = strpbrk(s, "/?#");
-      if (p) {
-         memmove(s - 2, s, (size_t)MAX(p - s, 1));
-         url->authority = s - 2;
-         p[-2] = 0;
-         s = p;
-      } else if (*s) {
-         url->authority = s;
-         return url;
-      }
-   }
+    p = strpbrk(s, ":/?#");
+    if (p && p[0] == ':' && p > s) {                /* scheme */
+        *p = 0;
+        url->scheme = s;
+        s = ++p;
+    }
+    /* p = strpbrk(s, "/"); */
+    if (p == s && p[0] == '/' && p[1] == '/') {     /* authority */
+        s = p + 2;
+        p = strpbrk(s, "/?#");
+        if (p) {
+            memmove(s - 2, s, (size_t)MAX(p - s, 1));
+            url->authority = s - 2;
+            p[-2] = 0;
+            s = p;
+        } else if (*s) {
+            url->authority = s;
+            return url;
+        }
+    }
 
-   p = strpbrk(s, "?#");
-   if (p) {                                        /* path */
-      url->path = (p > s) ? s : NULL;
-      s = p;
-   } else if (*s) {
-      url->path = s;
-      return url;
-   }
+    p = strpbrk(s, "?#");
+    if (p) {                                        /* path */
+        url->path = (p > s) ? s : NULL;
+        s = p;
+    } else if (*s) {
+        url->path = s;
+        return url;
+    }
 
-   p = strpbrk(s, "?#");
-   if (p && p[0] == '?') {                         /* query */
-      *p = 0;
-      s = p + 1;
-      url->query = s;
-      p = strpbrk(s, "#");
-      url->flags |= URL_Get;
-   }
-   if (p && p[0] == '#') {                         /* fragment */
-      *p = 0;
-      s = p + 1;
-      url->fragment = s;
-   }
+    p = strpbrk(s, "?#");
+    if (p && p[0] == '?') {                         /* query */
+        *p = 0;
+        s = p + 1;
+        url->query = s;
+        p = strpbrk(s, "#");
+        url->flags |= URL_Get;
+    }
+    if (p && p[0] == '#') {                         /* fragment */
+        *p = 0;
+        s = p + 1;
+        url->fragment = s;
+    }
 
-   return url;
+    return url;
 }
 
 /**
@@ -206,15 +206,15 @@ static DilloUrl *Url_object_new(const char *uri_str)
  */
 void a_Url_free(DilloUrl *url)
 {
-   if (url) {
-      if (url->url_string)
-         dStr_free(url->url_string, TRUE);
-      if (url->hostname != url->authority)
-         dFree((char *)url->hostname);
-      dFree((char *)url->buffer);
-      dStr_free(url->data, 1);
-      dFree(url);
-   }
+    if (url) {
+        if (url->url_string)
+            dStr_free(url->url_string, TRUE);
+        if (url->hostname != url->authority)
+            dFree((char *)url->hostname);
+        dFree((char *)url->buffer);
+        dStr_free(url->data, 1);
+        dFree(url);
+    }
 }
 
 /**
@@ -223,126 +223,126 @@ void a_Url_free(DilloUrl *url)
 static Dstr *Url_resolve_relative(const char *RelStr,
                                   const char *BaseStr)
 {
-   char *p, *s, *e;
-   int i;
-   Dstr *SolvedUrl, *Path;
-   DilloUrl *RelUrl, *BaseUrl = NULL;
+    char *p, *s, *e;
+    int i;
+    Dstr *SolvedUrl, *Path;
+    DilloUrl *RelUrl, *BaseUrl = NULL;
 
-   /* parse relative URL */
-   RelUrl = Url_object_new(RelStr);
+    /* parse relative URL */
+    RelUrl = Url_object_new(RelStr);
 
-   if (RelUrl->scheme == NULL) {
-      /* only required when there's no <scheme> in RelStr */
-      BaseUrl = Url_object_new(BaseStr);
-   }
+    if (RelUrl->scheme == NULL) {
+        /* only required when there's no <scheme> in RelStr */
+        BaseUrl = Url_object_new(BaseStr);
+    }
 
-   SolvedUrl = dStr_sized_new(64);
-   Path = dStr_sized_new(64);
+    SolvedUrl = dStr_sized_new(64);
+    Path = dStr_sized_new(64);
 
-   /* path empty && scheme and authority undefined */
-   if (!RelUrl->path && !RelUrl->scheme && !RelUrl->authority) {
-      dStr_append(SolvedUrl, BaseStr);
-      if ((p = strchr(SolvedUrl->str, '#')))
-         dStr_truncate(SolvedUrl, p - SolvedUrl->str);
-      if (!BaseUrl->path)
-         dStr_append_c(SolvedUrl, '/');
+    /* path empty && scheme and authority undefined */
+    if (!RelUrl->path && !RelUrl->scheme && !RelUrl->authority) {
+        dStr_append(SolvedUrl, BaseStr);
+        if ((p = strchr(SolvedUrl->str, '#')))
+            dStr_truncate(SolvedUrl, p - SolvedUrl->str);
+        if (!BaseUrl->path)
+            dStr_append_c(SolvedUrl, '/');
 
-      if (RelUrl->query) {                        /* query */
-         if (BaseUrl->query)
-            dStr_truncate(SolvedUrl, BaseUrl->query - BaseUrl->buffer - 1);
-         dStr_append_c(SolvedUrl, '?');
-         dStr_append(SolvedUrl, RelUrl->query);
-      }
-      if (RelUrl->fragment) {                    /* fragment */
-         dStr_append_c(SolvedUrl, '#');
-         dStr_append(SolvedUrl, RelUrl->fragment);
-      }
-      goto done;
+        if (RelUrl->query) {                        /* query */
+            if (BaseUrl->query)
+                dStr_truncate(SolvedUrl, BaseUrl->query - BaseUrl->buffer - 1);
+            dStr_append_c(SolvedUrl, '?');
+            dStr_append(SolvedUrl, RelUrl->query);
+        }
+        if (RelUrl->fragment) {                    /* fragment */
+            dStr_append_c(SolvedUrl, '#');
+            dStr_append(SolvedUrl, RelUrl->fragment);
+        }
+        goto done;
 
-   } else if (RelUrl->scheme) {                  /* scheme */
-      dStr_append(SolvedUrl, RelStr);
-      goto done;
+    } else if (RelUrl->scheme) {                  /* scheme */
+        dStr_append(SolvedUrl, RelStr);
+        goto done;
 
-   } else if (RelUrl->authority) {               /* authority */
-      // Set the Path buffer and goto "STEP 7";
-      if (RelUrl->path)
-         dStr_append(Path, RelUrl->path);
+    } else if (RelUrl->authority) {               /* authority */
+        /* Set the Path buffer and goto "STEP 7"; */
+        if (RelUrl->path)
+            dStr_append(Path, RelUrl->path);
 
-   } else {
-      if (RelUrl->path && RelUrl->path[0] == '/') {   /* absolute path */
-         ; /* Ignore BaseUrl path */
-      } else if (BaseUrl->path) {                     /* relative path */
-         dStr_append(Path, BaseUrl->path);
-         for (i = Path->len; --i >= 0 && Path->str[i] != '/'; ) ;
-         if (i >= 0 && Path->str[i] == '/')
-            dStr_truncate(Path, ++i);
-      }
-      if (RelUrl->path)
-         dStr_append(Path, RelUrl->path);
+    } else {
+        if (RelUrl->path && RelUrl->path[0] == '/') {   /* absolute path */
+            ; /* Ignore BaseUrl path */
+        } else if (BaseUrl->path) {                     /* relative path */
+            dStr_append(Path, BaseUrl->path);
+            for (i = Path->len; --i >= 0 && Path->str[i] != '/'; ) ;
+            if (i >= 0 && Path->str[i] == '/')
+                dStr_truncate(Path, ++i);
+        }
+        if (RelUrl->path)
+            dStr_append(Path, RelUrl->path);
 
-      // erase "./"
-      while ((p=strstr(Path->str, "./")) &&
+        /* erase "./" */
+        while ((p=strstr(Path->str, "./")) &&
              (p == Path->str || p[-1] == '/'))
-         dStr_erase(Path, p - Path->str, 2);
-      // erase last "."
-      if (Path->len && Path->str[Path->len - 1] == '.' &&
+            dStr_erase(Path, p - Path->str, 2);
+        /* erase last "." */
+        if (Path->len && Path->str[Path->len - 1] == '.' &&
           (Path->len == 1 || Path->str[Path->len - 2] == '/'))
-         dStr_truncate(Path, Path->len - 1);
+            dStr_truncate(Path, Path->len - 1);
 
-      // erase "<segment>/../" and "<segment>/.."
-      s = p = Path->str;
-      while ( (p = strstr(p, "/..")) != NULL ) {
-         if (p[3] == '/' || !p[3]) { //  "/../" | "/.."
-            for (e = p + 3 ; p > s && p[-1] != '/'; --p) ;
-            dStr_erase(Path, p - Path->str, e - p + (p > s && *e != 0));
-            p -= (p > Path->str);
-         } else
-            p += 3;
-      }
-   }
+        /* erase "<segment>/../" and "<segment>/.." */
+        s = p = Path->str;
+        while ( (p = strstr(p, "/..")) != NULL ) {
+            if (p[3] == '/' || !p[3]) { //  "/../" | "/.."
+                for (e = p + 3 ; p > s && p[-1] != '/'; --p) ;
+                dStr_erase(Path, p - Path->str, e - p + (p > s && *e != 0));
+                p -= (p > Path->str);
+            } else
+                p += 3;
+        }
+    }
 
-   /* STEP 7
+    /* STEP 7
     */
 
-   /* scheme */
-   if (BaseUrl->scheme) {
-      dStr_append(SolvedUrl, BaseUrl->scheme);
-      dStr_append_c(SolvedUrl, ':');
-   }
+    /* scheme */
+    if (BaseUrl->scheme) {
+        dStr_append(SolvedUrl, BaseUrl->scheme);
+        dStr_append_c(SolvedUrl, ':');
+    }
 
-   /* authority */
-   if (RelUrl->authority) {
-      dStr_append(SolvedUrl, "//");
-      dStr_append(SolvedUrl, RelUrl->authority);
-   } else if (BaseUrl->authority) {
-      dStr_append(SolvedUrl, "//");
-      dStr_append(SolvedUrl, BaseUrl->authority);
-   }
+    /* authority */
+    if (RelUrl->authority) {
+        dStr_append(SolvedUrl, "//");
+        dStr_append(SolvedUrl, RelUrl->authority);
+    } else if (BaseUrl->authority) {
+        dStr_append(SolvedUrl, "//");
+        dStr_append(SolvedUrl, BaseUrl->authority);
+    }
 
-   /* path */
-   if ((RelUrl->authority || BaseUrl->authority) &&
+    /* path */
+    if ((RelUrl->authority || BaseUrl->authority) &&
        ((Path->len == 0 && (RelUrl->query || RelUrl->fragment)) ||
         (Path->len && Path->str[0] != '/')))
-      dStr_append_c(SolvedUrl, '/'); /* hack? */
-   dStr_append(SolvedUrl, Path->str);
+        dStr_append_c(SolvedUrl, '/'); /* hack? */
+    dStr_append(SolvedUrl, Path->str);
 
-   /* query */
-   if (RelUrl->query) {
-      dStr_append_c(SolvedUrl, '?');
-      dStr_append(SolvedUrl, RelUrl->query);
-   }
+    /* query */
+    if (RelUrl->query) {
+        dStr_append_c(SolvedUrl, '?');
+        dStr_append(SolvedUrl, RelUrl->query);
+    }
 
-   /* fragment */
-   if (RelUrl->fragment) {
-      dStr_append_c(SolvedUrl, '#');
-      dStr_append(SolvedUrl, RelUrl->fragment);
-   }
+    /* fragment */
+    if (RelUrl->fragment) {
+        dStr_append_c(SolvedUrl, '#');
+        dStr_append(SolvedUrl, RelUrl->fragment);
+    }
 
 done:
-   dStr_free(Path, TRUE);
-   a_Url_free(RelUrl);
-   a_Url_free(BaseUrl);
-   return SolvedUrl;
+    dStr_free(Path, TRUE);
+    a_Url_free(RelUrl);
+    a_Url_free(BaseUrl);
+    return SolvedUrl;
 }
 
 /**
@@ -369,104 +369,104 @@ done:
  */
 DilloUrl* a_Url_new(const char *url_str, const char *base_url)
 {
-   DilloUrl *url;
-   char *urlstr = (char *)url_str;  /* auxiliary variable, don't free */
-   char *p, *str1 = NULL, *str2 = NULL;
-   Dstr *SolvedUrl;
-   int i, n_ic, n_ic_spc;
+    DilloUrl *url;
+    char *urlstr = (char *)url_str;  /* auxiliary variable, don't free */
+    char *p, *str1 = NULL, *str2 = NULL;
+    Dstr *SolvedUrl;
+    int i, n_ic, n_ic_spc;
 
-   if (!url_str)
-      return NULL;
+    if (!url_str)
+        return NULL;
 
-   /* Empty URL without base_url is not valid.
+    /* Empty URL without base_url is not valid.
     * They are used for action="" in forms with base_url set. */
-   if (url_str[0] == '\0' && base_url == NULL)
-      return NULL;
+    if (url_str[0] == '\0' && base_url == NULL)
+        return NULL;
 
-   /* Count illegal characters (0x00-0x1F, 0x7F-0xFF and space) */
-   n_ic = n_ic_spc = 0;
-   for (p = (char*)url_str; *p; p++) {
-      n_ic_spc += (*p == ' ') ? 1 : 0;
-      n_ic += (*p != ' ' && *p > 0x1F && *p < 0x7F) ? 0 : 1;
-   }
-   if (n_ic) {
-      /* Encode illegal characters (they could also be stripped).
+    /* Count illegal characters (0x00-0x1F, 0x7F-0xFF and space) */
+    n_ic = n_ic_spc = 0;
+    for (p = (char*)url_str; *p; p++) {
+        n_ic_spc += (*p == ' ') ? 1 : 0;
+        n_ic += (*p != ' ' && *p > 0x1F && *p < 0x7F) ? 0 : 1;
+    }
+    if (n_ic) {
+        /* Encode illegal characters (they could also be stripped).
        * There's no standard for illegal chars; we chose to encode. */
-      p = str1 = dNew(char, strlen(url_str) + 2*n_ic + 1);
-      for (i = 0; url_str[i]; ++i)
-         if (url_str[i] > 0x1F && url_str[i] < 0x7F && url_str[i] != ' ')
-            *p++ = url_str[i];
-         else {
-            *p++ = '%';
-            *p++ = HEX[(url_str[i] >> 4) & 15];
-            *p++ = HEX[url_str[i] & 15];
-         }
-      *p = 0;
-      urlstr = str1;
-   }
+        p = str1 = dNew(char, strlen(url_str) + 2*n_ic + 1);
+        for (i = 0; url_str[i]; ++i)
+            if (url_str[i] > 0x1F && url_str[i] < 0x7F && url_str[i] != ' ')
+                *p++ = url_str[i];
+            else {
+                *p++ = '%';
+                *p++ = HEX[(url_str[i] >> 4) & 15];
+                *p++ = HEX[url_str[i] & 15];
+            }
+        *p = 0;
+        urlstr = str1;
+    }
 
-   /* let's use a heuristic to set http: as default */
-   if (!base_url) {
-      base_url = "http:";
-      if (urlstr[0] != '/') {
-         p = strpbrk(urlstr, "/#?:");
-         if (!p || *p != ':')
-            urlstr = str2 = dStrconcat("//", urlstr, NULL);
-      } else if (urlstr[1] != '/')
-         urlstr = str2 = dStrconcat("/", urlstr, NULL);
-   }
+    /* let's use a heuristic to set http: as default */
+    if (!base_url) {
+        base_url = "http:";
+        if (urlstr[0] != '/') {
+            p = strpbrk(urlstr, "/#?:");
+            if (!p || *p != ':')
+                urlstr = str2 = dStrconcat("//", urlstr, NULL);
+        } else if (urlstr[1] != '/')
+            urlstr = str2 = dStrconcat("/", urlstr, NULL);
+    }
 
-   /* Resolve the URL */
-   SolvedUrl = Url_resolve_relative(urlstr, base_url);
-   _MSG("SolvedUrl = %s\n", SolvedUrl->str);
+    /* Resolve the URL */
+    SolvedUrl = Url_resolve_relative(urlstr, base_url);
+    _MSG("SolvedUrl = %s\n", SolvedUrl->str);
 
-   /* Fill url data */
-   url = Url_object_new(SolvedUrl->str);
-   url->data = dStr_new("");
-   url->url_string = SolvedUrl;
-   url->illegal_chars = n_ic;
-   url->illegal_chars_spc = n_ic_spc;
+    /* Fill url data */
+    url = Url_object_new(SolvedUrl->str);
+    url->data = dStr_new("");
+    url->url_string = SolvedUrl;
+    url->illegal_chars = n_ic;
+    url->illegal_chars_spc = n_ic_spc;
 
-   dFree(str1);
-   dFree(str2);
+    dFree(str1);
+    dFree(str2);
 
-   bool_t switch_to_https = FALSE;
+    bool_t switch_to_https = FALSE;
 
-   if (url->scheme && !dStrAsciiCasecmp(url->scheme, "http")) {
-      /*
+    if (url->scheme && !dStrAsciiCasecmp(url->scheme, "http")) {
+        /*
        * A site's HTTP Strict Transport Security policy may direct us to transform
        * URLs like "http://en.wikipedia.org:80" to "https://en.wikipedia.org:443".
        */
-      if (prefs.http_strict_transport_security &&
+        if (prefs.http_strict_transport_security &&
           a_Hsts_require_https(a_Url_hostname(url))) {
-         _MSG("url: HSTS transformation for %s.\n", url->url_string->str);
-         switch_to_https = TRUE;
-      } else if (prefs.http_force_https) {
-         _MSG("url: Force HTTPS transformation for %s.\n", url->url_string->str);
-         switch_to_https = TRUE;
-      }
-   }
+            _MSG("url: HSTS transformation for %s.\n", url->url_string->str);
+            switch_to_https = TRUE;
+        } else if (prefs.http_force_https) {
+            _MSG("url: Force HTTPS transformation for %s.\n", url->url_string->str);
+            switch_to_https = TRUE;
+        }
+    }
 
-   if (switch_to_https) {
-      const char *const scheme = "https";
+    if (switch_to_https) {
+        const char *const scheme = "https";
 
-      url->scheme = scheme;
-      if (url->port == URL_HTTP_PORT)
-         url->port = URL_HTTPS_PORT;
+        url->scheme = scheme;
+        if (url->port == URL_HTTP_PORT)
+            url->port = URL_HTTPS_PORT;
 
-      if (url->authority) {
-         int len = strlen(url->authority);
+        if (url->authority) {
+            int len = strlen(url->authority);
 
-         if (len >= 3 && !strcmp(url->authority + len-3, ":80")) {
-            strcpy((char *)url->authority + len-2, "443");
-         }
-      }
-      
-      dStr_free(url->url_string, TRUE);
-      url->url_string = NULL;
-   }
+            if (len >= 3 && !strcmp(url->authority + len-3, ":80")) {
+                strcpy((char *)url->authority + len-2, "443");
+            }
+        }
 
-   return url;
+        dStr_free(url->url_string, TRUE);
+        url->url_string = NULL;
+    }
+
+    return url;
 }
 
 
@@ -475,20 +475,20 @@ DilloUrl* a_Url_new(const char *url_str, const char *base_url)
  */
 DilloUrl* a_Url_dup(const DilloUrl *ori)
 {
-   DilloUrl *url;
+    DilloUrl *url;
 
-   url = Url_object_new(URL_STR_(ori));
-   dReturn_val_if_fail (url != NULL, NULL);
+    url = Url_object_new(URL_STR_(ori));
+    dReturn_val_if_fail (url != NULL, NULL);
 
-   url->url_string           = dStr_new(URL_STR(ori));
-   url->port                 = ori->port;
-   url->flags                = ori->flags;
-   url->ismap_url_len        = ori->ismap_url_len;
-   url->illegal_chars        = ori->illegal_chars;
-   url->illegal_chars_spc    = ori->illegal_chars_spc;
-   url->data                 = dStr_sized_new(URL_DATA(ori)->len);
-   dStr_append_l(url->data, URL_DATA(ori)->str, URL_DATA(ori)->len);
-   return url;
+    url->url_string           = dStr_new(URL_STR(ori));
+    url->port                 = ori->port;
+    url->flags                = ori->flags;
+    url->ismap_url_len        = ori->ismap_url_len;
+    url->illegal_chars        = ori->illegal_chars;
+    url->illegal_chars_spc    = ori->illegal_chars_spc;
+    url->data                 = dStr_sized_new(URL_DATA(ori)->len);
+    dStr_append_l(url->data, URL_DATA(ori)->str, URL_DATA(ori)->len);
+    return url;
 }
 
 /**
@@ -504,20 +504,20 @@ DilloUrl* a_Url_dup(const DilloUrl *ori)
  */
 int a_Url_cmp(const DilloUrl *A, const DilloUrl *B)
 {
-   int st;
+    int st;
 
-   dReturn_val_if_fail(A && B, 1);
+    dReturn_val_if_fail(A && B, 1);
 
-   if (A == B ||
+    if (A == B ||
        ((st = URL_STR_FIELD_I_CMP(A->authority, B->authority)) == 0 &&
         (st = strcmp(A->path ? A->path + (*A->path == '/') : "",
-                     B->path ? B->path + (*B->path == '/') : "")) == 0 &&
-        //(st = URL_STR_FIELD_CMP(A->path, B->path)) == 0 &&
+                            B->path ? B->path + (*B->path == '/') : "")) == 0 &&
+        /* (st = URL_STR_FIELD_CMP(A->path, B->path)) == 0 && */
         (st = URL_STR_FIELD_CMP(A->query, B->query)) == 0 &&
         (st = dStr_cmp(A->data, B->data)) == 0 &&
         (st = URL_STR_FIELD_I_CMP(A->scheme, B->scheme)) == 0))
-      return 0;
-   return st;
+        return 0;
+    return st;
 }
 
 /**
@@ -525,8 +525,8 @@ int a_Url_cmp(const DilloUrl *A, const DilloUrl *B)
  */
 void a_Url_set_flags(DilloUrl *u, int flags)
 {
-   if (u)
-      u->flags = flags;
+    if (u)
+        u->flags = flags;
 }
 
 /**
@@ -534,11 +534,11 @@ void a_Url_set_flags(DilloUrl *u, int flags)
  */
 void a_Url_set_data(DilloUrl *u, Dstr **data)
 {
-   if (u) {
-      dStr_free(u->data, 1);
-      u->data = *data;
-      *data = NULL;
-   }
+    if (u) {
+        dStr_free(u->data, 1);
+        u->data = *data;
+        *data = NULL;
+    }
 }
 
 /**
@@ -547,17 +547,17 @@ void a_Url_set_data(DilloUrl *u, Dstr **data)
  */
 void a_Url_set_ismap_coords(DilloUrl *u, char *coord_str)
 {
-   dReturn_if_fail (u && coord_str);
+    dReturn_if_fail (u && coord_str);
 
-   if (!u->ismap_url_len) {
-      /* Save base-url length (without coords) */
-      u->ismap_url_len = URL_STR_(u) ? u->url_string->len : 0;
-   }
-   if (u->url_string) {
-      dStr_truncate(u->url_string, u->ismap_url_len);
-      dStr_append(u->url_string, coord_str);
-      u->query = u->url_string->str + u->ismap_url_len + 1;
-   }
+    if (!u->ismap_url_len) {
+        /* Save base-url length (without coords) */
+        u->ismap_url_len = URL_STR_(u) ? u->url_string->len : 0;
+    }
+    if (u->url_string) {
+        dStr_truncate(u->url_string, u->ismap_url_len);
+        dStr_append(u->url_string, coord_str);
+        u->query = u->url_string->str + u->ismap_url_len + 1;
+    }
 }
 
 /**
@@ -566,16 +566,16 @@ void a_Url_set_ismap_coords(DilloUrl *u, char *coord_str)
  */
 static int Url_decode_hex_octet(const char *s)
 {
-   int hex_value;
-   char *tail, hex[3];
+    int hex_value;
+    char *tail, hex[3];
 
-   if (s && (hex[0] = s[0]) && (hex[1] = s[1])) {
-      hex[2] = 0;
-      hex_value = strtol(hex, &tail, 16);
-      if (tail - hex == 2)
+    if (s && (hex[0] = s[0]) && (hex[1] = s[1])) {
+        hex[2] = 0;
+        hex_value = strtol(hex, &tail, 16);
+        if (tail - hex == 2)
         return hex_value;
-   }
-   return -1;
+    }
+    return -1;
 }
 
 /**
@@ -584,26 +584,26 @@ static int Url_decode_hex_octet(const char *s)
  */
 char *a_Url_decode_hex_str(const char *str)
 {
-   char *new_str, *dest;
-   int i, val;
+    char *new_str, *dest;
+    int i, val;
 
-   if (!str)
-      return NULL;
+    if (!str)
+        return NULL;
 
-   /* most cases won't have hex octets */
-   if (!strchr(str, '%'))
-      return dStrdup(str);
+    /* most cases won't have hex octets */
+    if (!strchr(str, '%'))
+        return dStrdup(str);
 
-   dest = new_str = dNew(char, strlen(str) + 1);
+    dest = new_str = dNew(char, strlen(str) + 1);
 
-   for (i = 0; str[i]; i++) {
-      *dest++ = (str[i] == '%' && (val = Url_decode_hex_octet(str+i+1)) >= 0) ?
+    for (i = 0; str[i]; i++) {
+        *dest++ = (str[i] == '%' && (val = Url_decode_hex_octet(str+i+1)) >= 0) ?
                 i+=2, val : str[i];
-   }
-   *dest++ = 0;
+    }
+    *dest++ = 0;
 
-   new_str = dRealloc(new_str, sizeof(char) * (dest - new_str));
-   return new_str;
+    new_str = dRealloc(new_str, sizeof(char) * (dest - new_str));
+    return new_str;
 }
 
 /**
@@ -618,32 +618,32 @@ char *a_Url_decode_hex_str(const char *str)
  */
 char *a_Url_encode_hex_str(const char *str)
 {
-   static const char *const verbatim = "-_.*";
-   char *newstr, *c;
+    static const char *const verbatim = "-_.*";
+    char *newstr, *c;
 
-   if (!str)
-      return NULL;
+    if (!str)
+        return NULL;
 
-   newstr = dNew(char, 6*strlen(str)+1);
+    newstr = dNew(char, 6*strlen(str)+1);
 
-   for (c = newstr; *str; str++)
-      if ((dIsalnum(*str) && dIsascii(*str)) || strchr(verbatim, *str))
-         *c++ = *str;
-      else if (*str == ' ')
-         *c++ = '+';
-      else if (*str == '\n') {
-         *c++ = '%';
-         *c++ = '0';
-         *c++ = 'D';
-         *c++ = '%';
-         *c++ = '0';
-         *c++ = 'A';
-      } else {
-         *c++ = '%';
-         *c++ = HEX[(*str >> 4) & 15];
-         *c++ = HEX[*str & 15];
-      }
-   *c = 0;
+    for (c = newstr; *str; str++)
+        if ((dIsalnum(*str) && dIsascii(*str)) || strchr(verbatim, *str))
+            *c++ = *str;
+        else if (*str == ' ')
+            *c++ = '+';
+        else if (*str == '\n') {
+            *c++ = '%';
+            *c++ = '0';
+            *c++ = 'D';
+            *c++ = '%';
+            *c++ = '0';
+            *c++ = 'A';
+        } else {
+            *c++ = '%';
+            *c++ = HEX[(*str >> 4) & 15];
+            *c++ = HEX[*str & 15];
+        }
+    *c = 0;
 
   return newstr;
 }
@@ -656,24 +656,24 @@ char *a_Url_encode_hex_str(const char *str)
  */
 char *a_Url_string_strip_delimiters(const char *str)
 {
-   char *p, *new_str, *text;
+    char *p, *new_str, *text;
 
-   new_str = text = dStrdup(str);
+    new_str = text = dStrdup(str);
 
-   if (new_str) {
-      if (strncmp(new_str, "URL:", 4) == 0)
-         text += 4;
-      if (*text == '<')
-         text++;
+    if (new_str) {
+        if (strncmp(new_str, "URL:", 4) == 0)
+            text += 4;
+        if (*text == '<')
+            text++;
 
-      for (p = new_str; *text; text++)
-         if (*text > 0x1F && *text < 0x7F && *text != ' ')
-            *p++ = *text;
-      if (p > new_str && p[-1] == '>')
-         --p;
-      *p = 0;
-   }
-   return new_str;
+        for (p = new_str; *text; text++)
+            if (*text > 0x1F && *text < 0x7F && *text != ' ')
+                *p++ = *text;
+        if (p > new_str && p[-1] == '>')
+            --p;
+        *p = 0;
+    }
+    return new_str;
 }
 
 /**
@@ -681,22 +681,22 @@ char *a_Url_string_strip_delimiters(const char *str)
  */
 int a_Url_host_type(const char *host)
 {
-   uint_t len;
+    uint_t len;
 
-   if (!host || !*host)
-      return URL_HOST_ERROR;
+    if (!host || !*host)
+        return URL_HOST_ERROR;
 
-   len = strlen(host);
+    len = strlen(host);
 
-   if (len == strspn(host, "0123456789.")) {
-      return URL_HOST_IPV4;
-   }
-   if (strchr(host, ':') &&
+    if (len == strspn(host, "0123456789.")) {
+        return URL_HOST_IPV4;
+    }
+    if (strchr(host, ':') &&
        (len == strspn(host, "0123456789abcdefABCDEF:."))) {
-      /* The precise format is shown in section 3.2.2 of rfc 3986 */
-      return URL_HOST_IPV6;
-   }
-   return URL_HOST_NAME;
+        /* The precise format is shown in section 3.2.2 of rfc 3986 */
+        return URL_HOST_IPV6;
+    }
+    return URL_HOST_NAME;
 }
 
 /**
@@ -709,24 +709,24 @@ int a_Url_host_type(const char *host)
  */
 static uint_t Url_host_public_internal_dots(const char *host)
 {
-   uint_t ret = 1;
+    uint_t ret = 1;
 
-   if (host) {
-      int start, after, tld_len;
+    if (host) {
+        int start, after, tld_len;
 
-      /* We may be able to trust the format of the host string more than
+        /* We may be able to trust the format of the host string more than
        * I am here. Trailing dots and no dots are real possibilities, though.
        */
-      after = strlen(host);
-      if (after > 0 && host[after - 1] == '.')
-         after--;
-      start = after;
-      while (start > 0 && host[start - 1] != '.')
-         start--;
-      tld_len = after - start;
+        after = strlen(host);
+        if (after > 0 && host[after - 1] == '.')
+            after--;
+        start = after;
+        while (start > 0 && host[start - 1] != '.')
+            start--;
+        tld_len = after - start;
 
-      if (tld_len > 0) {
-         /* These TLDs were chosen by examining the current publicsuffix list
+        if (tld_len > 0) {
+            /* These TLDs were chosen by examining the current publicsuffix list
           * in July 2016 and picking out those where it was simplest for
           * them to describe the situation by beginning with a "*.[tld]" rule
           * or every rule was "[something].[tld]".
@@ -735,22 +735,22 @@ static uint_t Url_host_public_internal_dots(const char *host)
           * shrunk and shrunk over the years, and has become a poorer and
           * poorer approximation of administrative boundaries.
           */
-         const char *const tlds[] = {"bd","bn","ck","cy","er","fj","fk",
+            const char *const tlds[] = {"bd","bn","ck","cy","er","fj","fk",
                                      "gu","jm","ke","kh","kw","mm","mz",
                                      "ni","np","pg","ye","za","zw"};
-         uint_t i, tld_num = sizeof(tlds) / sizeof(tlds[0]);
+            uint_t i, tld_num = sizeof(tlds) / sizeof(tlds[0]);
 
-         for (i = 0; i < tld_num; i++) {
-            if (strlen(tlds[i]) == (uint_t) tld_len &&
+            for (i = 0; i < tld_num; i++) {
+                if (strlen(tlds[i]) == (uint_t) tld_len &&
                 !dStrnAsciiCasecmp(tlds[i], host + start, tld_len)) {
-               _MSG("TLD code matched %s\n", tlds[i]);
-               ret++;
-               break;
+                    _MSG("TLD code matched %s\n", tlds[i]);
+                    ret++;
+                    break;
+                }
             }
-         }
-      }
-   }
-   return ret;
+        }
+    }
+    return ret;
 }
 
 /**
@@ -760,46 +760,46 @@ static uint_t Url_host_public_internal_dots(const char *host)
  */
 static const char *Url_host_find_public_suffix(const char *host)
 {
-   const char *s;
-   uint_t dots;
+    const char *s;
+    uint_t dots;
 
-   if (a_Url_host_type(host) != URL_HOST_NAME)
-      return host;
+    if (a_Url_host_type(host) != URL_HOST_NAME)
+        return host;
 
-   s = host;
+    s = host;
 
-   while (s[1])
-      s++;
+    while (s[1])
+        s++;
 
-   if (s > host && *s == '.') {
-      /* don't want to deal with trailing dot */
-      s--;
-   }
+    if (s > host && *s == '.') {
+        /* don't want to deal with trailing dot */
+        s--;
+    }
 
-   dots = Url_host_public_internal_dots(host);
+    dots = Url_host_public_internal_dots(host);
 
-   /* With a proper host string, we should not be pointing to a dot now. */
+    /* With a proper host string, we should not be pointing to a dot now. */
 
-   while (s > host) {
-      if (s[-1] == '.') {
-         if (dots == 0)
-            break;
-         else
-            dots--;
-      }
-      s--;
-   }
+    while (s > host) {
+        if (s[-1] == '.') {
+            if (dots == 0)
+                break;
+            else
+                dots--;
+        }
+        s--;
+    }
 
-   _MSG("public suffix of %s is %s\n", host, s);
-   return s;
+    _MSG("public suffix of %s is %s\n", host, s);
+    return s;
 }
 
 bool_t a_Url_same_organization(const DilloUrl *u1, const DilloUrl *u2)
 {
-   if (!u1 || !u2)
-      return FALSE;
+    if (!u1 || !u2)
+        return FALSE;
 
-   return dStrAsciiCasecmp(Url_host_find_public_suffix(URL_HOST(u1)),
-                           Url_host_find_public_suffix(URL_HOST(u2)))
+    return dStrAsciiCasecmp(Url_host_find_public_suffix(URL_HOST(u1)),
+                                    Url_host_find_public_suffix(URL_HOST(u2)))
           ? FALSE : TRUE;
 }

@@ -2,9 +2,9 @@
 #define HTML_CHARREFS_H
 
 typedef struct {
-   const char *ref;
-   const char *html5_str;
-   const char *html4_str;
+    const char *ref;
+    const char *html5_str;
+    const char *html4_str;
 } Charref_t;
 
 #define NumRef 2125

@@ -19,9 +19,9 @@
  */
 void errmsg(char *caller, char *called, int errornum, char *file, int line)
 {
-   MSG_ERR("%s:%d: %s: %s\n", file, line, caller, called);
-   if (errornum > 0)
-      MSG_ERR("%s\n", dStrerror(errornum));
+    MSG_ERR("%s:%d: %s: %s\n", file, line, caller, called);
+    if (errornum > 0)
+        MSG_ERR("%s\n", dStrerror(errornum));
 }
 
 /*!
@@ -31,15 +31,15 @@ void errmsg(char *caller, char *called, int errornum, char *file, int line)
  */
 ssize_t ckd_write(int fd, char *msg, char *file, int line)
 {
-   ssize_t ret;
+    ssize_t ret;
 
-   do {
-      ret = write(fd, msg, strlen(msg));
-   } while (ret == -1 && errno == EINTR);
-   if (ret == -1) {
-      MSG_ERR("%s:%d: write: %s\n", file, line, dStrerror(errno));
-   }
-   return (ret);
+    do {
+        ret = write(fd, msg, strlen(msg));
+    } while (ret == -1 && errno == EINTR);
+    if (ret == -1) {
+        MSG_ERR("%s:%d: write: %s\n", file, line, dStrerror(errno));
+    }
+    return (ret);
 }
 
 /*!
@@ -49,11 +49,11 @@ ssize_t ckd_write(int fd, char *msg, char *file, int line)
  */
 ssize_t ckd_close(int fd, char *file, int line)
 {
-   ssize_t ret;
+    ssize_t ret;
 
-   ret = dClose(fd);
-   if (ret == -1)
-      MSG_ERR("%s:%d: close: %s\n", file, line, dStrerror(errno));
-   return ret;
+    ret = dClose(fd);
+    if (ret == -1)
+        MSG_ERR("%s:%d: close: %s\n", file, line, dStrerror(errno));
+    return ret;
 }
 

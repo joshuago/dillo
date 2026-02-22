@@ -24,14 +24,14 @@ namespace dw {
 namespace oof {
 
 OOFPosAbsMgr::OOFPosAbsMgr (OOFAwareWidget *container) :
-   OOFPosAbsLikeMgr (container)
+    OOFPosAbsLikeMgr (container)
 {
-   DBG_OBJ_CREATE ("dw::oof::OOFPosAbsMgr");
+    DBG_OBJ_CREATE ("dw::oof::OOFPosAbsMgr");
 }
 
 OOFPosAbsMgr::~OOFPosAbsMgr ()
 {
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 // Comment for all containerBox* implementations: for the toplevel
@@ -41,26 +41,26 @@ OOFPosAbsMgr::~OOFPosAbsMgr ()
 
 int OOFPosAbsMgr::containerBoxOffsetX ()
 {
-   return container->getParent () ?
-      container->boxOffsetX () - container->getStyle()->padding.left : 0;
+    return container->getParent () ?
+        container->boxOffsetX () - container->getStyle()->padding.left : 0;
 }
 
 int OOFPosAbsMgr::containerBoxOffsetY ()
 {
-   return container->getParent () ?
-      container->boxOffsetY () - container->getStyle()->padding.top : 0;
+    return container->getParent () ?
+        container->boxOffsetY () - container->getStyle()->padding.top : 0;
 }
 
 int OOFPosAbsMgr::containerBoxRestWidth ()
 {
-   return container->getParent () ?
-      container->boxRestWidth () - container->getStyle()->padding.right : 0;
+    return container->getParent () ?
+        container->boxRestWidth () - container->getStyle()->padding.right : 0;
 }
 
 int OOFPosAbsMgr::containerBoxRestHeight ()
 {
-   return container->getParent () ?
-      container->boxRestHeight () - container->getStyle()->padding.bottom : 0;
+    return container->getParent () ?
+        container->boxRestHeight () - container->getStyle()->padding.bottom : 0;
 }
 
 } // namespace oof

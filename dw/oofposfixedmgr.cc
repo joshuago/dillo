@@ -24,34 +24,34 @@ namespace dw {
 namespace oof {
 
 OOFPosFixedMgr::OOFPosFixedMgr (OOFAwareWidget *container) :
-   OOFPosAbsLikeMgr (container)
+    OOFPosAbsLikeMgr (container)
 {
-   DBG_OBJ_CREATE ("dw::oof::OOFPosFixedMgr");
+    DBG_OBJ_CREATE ("dw::oof::OOFPosFixedMgr");
 }
 
 OOFPosFixedMgr::~OOFPosFixedMgr ()
 {
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 int OOFPosFixedMgr::containerBoxOffsetX ()
 {
-   return 0;
+    return 0;
 }
 
 int OOFPosFixedMgr::containerBoxOffsetY ()
 {
-   return 0;
+    return 0;
 }
 
 int OOFPosFixedMgr::containerBoxRestWidth ()
 {
-   return 0;
+    return 0;
 }
 
 int OOFPosFixedMgr::containerBoxRestHeight ()
 {
-   return 0;
+    return 0;
 }
 
 } // namespace oof

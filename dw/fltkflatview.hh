@@ -11,23 +11,23 @@ namespace fltk {
 class FltkFlatView: public FltkWidgetView
 {
 protected:
-   int translateViewXToCanvasX (int x);
-   int translateViewYToCanvasY (int y);
-   int translateCanvasXToViewX (int x);
-   int translateCanvasYToViewY (int y);
+    int translateViewXToCanvasX (int x);
+    int translateViewYToCanvasY (int y);
+    int translateCanvasXToViewX (int x);
+    int translateCanvasYToViewY (int y);
 
 public:
-   FltkFlatView (int x, int y, int w, int h, const char *label = 0);
-   ~FltkFlatView ();
+    FltkFlatView (int x, int y, int w, int h, const char *label = 0);
+    ~FltkFlatView ();
 
-   void setCanvasSize (int width, int ascent, int descent);
+    void setCanvasSize (int width, int ascent, int descent);
 
-   bool usesViewport ();
-   int getHScrollbarThickness ();
-   int getVScrollbarThickness ();
-   int getScrollbarOnLeft ();
-   void scrollTo (int x, int y);
-   void setViewportSize (int width, int height,
+    bool usesViewport ();
+    int getHScrollbarThickness ();
+    int getVScrollbarThickness ();
+    int getScrollbarOnLeft ();
+    void scrollTo (int x, int y);
+    void setViewportSize (int width, int height,
                          int hScrollbarThickness, int vScrollbarThickness);
 };
 

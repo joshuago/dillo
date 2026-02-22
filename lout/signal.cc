@@ -32,28 +32,28 @@ using namespace container::typed;
 
 Emitter::Emitter ()
 {
-   receivers = new List <Receiver> (false);
+    receivers = new List <Receiver> (false);
 }
 
 Emitter::~Emitter ()
 {
-   for (Iterator<Receiver> it = receivers->iterator (); it.hasNext (); ) {
-      Receiver *receiver = it.getNext ();
-      receiver->unconnectFrom (this);
-   }
-   delete receivers;
+    for (Iterator<Receiver> it = receivers->iterator (); it.hasNext (); ) {
+        Receiver *receiver = it.getNext ();
+        receiver->unconnectFrom (this);
+    }
+    delete receivers;
 }
 
 void Emitter::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append ("<emitter: ");
-   receivers->intoStringBuffer (sb);
-   sb->append (">");
+    sb->append ("<emitter: ");
+    receivers->intoStringBuffer (sb);
+    sb->append (">");
 }
 
 void Emitter::unconnect (Receiver *receiver)
 {
-   receivers->removeRef (receiver);
+    receivers->removeRef (receiver);
 }
 
 /**
@@ -64,8 +64,8 @@ void Emitter::unconnect (Receiver *receiver)
  */
 void Emitter::connect (Receiver *receiver)
 {
-   receivers->append (receiver);
-   receiver->connectTo (this);
+    receivers->append (receiver);
+    receiver->connectTo (this);
 }
 
 /**
@@ -76,10 +76,10 @@ void Emitter::connect (Receiver *receiver)
  */
 void Emitter::emitVoid (int signalNo, int argc, Object **argv)
 {
-   for (Iterator <Receiver> it = receivers->iterator (); it.hasNext (); ) {
-      Receiver *receiver = it.getNext();
-      emitToReceiver (receiver, signalNo, argc, argv);
-   }
+    for (Iterator <Receiver> it = receivers->iterator (); it.hasNext (); ) {
+        Receiver *receiver = it.getNext();
+        emitToReceiver (receiver, signalNo, argc, argv);
+    }
 }
 
 /**
@@ -90,19 +90,19 @@ void Emitter::emitVoid (int signalNo, int argc, Object **argv)
  */
 bool Emitter::emitBool (int signalNo, int argc, Object **argv)
 {
-   bool b = false, bt;
+    bool b = false, bt;
 
-   for (Iterator <Receiver> it = receivers->iterator (); it.hasNext (); ) {
-      Receiver *receiver = it.getNext();
-      // Note: All receivers are called, even if one returns true.
-      // Therefore, something like
-      //    b = b || emitToReceiver (receiver, signalNo, argc, argv);
-      // does not work.
-      bt = emitToReceiver (receiver, signalNo, argc, argv);
-      b = b || bt;
-   }
+    for (Iterator <Receiver> it = receivers->iterator (); it.hasNext (); ) {
+        Receiver *receiver = it.getNext();
+        // Note: All receivers are called, even if one returns true.
+        // Therefore, something like
+        //    b = b || emitToReceiver (receiver, signalNo, argc, argv);
+        // does not work.
+        bt = emitToReceiver (receiver, signalNo, argc, argv);
+        b = b || bt;
+    }
 
-   return b;
+    return b;
 }
 
 
@@ -112,32 +112,32 @@ bool Emitter::emitBool (int signalNo, int argc, Object **argv)
 
 Receiver::Receiver()
 {
-   emitters = new List <Emitter> (false);
+    emitters = new List <Emitter> (false);
 }
 
 Receiver::~Receiver()
 {
-   for (Iterator<Emitter> it = emitters->iterator(); it.hasNext(); ) {
-      Emitter *emitter = it.getNext();
-      emitter->unconnect (this);
-   }
-   delete emitters;
+    for (Iterator<Emitter> it = emitters->iterator(); it.hasNext(); ) {
+        Emitter *emitter = it.getNext();
+        emitter->unconnect (this);
+    }
+    delete emitters;
 }
 
 void Receiver::intoStringBuffer(misc::StringBuffer *sb)
 {
-   // emitters are not listed, to prevent recursion
-   sb->append ("<receiver>");
+    // emitters are not listed, to prevent recursion
+    sb->append ("<receiver>");
 }
 
 void Receiver::connectTo(Emitter *emitter)
 {
-   emitters->append (emitter);
+    emitters->append (emitter);
 }
 
 void Receiver::unconnectFrom(Emitter *emitter)
 {
-   emitters->removeRef (emitter);
+    emitters->removeRef (emitter);
 }
 
 // ------------------------
@@ -145,25 +145,25 @@ void Receiver::unconnectFrom(Emitter *emitter)
 // ------------------------
 
 bool ObservedObject::DeletionEmitter::emitToReceiver (Receiver *receiver,
-                                                      int signalNo,
-                                                      int argc, Object **argv)
+                                                                        int signalNo,
+                                                                        int argc, Object **argv)
 {
-   object::TypedPointer <ObservedObject> *p =
-      (object::TypedPointer<ObservedObject>*)argv[0];
-   ((DeletionReceiver*)receiver)->deleted (p->getTypedValue ());
-   return false;
+    object::TypedPointer <ObservedObject> *p =
+        (object::TypedPointer<ObservedObject>*)argv[0];
+    ((DeletionReceiver*)receiver)->deleted (p->getTypedValue ());
+    return false;
 }
 
 void ObservedObject::DeletionEmitter::emitDeletion (ObservedObject *obj)
 {
-   object::TypedPointer <ObservedObject> p(obj);
-   object::Object *argv[1] = { &p };
-   emitVoid (0, 1, argv);
+    object::TypedPointer <ObservedObject> p(obj);
+    object::Object *argv[1] = { &p };
+    emitVoid (0, 1, argv);
 }
 
 ObservedObject::~ObservedObject()
 {
-   deletionEmitter.emitDeletion (this);
+    deletionEmitter.emitDeletion (this);
 }
 
 } // namespace signal

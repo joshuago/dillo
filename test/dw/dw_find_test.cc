@@ -43,8 +43,8 @@ static Fl_Widget *resultLabel;
 
 static void findCallback (Fl_Widget *widget, void *data)
 {
-   //switch(layout->search ("worm", true)) {
-   switch(layout->search ("WORM", false, false)) {
+    //switch(layout->search ("worm", true)) {
+    switch(layout->search ("WORM", false, false)) {
        case FindtextState::SUCCESS:
           resultLabel->label("SUCCESS");
           break;
@@ -56,103 +56,103 @@ static void findCallback (Fl_Widget *widget, void *data)
        case FindtextState::NOT_FOUND:
           resultLabel->label("NOT_FOUND");
           break;
-   }
+    }
 
-   resultLabel->redraw ();
+    resultLabel->redraw ();
 }
 
 static void resetCallback (Fl_Widget *widget, void *data)
 {
-   layout->resetSearch ();
-   resultLabel->label("---");
-   resultLabel->redraw ();
+    layout->resetSearch ();
+    resultLabel->label("---");
+    resultLabel->redraw ();
 }
 
 int main(int argc, char **argv)
 {
-   platform = new FltkPlatform ();
-   layout = new Layout (platform);
+    platform = new FltkPlatform ();
+    layout = new Layout (platform);
 
-   window = new Fl_Window(200, 300, "Dw Find Test");
-   window->box(FL_NO_BOX);
-   window->begin();
+    window = new Fl_Window(200, 300, "Dw Find Test");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   viewport = new FltkViewport (0, 0, 200, 280);
-   viewport->end();
-   layout->attachView (viewport);
+    viewport = new FltkViewport (0, 0, 200, 280);
+    viewport->end();
+    layout->attachView (viewport);
 
-   findButton = new Fl_Button(0, 280, 50, 20, "Find");
-   findButton->callback (findCallback, NULL);
-   findButton->when (FL_WHEN_RELEASE);
-   findButton->clear_visible_focus ();
+    findButton = new Fl_Button(0, 280, 50, 20, "Find");
+    findButton->callback (findCallback, NULL);
+    findButton->when (FL_WHEN_RELEASE);
+    findButton->clear_visible_focus ();
 
-   resetButton = new Fl_Button(50, 280, 50, 20, "Reset");
-   resetButton->callback (resetCallback, NULL);
-   resetButton->when (FL_WHEN_RELEASE);
-   resetButton->clear_visible_focus ();
+    resetButton = new Fl_Button(50, 280, 50, 20, "Reset");
+    resetButton->callback (resetCallback, NULL);
+    resetButton->when (FL_WHEN_RELEASE);
+    resetButton->clear_visible_focus ();
 
-   resultLabel = new Fl_Box(100, 280, 100, 20, "---");
-   resultLabel->box(FL_FLAT_BOX);
+    resultLabel = new Fl_Box(100, 280, 100, 20, "---");
+    resultLabel->box(FL_FLAT_BOX);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
-   styleAttrs.margin.setVal (10);
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
-   Style *topWidgetStyle = Style::create (&styleAttrs);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    styleAttrs.margin.setVal (10);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    Style *topWidgetStyle = Style::create (&styleAttrs);
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.margin.left = 30;
-   styleAttrs.backgroundColor = NULL;
-   Style *widgetStyle = Style::create (&styleAttrs);
+    styleAttrs.margin.setVal (0);
+    styleAttrs.margin.left = 30;
+    styleAttrs.backgroundColor = NULL;
+    Style *widgetStyle = Style::create (&styleAttrs);
 
-   styleAttrs.margin.left = 0;
-   Style *wordStyle = Style::create (&styleAttrs);
+    styleAttrs.margin.left = 0;
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock = new Textblock (false);
-   textblock->setStyle (topWidgetStyle);
-   layout->setWidget (textblock);
+    Textblock *textblock = new Textblock (false);
+    textblock->setStyle (topWidgetStyle);
+    layout->setWidget (textblock);
 
-   Stack <Textblock> *stack = new Stack <Textblock> (false);
-   stack->push (textblock);
+    Stack <Textblock> *stack = new Stack <Textblock> (false);
+    stack->push (textblock);
 
-   for(int i = 0; i < 10; i++)
-      for(int j = 0; j < 10; j++) {
-         Textblock *current;
-         if(j < 5) {
-            current = new Textblock (false);
-            stack->getTop()->addWidget (current, widgetStyle);
-            stack->push (current);
-         } else {
-            stack->getTop()->flush ();
-            stack->pop ();
-            current = stack->getTop ();
-         }
+    for(int i = 0; i < 10; i++)
+        for(int j = 0; j < 10; j++) {
+            Textblock *current;
+            if(j < 5) {
+                current = new Textblock (false);
+                stack->getTop()->addWidget (current, widgetStyle);
+                stack->push (current);
+            } else {
+                stack->getTop()->flush ();
+                stack->pop ();
+                current = stack->getTop ();
+            }
 
-         current->addText ((i == j ? "worm" : "apple"), wordStyle);
-         current->addLinebreak (wordStyle);
-      }
+            current->addText ((i == j ? "worm" : "apple"), wordStyle);
+            current->addLinebreak (wordStyle);
+        }
 
-   stack->getTop()->flush ();
+    stack->getTop()->flush ();
 
-   topWidgetStyle->unref ();
-   widgetStyle->unref ();
-   wordStyle->unref ();
+    topWidgetStyle->unref ();
+    widgetStyle->unref ();
+    wordStyle->unref ();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

@@ -35,83 +35,83 @@ using namespace dw::fltk;
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(300, 300, "Dw Table");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(300, 300, "Dw Table");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 300, 300);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 300, 300);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
-   styleAttrs.padding.setVal (0);
-   styleAttrs.borderWidth.setVal (1);
-   styleAttrs.setBorderStyle (BORDER_OUTSET);
-   styleAttrs.setBorderColor (Color::create (layout, 0xffffff));
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
-   styleAttrs.hBorderSpacing = 5;
-   styleAttrs.vBorderSpacing = 5;
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
+    styleAttrs.padding.setVal (0);
+    styleAttrs.borderWidth.setVal (1);
+    styleAttrs.setBorderStyle (BORDER_OUTSET);
+    styleAttrs.setBorderColor (Color::create (layout, 0xffffff));
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.hBorderSpacing = 5;
+    styleAttrs.vBorderSpacing = 5;
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   Style *tableStyle = Style::create (&styleAttrs);
+    Style *tableStyle = Style::create (&styleAttrs);
 
-   Table *table = new Table (false);
-   table->setStyle (tableStyle);
-   layout->setWidget (table);
+    Table *table = new Table (false);
+    table->setStyle (tableStyle);
+    layout->setWidget (table);
 
-   tableStyle->unref();
+    tableStyle->unref();
 
-   styleAttrs.setBorderStyle (BORDER_INSET);
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.margin.setVal (0);
-   styleAttrs.padding.setVal (5);
+    styleAttrs.setBorderStyle (BORDER_INSET);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.padding.setVal (5);
 
-   Style *cellStyle = Style::create (&styleAttrs);
+    Style *cellStyle = Style::create (&styleAttrs);
 
-   styleAttrs.borderWidth.setVal (0);
-   styleAttrs.margin.setVal (0);
-   styleAttrs.cursor = CURSOR_TEXT;
-   styleAttrs.textAlignChar = '.';
+    styleAttrs.borderWidth.setVal (0);
+    styleAttrs.margin.setVal (0);
+    styleAttrs.cursor = CURSOR_TEXT;
+    styleAttrs.textAlignChar = '.';
 
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   for (int i = 0; i < 4; i++) {
-      table->addRow (wordStyle);
+    for (int i = 0; i < 4; i++) {
+        table->addRow (wordStyle);
 
-      for (int j = 0; j < 4; j++) {
-         Textblock *cell = new Textblock (false);
-         cell->setStyle (cellStyle);
-         table->addCell (cell, 1, 1);
+        for (int j = 0; j < 4; j++) {
+            Textblock *cell = new Textblock (false);
+            cell->setStyle (cellStyle);
+            table->addCell (cell, 1, 1);
 
-         char buf[10];
-         sprintf (buf, "cell %c", 'A' + 4 * i + j);
+            char buf[10];
+            sprintf (buf, "cell %c", 'A' + 4 * i + j);
 
-         cell->addText (buf, wordStyle);
-         cell->flush ();
-      }
-   }
+            cell->addText (buf, wordStyle);
+            cell->flush ();
+        }
+    }
 
-   wordStyle->unref();
-   cellStyle->unref();
+    wordStyle->unref();
+    cellStyle->unref();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

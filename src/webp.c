@@ -23,18 +23,18 @@
 #include "dicache.h"
 
 enum prog_state {
-   IS_finished, IS_init, IS_nextdata
+    IS_finished, IS_init, IS_nextdata
 };
 
 typedef struct {
-   DilloImage *Image;           /* Image meta data */
-   DilloUrl *url;               /* Primary Key for the dicache */
-   int version;                 /* Secondary Key for the dicache */
-   int bgcolor;                 /* Parent widget background color */
-   int state;
-   int y;
-   WebPIDecoder* idec;
-   WebPDecBuffer output_buffer; /* for RGBA */
+    DilloImage *Image;           /* Image meta data */
+    DilloUrl *url;               /* Primary Key for the dicache */
+    int version;                 /* Secondary Key for the dicache */
+    int bgcolor;                 /* Parent widget background color */
+    int state;
+    int y;
+    WebPIDecoder* idec;
+    WebPDecBuffer output_buffer; /* for RGBA */
 } DilloWebp;
 
 
@@ -43,12 +43,12 @@ typedef struct {
  */
 static void Webp_free(DilloWebp *webp)
 {
-   _MSG("Webp_free: webp=%p\n", webp);
+    _MSG("Webp_free: webp=%p\n", webp);
 
-   WebPFreeDecBuffer(&webp->output_buffer);
-   if (webp->idec)
-      WebPIDelete(webp->idec);
-   dFree(webp);
+    WebPFreeDecBuffer(&webp->output_buffer);
+    if (webp->idec)
+        WebPIDelete(webp->idec);
+    dFree(webp);
 }
 
 /*
@@ -56,10 +56,10 @@ static void Webp_free(DilloWebp *webp)
  */
 static void Webp_close(DilloWebp *webp, CacheClient_t *Client)
 {
-   _MSG("Webp_close\n");
-   /* Let dicache know decoding is over */
-   a_Dicache_close(webp->url, webp->version, Client);
-   Webp_free(webp);
+    _MSG("Webp_close\n");
+    /* Let dicache know decoding is over */
+    a_Dicache_close(webp->url, webp->version, Client);
+    Webp_free(webp);
 }
 
 /*
@@ -86,108 +86,108 @@ static void Webp_close(DilloWebp *webp, CacheClient_t *Client)
  */
 void a_Webp_callback(int Op, void *data)
 {
-   CacheClient_t *Client = data;
+    CacheClient_t *Client = data;
 
-   if (Op == CA_Send) {
-      uint8_t* output;
-      VP8StatusCode ret;
+    if (Op == CA_Send) {
+        uint8_t* output;
+        VP8StatusCode ret;
 
-      DilloWebp *webp = (DilloWebp *)Client->CbData;
+        DilloWebp *webp = (DilloWebp *)Client->CbData;
 
-      if (webp->state == IS_init) {
-         WebPBitstreamFeatures features;
+        if (webp->state == IS_init) {
+            WebPBitstreamFeatures features;
 
-         ret = WebPGetFeatures(Client->Buf, Client->BufSize, &features);
-         if (ret != VP8_STATUS_OK) {
-            MSG("features ret is %d\n", ret);
-            return;
-         }
-         if (features.has_alpha) {
-            _MSG("WEBP: Alpha!\n");
-         }
-         webp->output_buffer.colorspace = features.has_alpha ? MODE_RGBA : MODE_RGB;
+            ret = WebPGetFeatures(Client->Buf, Client->BufSize, &features);
+            if (ret != VP8_STATUS_OK) {
+                MSG("features ret is %d\n", ret);
+                return;
+            }
+            if (features.has_alpha) {
+                _MSG("WEBP: Alpha!\n");
+            }
+            webp->output_buffer.colorspace = features.has_alpha ? MODE_RGBA : MODE_RGB;
 
-         a_Dicache_set_parms(webp->url, webp->version, webp->Image,
+            a_Dicache_set_parms(webp->url, webp->version, webp->Image,
                              features.width, features.height,
                              DILLO_IMG_TYPE_RGB, 1 / 2.2);
 
-         webp->idec = WebPINewDecoder(&webp->output_buffer);
-         webp->state = IS_nextdata;
-      }
+            webp->idec = WebPINewDecoder(&webp->output_buffer);
+            webp->state = IS_nextdata;
+        }
 
-      ret = WebPIUpdate(webp->idec, Client->Buf, Client->BufSize);
-      /* SUSPENDED is a success state that means you don't have the entire file yet */
-      if (ret == VP8_STATUS_SUSPENDED || ret == VP8_STATUS_OK) {
-         /* last_y seems 1-based, which would be kind of crazy, but I would expect
+        ret = WebPIUpdate(webp->idec, Client->Buf, Client->BufSize);
+        /* SUSPENDED is a success state that means you don't have the entire file yet */
+        if (ret == VP8_STATUS_SUSPENDED || ret == VP8_STATUS_OK) {
+            /* last_y seems 1-based, which would be kind of crazy, but I would expect
           * crazy idiocy from google.
           */
-         int last_y, width, height, stride;
+            int last_y, width, height, stride;
 
-         _MSG("webp completed. status: %s\n", ret == VP8_STATUS_SUSPENDED ? "suspended" : "ok (done)");
-         output = WebPIDecGetRGB(webp->idec, &last_y, &width, &height, &stride);
-         if (!output) {
-            _MSG("webp decoding no output\n");
-         } else {
-            unsigned char *line;
-            int row = webp->y;
+            _MSG("webp completed. status: %s\n", ret == VP8_STATUS_SUSPENDED ? "suspended" : "ok (done)");
+            output = WebPIDecGetRGB(webp->idec, &last_y, &width, &height, &stride);
+            if (!output) {
+                _MSG("webp decoding no output\n");
+            } else {
+                unsigned char *line;
+                int row = webp->y;
 
-            if (webp->output_buffer.colorspace == MODE_RGBA)
-               line = dNew(unsigned char, width * 3);
-            else
-               line = output + row * stride;
+                if (webp->output_buffer.colorspace == MODE_RGBA)
+                    line = dNew(unsigned char, width * 3);
+                else
+                    line = output + row * stride;
 
-            for (; row < last_y; row++) {
+                for (; row < last_y; row++) {
 
-               if (webp->output_buffer.colorspace == MODE_RGBA) {
-                  int j;
+                    if (webp->output_buffer.colorspace == MODE_RGBA) {
+                        int j;
 
-                  uint_t bg_blue  = (webp->bgcolor) & 0xFF;
-                  uint_t bg_green = (webp->bgcolor>>8) & 0xFF;
-                  uint_t bg_red   = (webp->bgcolor>>16) & 0xFF;
-                  for (j = 0; j < width; j++) {
-                     uchar_t alpha = output[row * stride + 4 * j + 3];
-                     uchar_t r = output[row * stride + 4 * j];
-                     uchar_t g = output[row * stride + 4 * j + 1];
-                     uchar_t b = output[row * stride + 4 * j + 2];
-                     line[3 * j] = (r * alpha + (bg_red * (0xFF - alpha))) / 0xFF;
-                     line[3 * j + 1] = (g * alpha + (bg_green * (0xFF - alpha))) / 0xFF;
-                     line[3 * j + 2] = (b * alpha + (bg_blue * (0xFF - alpha))) / 0xFF;
-                  }
-               } else {
-                  line = output + row * stride;
-               }
-               a_Dicache_write(webp->url, webp->version, line, row);
+                        uint_t bg_blue  = (webp->bgcolor) & 0xFF;
+                        uint_t bg_green = (webp->bgcolor>>8) & 0xFF;
+                        uint_t bg_red   = (webp->bgcolor>>16) & 0xFF;
+                        for (j = 0; j < width; j++) {
+                            uchar_t alpha = output[row * stride + 4 * j + 3];
+                            uchar_t r = output[row * stride + 4 * j];
+                            uchar_t g = output[row * stride + 4 * j + 1];
+                            uchar_t b = output[row * stride + 4 * j + 2];
+                            line[3 * j] = (r * alpha + (bg_red * (0xFF - alpha))) / 0xFF;
+                            line[3 * j + 1] = (g * alpha + (bg_green * (0xFF - alpha))) / 0xFF;
+                            line[3 * j + 2] = (b * alpha + (bg_blue * (0xFF - alpha))) / 0xFF;
+                        }
+                    } else {
+                        line = output + row * stride;
+                    }
+                    a_Dicache_write(webp->url, webp->version, line, row);
+                }
+                webp->y = last_y;
+
+                if (webp->output_buffer.colorspace == MODE_RGBA)
+                    dFree(line);
             }
-            webp->y = last_y;
-
-            if (webp->output_buffer.colorspace == MODE_RGBA)
-               dFree(line);
-         }
-      } else {
-         MSG("webp WebPIUpdate failed with %d\n", ret);
-      }
-   } else if (Op == CA_Close) {
-      Webp_close(Client->CbData, Client);
-   } else if (Op == CA_Abort) {
-      Webp_free(data);
-   }
+        } else {
+            MSG("webp WebPIUpdate failed with %d\n", ret);
+        }
+    } else if (Op == CA_Close) {
+        Webp_close(Client->CbData, Client);
+    } else if (Op == CA_Abort) {
+        Webp_free(data);
+    }
 }
 
 const char *a_Webp_version(char *buf, int n)
 {
-   /* Return the decoder's version number, packed in
+    /* Return the decoder's version number, packed in
     * hexadecimal using 8bits for each of major/minor/revision.
     * E.g: v2.5.7 is 0x020507. */
-   int ver = WebPGetDecoderVersion();
+    int ver = WebPGetDecoderVersion();
 
-   int major = (ver >> 16) & 0xff;
-   int minor = (ver >>  8) & 0xff;
-   int rev   = (ver >>  0) & 0xff;
+    int major = (ver >> 16) & 0xff;
+    int minor = (ver >>  8) & 0xff;
+    int rev   = (ver >>  0) & 0xff;
 
-   int k = snprintf(buf, n, "%d.%d.%d", major, minor, rev);
-   if (k >= n)
-      return "?";
-   return buf;
+    int k = snprintf(buf, n, "%d.%d.%d", major, minor, rev);
+    if (k >= n)
+        return "?";
+    return buf;
 }
 
 /*
@@ -195,20 +195,20 @@ const char *a_Webp_version(char *buf, int n)
  */
 void *a_Webp_new(DilloImage *Image, DilloUrl *url, int version)
 {
-   DilloWebp *webp = dNew0(DilloWebp, 1);
-   _MSG("a_Webp_new: webp=%p\n", webp);
+    DilloWebp *webp = dNew0(DilloWebp, 1);
+    _MSG("a_Webp_new: webp=%p\n", webp);
 
-   webp->Image = Image;
-   webp->url = url;
-   webp->version = version;
+    webp->Image = Image;
+    webp->url = url;
+    webp->version = version;
 
-   webp->bgcolor = Image->bg_color;
-   webp->state = IS_init;
-   webp->y = 0;
-   webp->idec = NULL;
-   WebPInitDecBuffer(&webp->output_buffer);
+    webp->bgcolor = Image->bg_color;
+    webp->state = IS_init;
+    webp->y = 0;
+    webp->idec = NULL;
+    WebPInitDecBuffer(&webp->output_buffer);
 
-   return webp;
+    return webp;
 }
 
 #else /* ENABLE_WEBP */

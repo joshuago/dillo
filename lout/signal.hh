@@ -211,19 +211,19 @@ class Receiver;
  */
 class Emitter: public object::Object
 {
-   friend class Receiver;
+    friend class Receiver;
 
 private:
-   container::typed::List <Receiver> *receivers;
+    container::typed::List <Receiver> *receivers;
 
-   void unconnect (Receiver *receiver);
+    void unconnect (Receiver *receiver);
 
 protected:
-   void emitVoid (int signalNo, int argc, Object **argv);
-   bool emitBool (int signalNo, int argc, Object **argv);
-   void connect(Receiver *receiver);
+    void emitVoid (int signalNo, int argc, Object **argv);
+    bool emitBool (int signalNo, int argc, Object **argv);
+    void connect(Receiver *receiver);
 
-   /**
+    /**
     * \brief A sub class must implement this for a call to a single
     *    receiver.
     *
@@ -232,14 +232,14 @@ protected:
     * the return value of the receiver must be returned, for void signals,
     * the return value is discarded.
     */
-   virtual bool emitToReceiver (Receiver *receiver, int signalNo,
+    virtual bool emitToReceiver (Receiver *receiver, int signalNo,
                                 int argc, Object **argv) = 0;
 
 public:
-   Emitter();
-   ~Emitter();
+    Emitter();
+    ~Emitter();
 
-   void intoStringBuffer(misc::StringBuffer *sb);
+    void intoStringBuffer(misc::StringBuffer *sb);
 };
 
 /**
@@ -255,16 +255,16 @@ class Receiver: public object::Object
   friend class Emitter;
 
 private:
-   container::typed::List<Emitter> *emitters;
+    container::typed::List<Emitter> *emitters;
 
-   void connectTo(Emitter *emitter);
-   void unconnectFrom(Emitter *emitter);
+    void connectTo(Emitter *emitter);
+    void unconnectFrom(Emitter *emitter);
 
 public:
-   Receiver();
-   ~Receiver();
+    Receiver();
+    ~Receiver();
 
-   void intoStringBuffer(misc::StringBuffer *sb);
+    void intoStringBuffer(misc::StringBuffer *sb);
 };
 
 /**
@@ -274,33 +274,33 @@ public:
 class ObservedObject
 {
 public:
-   class DeletionReceiver: public signal::Receiver
-   {
-   public:
-      virtual void deleted (ObservedObject *object) = 0;
-   };
+    class DeletionReceiver: public signal::Receiver
+    {
+    public:
+        virtual void deleted (ObservedObject *object) = 0;
+    };
 
 private:
-   class DeletionEmitter: public signal::Emitter
-   {
-   protected:
-      bool emitToReceiver (signal::Receiver *receiver, int signalNo,
-                           int argc, Object **argv);
+    class DeletionEmitter: public signal::Emitter
+    {
+    protected:
+        bool emitToReceiver (signal::Receiver *receiver, int signalNo,
+                                    int argc, Object **argv);
 
-   public:
-      inline void connectDeletion (DeletionReceiver *receiver)
-      { connect (receiver); }
+    public:
+        inline void connectDeletion (DeletionReceiver *receiver)
+        { connect (receiver); }
 
-      void emitDeletion (ObservedObject *obj);
-   };
+        void emitDeletion (ObservedObject *obj);
+    };
 
-   DeletionEmitter deletionEmitter;
+    DeletionEmitter deletionEmitter;
 
 public:
-   virtual ~ObservedObject();
+    virtual ~ObservedObject();
 
-   inline void connectDeletion (DeletionReceiver *receiver)
-   { deletionEmitter.connectDeletion (receiver); }
+    inline void connectDeletion (DeletionReceiver *receiver)
+    { deletionEmitter.connectDeletion (receiver); }
 };
 
 } // namespace signal

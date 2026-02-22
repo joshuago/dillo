@@ -22,18 +22,18 @@
  */
 uint_t a_Utf8_end_of_char(const char *str, uint_t i)
 {
-   /* We can almost get what we want from utf8fwd(p+1,...)-1, but that
+    /* We can almost get what we want from utf8fwd(p+1,...)-1, but that
     * does not work for the last character in a string, and the fn makes some
     * assumptions that do not suit us.
     * Here's something very simpleminded instead:
     */
-   if (str && *str && (str[i] & 0x80)) {
-      int internal_bytes = (str[i] & 0x40) ? 0 : 1;
+    if (str && *str && (str[i] & 0x80)) {
+        int internal_bytes = (str[i] & 0x40) ? 0 : 1;
 
-      while (((str[i + 1] & 0xc0) == 0x80) && (++internal_bytes < 4))
-         i++;
-   }
-   return i;
+        while (((str[i + 1] & 0xc0) == 0x80) && (++internal_bytes < 4))
+            i++;
+    }
+    return i;
 }
 
 /**
@@ -45,7 +45,7 @@ uint_t a_Utf8_end_of_char(const char *str, uint_t i)
  */
 uint_t a_Utf8_decode(const char* str, const char* end, int* len)
 {
-   return fl_utf8decode(str, end, len);
+    return fl_utf8decode(str, end, len);
 }
 
 /**
@@ -53,7 +53,7 @@ uint_t a_Utf8_decode(const char* str, const char* end, int* len)
  */
 int a_Utf8_encode(unsigned int ucs, char *buf)
 {
-   return fl_utf8encode(ucs, buf);
+    return fl_utf8encode(ucs, buf);
 }
 
 /**
@@ -63,7 +63,7 @@ int a_Utf8_encode(unsigned int ucs, char *buf)
  */
 int a_Utf8_test(const char* src, unsigned int srclen)
 {
-   return fl_utf8test(src, srclen);
+    return fl_utf8test(src, srclen);
 }
 
 /**
@@ -75,27 +75,27 @@ int a_Utf8_test(const char* src, unsigned int srclen)
  */
 bool_t a_Utf8_ideographic(const char *s, const char *end, int *len)
 {
-   bool_t ret = FALSE;
+    bool_t ret = FALSE;
 
-   if ((uchar_t)*s >= 0xe2) {
-      /* Unicode char >= U+2000. */
-      unsigned unicode = a_Utf8_decode(s, end, len);
+    if ((uchar_t)*s >= 0xe2) {
+        /* Unicode char >= U+2000. */
+        unsigned unicode = a_Utf8_decode(s, end, len);
 
-      if (unicode >= 0x2e80 &&
+        if (unicode >= 0x2e80 &&
            ((unicode <= 0xa4cf) ||
-            (unicode >= 0xf900 && unicode <= 0xfaff) ||
-            (unicode >= 0xff00 && unicode <= 0xff9f))) {
-         ret = TRUE;
+                (unicode >= 0xf900 && unicode <= 0xfaff) ||
+                (unicode >= 0xff00 && unicode <= 0xff9f))) {
+            ret = TRUE;
      }
-   } else {
-      *len = 1 + (int)a_Utf8_end_of_char(s, 0);
-   }
-   return ret;
+    } else {
+        *len = 1 + (int)a_Utf8_end_of_char(s, 0);
+    }
+    return ret;
 }
 
 bool_t a_Utf8_combining_char(int unicode)
 {
-   return ((unicode >= 0x0300 && unicode <= 0x036f) ||
+    return ((unicode >= 0x0300 && unicode <= 0x036f) ||
            (unicode >= 0x1dc0 && unicode <= 0x1dff) ||
            (unicode >= 0x20d0 && unicode <= 0x20ff) ||
            (unicode >= 0xfe20 && unicode <= 0xfe2f));
@@ -103,5 +103,5 @@ bool_t a_Utf8_combining_char(int unicode)
 
 int a_Utf8_char_count(const char *str, int len)
 {
-   return fl_utf_nb_char((const uchar_t*)str, len);
+    return fl_utf_nb_char((const uchar_t*)str, len);
 }

@@ -187,106 +187,106 @@ namespace ui {
 class FltkResource: public lout::object::Object
 {
 private:
-   bool enabled;
+    bool enabled;
 
 protected:
-   FltkView *view;
-   Fl_Widget *widget;
-   core::Allocation allocation;
-   FltkPlatform *platform;
+    FltkView *view;
+    Fl_Widget *widget;
+    core::Allocation allocation;
+    FltkPlatform *platform;
 
-   core::style::Style *style;
+    core::style::Style *style;
 
-   FltkResource (FltkPlatform *platform);
-   void init (FltkPlatform *platform);
-   virtual Fl_Widget *createNewWidget (core::Allocation *allocation) = 0;
+    FltkResource (FltkPlatform *platform);
+    void init (FltkPlatform *platform);
+    virtual Fl_Widget *createNewWidget (core::Allocation *allocation) = 0;
 
-   virtual void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
-   void setDisplayed (bool displayed);
-   bool displayed();
+    virtual void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
+    void setDisplayed (bool displayed);
+    bool displayed();
 public:
-   ~FltkResource ();
+    ~FltkResource ();
 
-   virtual void attachView (FltkView *view);
-   virtual void detachView (FltkView *view);
+    virtual void attachView (FltkView *view);
+    virtual void detachView (FltkView *view);
 
-   void sizeAllocate (core::Allocation *allocation);
-   void draw (core::View *view, core::Rectangle *area,
+    void sizeAllocate (core::Allocation *allocation);
+    void draw (core::View *view, core::Rectangle *area,
               core::DrawingContext *context);
 
-   void setStyle (core::style::Style *style);
+    void setStyle (core::style::Style *style);
 
-   bool isEnabled ();
-   void setEnabled (bool enabled);
+    bool isEnabled ();
+    void setEnabled (bool enabled);
 };
 
 
 template <class I> class FltkSpecificResource: public I, public FltkResource
 {
 public:
-   FltkSpecificResource (FltkPlatform *platform);
-   ~FltkSpecificResource ();
+    FltkSpecificResource (FltkPlatform *platform);
+    ~FltkSpecificResource ();
 
-   void sizeAllocate (core::Allocation *allocation);
-   void draw (core::View *view, core::Rectangle *area,
+    void sizeAllocate (core::Allocation *allocation);
+    void draw (core::View *view, core::Rectangle *area,
               core::DrawingContext *context);
-   void setStyle (core::style::Style *style);
+    void setStyle (core::style::Style *style);
 
-   bool isEnabled ();
-   void setEnabled (bool enabled);
+    bool isEnabled ();
+    void setEnabled (bool enabled);
 };
 
 
 class FltkLabelButtonResource:
-   public FltkSpecificResource <dw::core::ui::LabelButtonResource>
+    public FltkSpecificResource <dw::core::ui::LabelButtonResource>
 {
 private:
-   const char *label;
+    const char *label;
 
-   static void widgetCallback (Fl_Widget *widget, void *data);
+    static void widgetCallback (Fl_Widget *widget, void *data);
 
 protected:
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
 
 public:
-   FltkLabelButtonResource (FltkPlatform *platform, const char *label);
-   ~FltkLabelButtonResource ();
+    FltkLabelButtonResource (FltkPlatform *platform, const char *label);
+    ~FltkLabelButtonResource ();
 
-   void sizeRequest (core::Requisition *requisition);
+    void sizeRequest (core::Requisition *requisition);
 
-   const char *getLabel ();
-   void setLabel (const char *label);
+    const char *getLabel ();
+    void setLabel (const char *label);
 };
 
 
 class FltkComplexButtonResource:
-   public FltkSpecificResource <dw::core::ui::ComplexButtonResource>
+    public FltkSpecificResource <dw::core::ui::ComplexButtonResource>
 {
 private:
-   bool relief;
+    bool relief;
 
-   static void widgetCallback (Fl_Widget *widget, void *data);
+    static void widgetCallback (Fl_Widget *widget, void *data);
 
 protected:
-   FltkView *topView, *flatView;
+    FltkView *topView, *flatView;
 
-   void attachView (FltkView *view);
-   void detachView (FltkView *view);
+    void attachView (FltkView *view);
+    void detachView (FltkView *view);
 
-   void sizeAllocate (core::Allocation *allocation);
+    void sizeAllocate (core::Allocation *allocation);
 
-   dw::core::Platform *createPlatform ();
-   void setLayout (dw::core::Layout *layout);
+    dw::core::Platform *createPlatform ();
+    void setLayout (dw::core::Layout *layout);
 
-   int reliefXThickness ();
-   int reliefYThickness ();
+    int reliefXThickness ();
+    int reliefYThickness ();
 
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
 
 public:
-   FltkComplexButtonResource (FltkPlatform *platform, dw::core::Widget *widget,
-                              bool relief);
-   ~FltkComplexButtonResource ();
+    FltkComplexButtonResource (FltkPlatform *platform, dw::core::Widget *widget,
+                                        bool relief);
+    ~FltkComplexButtonResource ();
 };
 
 
@@ -295,239 +295,239 @@ public:
  * \todo Text values are not synchronized (not needed in dillo).
  */
 class FltkEntryResource:
-   public FltkSpecificResource <dw::core::ui::EntryResource>
+    public FltkSpecificResource <dw::core::ui::EntryResource>
 {
 private:
-   int size;
-   bool password;
-   const char *initText;
-   char *label;
-   int label_w;
-   char *placeholder;
-   bool editable;
+    int size;
+    bool password;
+    const char *initText;
+    char *label;
+    int label_w;
+    char *placeholder;
+    bool editable;
 
-   static void widgetCallback (Fl_Widget *widget, void *data);
-   void setDisplayed (bool displayed);
+    static void widgetCallback (Fl_Widget *widget, void *data);
+    void setDisplayed (bool displayed);
 
 protected:
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
-   void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
+    void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
 
 public:
-   FltkEntryResource (FltkPlatform *platform, int size, bool password,
+    FltkEntryResource (FltkPlatform *platform, int size, bool password,
                       const char *label, const char *placeholder);
-   ~FltkEntryResource ();
+    ~FltkEntryResource ();
 
-   void sizeRequest (core::Requisition *requisition);
-   void sizeAllocate (core::Allocation *allocation);
+    void sizeRequest (core::Requisition *requisition);
+    void sizeAllocate (core::Allocation *allocation);
 
-   const char *getText ();
-   void setText (const char *text);
-   bool isEditable ();
-   void setEditable (bool editable);
-   void setMaxLength (int maxlen);
+    const char *getText ();
+    void setText (const char *text);
+    bool isEditable ();
+    void setEditable (bool editable);
+    void setMaxLength (int maxlen);
 };
 
 
 class FltkMultiLineTextResource:
-   public FltkSpecificResource <dw::core::ui::MultiLineTextResource>
+    public FltkSpecificResource <dw::core::ui::MultiLineTextResource>
 {
 private:
-   bool editable;
-   int numCols, numRows;
-   char *placeholder;
+    bool editable;
+    int numCols, numRows;
+    char *placeholder;
 protected:
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
-   void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
+    void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
 
 public:
-   FltkMultiLineTextResource (FltkPlatform *platform, int cols, int rows,
-                              const char *placeholder);
-   ~FltkMultiLineTextResource ();
+    FltkMultiLineTextResource (FltkPlatform *platform, int cols, int rows,
+                                        const char *placeholder);
+    ~FltkMultiLineTextResource ();
 
-   void sizeRequest (core::Requisition *requisition);
+    void sizeRequest (core::Requisition *requisition);
 
-   const char *getText ();
-   void setText (const char *text);
-   bool isEditable ();
-   void setEditable (bool editable);
+    const char *getText ();
+    void setText (const char *text);
+    bool isEditable ();
+    void setEditable (bool editable);
 };
 
 
 template <class I> class FltkToggleButtonResource:
-   public FltkSpecificResource <I>
+    public FltkSpecificResource <I>
 {
 private:
-   bool initActivated;
+    bool initActivated;
 
 protected:
-   virtual Fl_Button *createNewButton (core::Allocation *allocation) = 0;
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
-   void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
+    virtual Fl_Button *createNewButton (core::Allocation *allocation) = 0;
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
+    void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
 
 public:
-   FltkToggleButtonResource (FltkPlatform *platform,
+    FltkToggleButtonResource (FltkPlatform *platform,
                              bool activated);
-   ~FltkToggleButtonResource ();
+    ~FltkToggleButtonResource ();
 
-   void sizeRequest (core::Requisition *requisition);
+    void sizeRequest (core::Requisition *requisition);
 
-   bool isActivated ();
-   void setActivated (bool activated);
+    bool isActivated ();
+    void setActivated (bool activated);
 };
 
 
 class FltkCheckButtonResource:
-   public FltkToggleButtonResource <dw::core::ui::CheckButtonResource>
+    public FltkToggleButtonResource <dw::core::ui::CheckButtonResource>
 {
 protected:
-   Fl_Button *createNewButton (core::Allocation *allocation);
+    Fl_Button *createNewButton (core::Allocation *allocation);
 
 public:
-   FltkCheckButtonResource (FltkPlatform *platform,
+    FltkCheckButtonResource (FltkPlatform *platform,
                             bool activated);
-   ~FltkCheckButtonResource ();
+    ~FltkCheckButtonResource ();
 };
 
 
 class FltkRadioButtonResource:
-   public FltkToggleButtonResource <dw::core::ui::RadioButtonResource>
+    public FltkToggleButtonResource <dw::core::ui::RadioButtonResource>
 {
 private:
-   class Group
-   {
-   private:
-      class FltkGroupIterator:
-         public dw::core::ui::RadioButtonResource::GroupIterator
-      {
-      private:
-         lout::container::typed::Iterator <FltkRadioButtonResource> it;
+    class Group
+    {
+    private:
+        class FltkGroupIterator:
+            public dw::core::ui::RadioButtonResource::GroupIterator
+        {
+        private:
+            lout::container::typed::Iterator <FltkRadioButtonResource> it;
 
-      public:
-         inline FltkGroupIterator (lout::container::typed::List
+        public:
+            inline FltkGroupIterator (lout::container::typed::List
                                    <FltkRadioButtonResource>
                                    *list)
-            { it = list->iterator (); }
+                { it = list->iterator (); }
 
-         bool hasNext ();
-         dw::core::ui::RadioButtonResource *getNext ();
-         void unref ();
-      };
+            bool hasNext ();
+            dw::core::ui::RadioButtonResource *getNext ();
+            void unref ();
+        };
 
-      lout::container::typed::List <FltkRadioButtonResource> *list;
+        lout::container::typed::List <FltkRadioButtonResource> *list;
 
-   protected:
-      ~Group ();
+    protected:
+        ~Group ();
 
-   public:
-      Group (FltkRadioButtonResource *radioButtonResource);
+    public:
+        Group (FltkRadioButtonResource *radioButtonResource);
 
-      inline lout::container::typed::Iterator <FltkRadioButtonResource>
+        inline lout::container::typed::Iterator <FltkRadioButtonResource>
                                               iterator ()
-      {
-         return list->iterator ();
-      }
+        {
+            return list->iterator ();
+        }
 
-      inline dw::core::ui::RadioButtonResource::GroupIterator
-         *groupIterator ()
-      {
-         return new FltkGroupIterator (list);
-      }
+        inline dw::core::ui::RadioButtonResource::GroupIterator
+            *groupIterator ()
+        {
+            return new FltkGroupIterator (list);
+        }
 
-      void connect (FltkRadioButtonResource *radioButtonResource);
-      void unconnect (FltkRadioButtonResource *radioButtonResource);
-   };
+        void connect (FltkRadioButtonResource *radioButtonResource);
+        void unconnect (FltkRadioButtonResource *radioButtonResource);
+    };
 
-   Group *group;
+    Group *group;
 
-   static void widgetCallback (Fl_Widget *widget, void *data);
-   void buttonClicked ();
+    static void widgetCallback (Fl_Widget *widget, void *data);
+    void buttonClicked ();
 
 protected:
-   Fl_Button *createNewButton (core::Allocation *allocation);
+    Fl_Button *createNewButton (core::Allocation *allocation);
 
 public:
-   FltkRadioButtonResource (FltkPlatform *platform,
+    FltkRadioButtonResource (FltkPlatform *platform,
                             FltkRadioButtonResource *groupedWith,
                             bool activated);
-   ~FltkRadioButtonResource ();
+    ~FltkRadioButtonResource ();
 
-   GroupIterator *groupIterator ();
+    GroupIterator *groupIterator ();
 };
 
 
 template <class I> class FltkSelectionResource:
-   public FltkSpecificResource <I>
+    public FltkSpecificResource <I>
 {
 protected:
-   virtual bool setSelectedItems() { return false; }
-   virtual void addItem (const char *str, bool enabled, bool selected) = 0;
-   virtual void setItem (int index, bool selected) = 0;
-   virtual void pushGroup (const char *name, bool enabled) = 0;
-   virtual void popGroup () = 0;
+    virtual bool setSelectedItems() { return false; }
+    virtual void addItem (const char *str, bool enabled, bool selected) = 0;
+    virtual void setItem (int index, bool selected) = 0;
+    virtual void pushGroup (const char *name, bool enabled) = 0;
+    virtual void popGroup () = 0;
 public:
-   FltkSelectionResource (FltkPlatform *platform) :
-      FltkSpecificResource<I> (platform) {};
-   dw::core::Iterator *iterator (dw::core::Content::Type mask, bool atEnd);
+    FltkSelectionResource (FltkPlatform *platform) :
+        FltkSpecificResource<I> (platform) {};
+    dw::core::Iterator *iterator (dw::core::Content::Type mask, bool atEnd);
 };
 
 
 class FltkOptionMenuResource:
-   public FltkSelectionResource <dw::core::ui::OptionMenuResource>
+    public FltkSelectionResource <dw::core::ui::OptionMenuResource>
 {
 protected:
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
-   virtual bool setSelectedItems() { return true; }
-   void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
-   int getNumberOfItems();
-   int getMaxItemWidth ();
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
+    virtual bool setSelectedItems() { return true; }
+    void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
+    int getNumberOfItems();
+    int getMaxItemWidth ();
 private:
-   static void widgetCallback (Fl_Widget *widget, void *data);
-   void enlargeMenu();
-   Fl_Menu_Item *newItem();
-   Fl_Menu_Item *menu;
-   int itemsAllocated, itemsUsed;
+    static void widgetCallback (Fl_Widget *widget, void *data);
+    void enlargeMenu();
+    Fl_Menu_Item *newItem();
+    Fl_Menu_Item *menu;
+    int itemsAllocated, itemsUsed;
 public:
-   FltkOptionMenuResource (FltkPlatform *platform);
-   ~FltkOptionMenuResource ();
+    FltkOptionMenuResource (FltkPlatform *platform);
+    ~FltkOptionMenuResource ();
 
-   void addItem (const char *str, bool enabled, bool selected);
-   void setItem (int index, bool selected);
-   void pushGroup (const char *name, bool enabled);
-   void popGroup ();
+    void addItem (const char *str, bool enabled, bool selected);
+    void setItem (int index, bool selected);
+    void pushGroup (const char *name, bool enabled);
+    void popGroup ();
 
-   void sizeRequest (core::Requisition *requisition);
-   bool isSelected (int index);
+    void sizeRequest (core::Requisition *requisition);
+    bool isSelected (int index);
 };
 
 class FltkListResource:
-   public FltkSelectionResource <dw::core::ui::ListResource>
+    public FltkSelectionResource <dw::core::ui::ListResource>
 {
 protected:
-   Fl_Widget *createNewWidget (core::Allocation *allocation);
-   void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
-   int getNumberOfItems();
-   int getMaxItemWidth ();
+    Fl_Widget *createNewWidget (core::Allocation *allocation);
+    void setWidgetStyle (Fl_Widget *widget, core::style::Style *style);
+    int getNumberOfItems();
+    int getMaxItemWidth ();
 private:
-   static void widgetCallback (Fl_Widget *widget, void *data);
-   void *newItem (const char *str, bool enabled, bool selected);
-   int currDepth;
-   int colWidths[4];
-   int showRows;
-   ListResource::SelectionMode mode;
+    static void widgetCallback (Fl_Widget *widget, void *data);
+    void *newItem (const char *str, bool enabled, bool selected);
+    int currDepth;
+    int colWidths[4];
+    int showRows;
+    ListResource::SelectionMode mode;
 public:
-   FltkListResource (FltkPlatform *platform,
-                     core::ui::ListResource::SelectionMode selectionMode,
-                     int rows);
-   ~FltkListResource ();
+    FltkListResource (FltkPlatform *platform,
+                            core::ui::ListResource::SelectionMode selectionMode,
+                            int rows);
+    ~FltkListResource ();
 
-   void addItem (const char *str, bool enabled, bool selected);
-   void setItem (int index, bool selected);
-   void pushGroup (const char *name, bool enabled);
-   void popGroup ();
+    void addItem (const char *str, bool enabled, bool selected);
+    void setItem (int index, bool selected);
+    void pushGroup (const char *name, bool enabled);
+    void popGroup ();
 
-   void sizeRequest (core::Requisition *requisition);
-   bool isSelected (int index);
+    void sizeRequest (core::Requisition *requisition);
+    bool isSelected (int index);
 };
 
 

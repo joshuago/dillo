@@ -19,41 +19,41 @@ namespace core {
 class Iterator: public lout::object::Comparable
 {
 protected:
-   Iterator(Widget *widget, Content::Type mask, bool atEnd);
-   Iterator(Iterator &it);
-   ~Iterator();
+    Iterator(Widget *widget, Content::Type mask, bool atEnd);
+    Iterator(Iterator &it);
+    ~Iterator();
 
-   Content content;
+    Content content;
 
 private:
-   Widget *widget;
-   Content::Type mask;
+    Widget *widget;
+    Content::Type mask;
 
 public:
-   bool equals (Object *other);
-   void intoStringBuffer(lout::misc::StringBuffer *sb);
+    bool equals (Object *other);
+    void intoStringBuffer(lout::misc::StringBuffer *sb);
 
-   inline Widget *getWidget () { return widget; }
-   inline Content *getContent () { return &content; }
-   inline Content::Type getMask () { return mask; }
+    inline Widget *getWidget () { return widget; }
+    inline Content *getContent () { return &content; }
+    inline Content::Type getMask () { return mask; }
 
-   virtual void unref ();
+    virtual void unref ();
 
-   /**
+    /**
     * \brief Move iterator forward and store content it.
     *
     * Returns true on success.
     */
-   virtual bool next () = 0;
+    virtual bool next () = 0;
 
-   /**
+    /**
     * \brief Move iterator backward and store content it.
     *
     * Returns true on success.
     */
-   virtual bool prev () = 0;
+    virtual bool prev () = 0;
 
-   /**
+    /**
     * \brief Extend highlighted region to contain part of the current content.
     *
     * For text, start and end define the
@@ -61,9 +61,9 @@ public:
     * highlighting a whole dw::core::Content, pass 0 and >= 1.
     * To unhighlight see also dw::core::Iterator::unhighlight.
     */
-   virtual void highlight (int start, int end, HighlightLayer layer) = 0;
+    virtual void highlight (int start, int end, HighlightLayer layer) = 0;
 
-   /**
+    /**
     * \brief Shrink highlighted region to no longer contain the
     *    current content.
     *
@@ -71,20 +71,20 @@ public:
     * be reduced from the start (direction > 0) or from the end
     * (direction < 0). If direction is 0 all content is unhighlighted.
     */
-   virtual void unhighlight (int direction, HighlightLayer layer) = 0;
+    virtual void unhighlight (int direction, HighlightLayer layer) = 0;
 
-   /**
+    /**
     * \brief Return the shape, which a part of the item, the iterator points
     *    on, allocates.
     *
     * The parameters start and end have the same meaning as in
     * DwIterator::highlight().
     */
-   virtual void getAllocation (int start, int end, Allocation *allocation) = 0;
+    virtual void getAllocation (int start, int end, Allocation *allocation) = 0;
 
-   inline Iterator *cloneIterator () { return (Iterator*)clone(); }
+    inline Iterator *cloneIterator () { return (Iterator*)clone(); }
 
-   static void scrollTo (Iterator *it1, Iterator *it2, int start, int end,
+    static void scrollTo (Iterator *it1, Iterator *it2, int start, int end,
                          HPosition hpos, VPosition vpos);
 };
 
@@ -96,18 +96,18 @@ public:
 class EmptyIterator: public Iterator
 {
 private:
-   EmptyIterator (EmptyIterator &it);
+    EmptyIterator (EmptyIterator &it);
 
 public:
-   EmptyIterator (Widget *widget, Content::Type mask, bool atEnd);
+    EmptyIterator (Widget *widget, Content::Type mask, bool atEnd);
 
-   lout::object::Object *clone();
-   int compareTo(lout::object::Comparable *other);
-   bool next ();
-   bool prev ();
-   void highlight (int start, int end, HighlightLayer layer);
-   void unhighlight (int direction, HighlightLayer layer);
-   void getAllocation (int start, int end, Allocation *allocation);
+    lout::object::Object *clone();
+    int compareTo(lout::object::Comparable *other);
+    bool next ();
+    bool prev ();
+    void highlight (int start, int end, HighlightLayer layer);
+    void unhighlight (int direction, HighlightLayer layer);
+    void getAllocation (int start, int end, Allocation *allocation);
 };
 
 
@@ -118,20 +118,20 @@ public:
 class TextIterator: public Iterator
 {
 private:
-   /** May be NULL, in this case, the next is skipped. */
-   const char *text;
+    /** May be NULL, in this case, the next is skipped. */
+    const char *text;
 
-   TextIterator (TextIterator &it);
+    TextIterator (TextIterator &it);
 
 public:
-   TextIterator (Widget *widget, Content::Type mask, bool atEnd,
+    TextIterator (Widget *widget, Content::Type mask, bool atEnd,
                  const char *text);
 
-   int compareTo(lout::object::Comparable *other);
+    int compareTo(lout::object::Comparable *other);
 
-   bool next ();
-   bool prev ();
-   void getAllocation (int start, int end, Allocation *allocation);
+    bool next ();
+    bool prev ();
+    void getAllocation (int start, int end, Allocation *allocation);
 };
 
 
@@ -146,57 +146,57 @@ public:
 class DeepIterator: public lout::object::Comparable
 {
 private:
-   class Stack: public lout::container::typed::Vector<Iterator>
-   {
-   public:
-      inline Stack (): lout::container::typed::Vector<Iterator> (4, false) { }
-      ~Stack ();
-      inline Iterator *getTop () { return get (size () - 1); }
-      inline void push (Iterator *it) { put(it, -1); }
-      inline void pop() { getTop()->unref (); remove (size () - 1); }
-   };
+    class Stack: public lout::container::typed::Vector<Iterator>
+    {
+    public:
+        inline Stack (): lout::container::typed::Vector<Iterator> (4, false) { }
+        ~Stack ();
+        inline Iterator *getTop () { return get (size () - 1); }
+        inline void push (Iterator *it) { put(it, -1); }
+        inline void pop() { getTop()->unref (); remove (size () - 1); }
+    };
 
-   Stack stack;
+    Stack stack;
 
-   static Iterator *searchDownward (Iterator *it, Content::Type mask,
-                                    bool fromEnd);
-   static Iterator *searchSideward (Iterator *it, Content::Type mask,
-                                    bool fromEnd);
+    static Iterator *searchDownward (Iterator *it, Content::Type mask,
+                                                bool fromEnd);
+    static Iterator *searchSideward (Iterator *it, Content::Type mask,
+                                                bool fromEnd);
 
-   Content::Type mask;
-   Content content;
-   bool hasContents;
+    Content::Type mask;
+    Content content;
+    bool hasContents;
 
-   inline DeepIterator () { }
+    inline DeepIterator () { }
 
-   static Widget *getRespectiveParent (Widget *widget, Content::Type mask);
-   inline Widget *getRespectiveParent (Widget *widget) {
-      return getRespectiveParent (widget, mask);
-   }
+    static Widget *getRespectiveParent (Widget *widget, Content::Type mask);
+    inline Widget *getRespectiveParent (Widget *widget) {
+        return getRespectiveParent (widget, mask);
+    }
 
-   static int getRespectiveLevel (Widget *widget, Content::Type mask);
-   inline int getRespectiveLevel (Widget *widget) {
-      return getRespectiveLevel (widget, mask);
-   }
+    static int getRespectiveLevel (Widget *widget, Content::Type mask);
+    inline int getRespectiveLevel (Widget *widget) {
+        return getRespectiveLevel (widget, mask);
+    }
 
 public:
-   DeepIterator(Iterator *it);
-   ~DeepIterator();
+    DeepIterator(Iterator *it);
+    ~DeepIterator();
 
-   lout::object::Object *clone ();
+    lout::object::Object *clone ();
 
-   DeepIterator *createVariant(Iterator *it);
-   inline Iterator *getTopIterator () { return stack.getTop(); }
-   inline Content *getContent () { return &content; }
+    DeepIterator *createVariant(Iterator *it);
+    inline Iterator *getTopIterator () { return stack.getTop(); }
+    inline Content *getContent () { return &content; }
 
-   bool isEmpty ();
+    bool isEmpty ();
 
-   bool next ();
-   bool prev ();
-   inline DeepIterator *cloneDeepIterator() { return (DeepIterator*)clone(); }
-   int compareTo(lout::object::Comparable *other);
+    bool next ();
+    bool prev ();
+    inline DeepIterator *cloneDeepIterator() { return (DeepIterator*)clone(); }
+    int compareTo(lout::object::Comparable *other);
 
-   /**
+    /**
     * \brief Highlight a part of the current content.
     *
     * Unhighlight the current content by passing -1 as start (see also
@@ -204,62 +204,62 @@ public:
     * characters, otherwise, the shape is defined as [0, 1], i.e. for
     * highlighting a whole dw::core::Content, pass 0 and >= 1.
     */
-   inline void highlight (int start, int end, HighlightLayer layer)
-   { stack.getTop()->highlight (start, end, layer); }
+    inline void highlight (int start, int end, HighlightLayer layer)
+    { stack.getTop()->highlight (start, end, layer); }
 
-   /**
+    /**
     * \brief Return the shape, which a part of the item, the iterator points
     *    on, allocates.
     *
     * The parameters start and end have the same meaning as in
     * DwIterator::highlight().
     */
-   inline void getAllocation (int start, int end, Allocation *allocation)
-   { stack.getTop()->getAllocation (start, end, allocation); }
+    inline void getAllocation (int start, int end, Allocation *allocation)
+    { stack.getTop()->getAllocation (start, end, allocation); }
 
-   inline void unhighlight (int direction, HighlightLayer layer)
-   { stack.getTop()->unhighlight (direction, layer); }
+    inline void unhighlight (int direction, HighlightLayer layer)
+    { stack.getTop()->unhighlight (direction, layer); }
 
-   inline static void scrollTo (DeepIterator *it1, DeepIterator *it2,
+    inline static void scrollTo (DeepIterator *it1, DeepIterator *it2,
                                 int start, int end,
                                 HPosition hpos, VPosition vpos)
-   { Iterator::scrollTo(it1->stack.getTop(), it2->stack.getTop(),
+    { Iterator::scrollTo(it1->stack.getTop(), it2->stack.getTop(),
                          start, end, hpos, vpos); }
 };
 
 class CharIterator: public lout::object::Comparable
 {
 public:
-   // START and END must not clash with any char value
-   // neither for signed nor unsigned char.
-   enum { START = 257, END = 258 };
+    // START and END must not clash with any char value
+    // neither for signed nor unsigned char.
+    enum { START = 257, END = 258 };
 
 private:
-   DeepIterator *it;
-   int pos, ch;
+    DeepIterator *it;
+    int pos, ch;
 
-   CharIterator ();
+    CharIterator ();
 
 public:
-   CharIterator (Widget *widget, bool followReferences);
-   ~CharIterator ();
+    CharIterator (Widget *widget, bool followReferences);
+    ~CharIterator ();
 
-   lout::object::Object *clone();
-   int compareTo(lout::object::Comparable *other);
+    lout::object::Object *clone();
+    int compareTo(lout::object::Comparable *other);
 
-   bool next ();
-   bool prev ();
-   inline int getChar() { return ch; }
-   inline CharIterator *cloneCharIterator() { return (CharIterator*)clone(); }
+    bool next ();
+    bool prev ();
+    inline int getChar() { return ch; }
+    inline CharIterator *cloneCharIterator() { return (CharIterator*)clone(); }
 
-   static void highlight (CharIterator *it1, CharIterator *it2,
+    static void highlight (CharIterator *it1, CharIterator *it2,
                           HighlightLayer layer);
-   static void unhighlight (CharIterator *it1, CharIterator *it2,
+    static void unhighlight (CharIterator *it1, CharIterator *it2,
                             HighlightLayer layer);
 
-   inline static void scrollTo (CharIterator *it1, CharIterator *it2,
+    inline static void scrollTo (CharIterator *it1, CharIterator *it2,
                                 HPosition hpos, VPosition vpos)
-   { DeepIterator::scrollTo(it1->it, it2->it, it1->pos, it2->pos,
+    { DeepIterator::scrollTo(it1->it, it2->it, it1->pos, it2->pos,
                             hpos, vpos); }
 };
 

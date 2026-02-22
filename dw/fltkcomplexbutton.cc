@@ -66,21 +66,21 @@ int ComplexButton::handle(int event) {
     /* fallthrough */
   case FL_DRAG:
     if (Fl::event_inside(this)) {
-      newval = !oldval;
+        newval = !oldval;
     } else
     {
-      clear_changed();
-      newval = oldval;
+        clear_changed();
+        newval = oldval;
     }
     if (newval != value_) {
-      value_ = newval;
-      set_changed();
-      redraw();
+        value_ = newval;
+        set_changed();
+        redraw();
     }
     return 1;
   case FL_RELEASE:
     if (value_ == oldval) {
-      return 1;
+        return 1;
     }
     set_changed();
     value(oldval);
@@ -90,23 +90,23 @@ int ComplexButton::handle(int event) {
   case FL_FOCUS : /* FALLTHROUGH */
   case FL_UNFOCUS :
     if (Fl::visible_focus()) {
-      redraw();
-      return 1;
+        redraw();
+        return 1;
     } else return 0;
   case FL_KEYBOARD :
     if (Fl::focus() == this &&
         (Fl::event_key() == ' ' || Fl::event_key() == FL_Enter) &&
         !(Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) {
-      value(1);
-      set_changed();
-      if (when() & FL_WHEN_RELEASE) do_callback();
-      return 1;
+        value(1);
+        set_changed();
+        if (when() & FL_WHEN_RELEASE) do_callback();
+        return 1;
     } else return 0;
   case FL_KEYUP:
     if (Fl::focus() == this &&
         (Fl::event_key() == ' ' || Fl::event_key() == FL_Enter)) {
-      value(0);
-      return 1;
+        value(0);
+        return 1;
     }
     /* fallthrough */
   default:
@@ -128,9 +128,9 @@ ComplexButton::ComplexButton(int X, int Y, int W, int H, const char *L)
 }
 
 ComplexButton::~ComplexButton() {
-   /*
+    /*
     * The Fl_Group destructor clear()s the children, but layout expects
     * the flat view to be around until it deletes it.
     */
-   remove(0);
+    remove(0);
 }

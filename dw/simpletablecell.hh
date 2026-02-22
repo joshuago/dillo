@@ -8,33 +8,33 @@ namespace dw {
 class SimpleTableCell: public Textblock
 {
 protected:
-   int getAvailWidthOfChild (Widget *child, bool forceValue);
-   int getAvailHeightOfChild (Widget *child, bool forceValue);
+    int getAvailWidthOfChild (Widget *child, bool forceValue);
+    int getAvailHeightOfChild (Widget *child, bool forceValue);
 
-   void correctRequisitionOfChild (Widget *child,
+    void correctRequisitionOfChild (Widget *child,
                                    core::Requisition *requisition,
                                    void (*splitHeightFun) (int, int*, int*),
                                    bool allowDecreaseWidth,
                                    bool allowDecreaseHeight);
-   void correctExtremesOfChild (Widget *child, core::Extremes *extremes,
+    void correctExtremesOfChild (Widget *child, core::Extremes *extremes,
                                 bool useAdjustmentWidth);
 
-   bool getAdjustMinWidth ();
+    bool getAdjustMinWidth ();
 
-   bool adjustExtraSpaceWhenCorrectingRequisitionByOOF ();
+    bool adjustExtraSpaceWhenCorrectingRequisitionByOOF ();
 
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   SimpleTableCell (bool limitTextWidth);
-   ~SimpleTableCell ();
+    SimpleTableCell (bool limitTextWidth);
+    ~SimpleTableCell ();
 
-   int applyPerWidth (int containerWidth, core::style::Length perWidth);
-   int applyPerHeight (int containerHeight, core::style::Length perHeight);
+    int applyPerWidth (int containerWidth, core::style::Length perWidth);
+    int applyPerHeight (int containerHeight, core::style::Length perHeight);
 
-   bool isBlockLevel ();
+    bool isBlockLevel ();
 
-   bool usesMaxGeneratorWidth ();
+    bool usesMaxGeneratorWidth ();
 };
 
 } // namespace dw

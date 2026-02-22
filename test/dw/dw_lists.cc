@@ -36,102 +36,102 @@ using namespace dw::fltk;
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(200, 300, "Dw Lists");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(200, 300, "Dw Lists");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *widgetStyle = Style::create (&styleAttrs);
+    Style *widgetStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock = new Textblock (false);
-   textblock->setStyle (widgetStyle);
-   layout->setWidget (textblock);
+    Textblock *textblock = new Textblock (false);
+    textblock->setStyle (widgetStyle);
+    layout->setWidget (textblock);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.cursor = CURSOR_TEXT;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.cursor = CURSOR_TEXT;
 
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   styleAttrs.margin.setVal (5);
-   styleAttrs.padding.setVal (5);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffff40);
-   styleAttrs.setBorderColor (Color::create (layout, 0x000000));
-   styleAttrs.setBorderStyle (BORDER_SOLID);
-   styleAttrs.borderWidth.setVal (1);
+    styleAttrs.margin.setVal (5);
+    styleAttrs.padding.setVal (5);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffff40);
+    styleAttrs.setBorderColor (Color::create (layout, 0x000000));
+    styleAttrs.setBorderStyle (BORDER_SOLID);
+    styleAttrs.borderWidth.setVal (1);
 
-   Style *itemStyle = Style::create (&styleAttrs);
+    Style *itemStyle = Style::create (&styleAttrs);
 
-   const char *wordsPar[] = {
-      "This", "is", "a", "normal", "paragraph.", "And",
-      "some", "list", "items", "follow:", NULL };
-   const char *wordsItem[] = {
-      "This", "is", "a", "list", "item.", "Here",
-      "comes", "some", "more", "text", "to",
-      "demonstrate", "word", "wrapping.", NULL };
+    const char *wordsPar[] = {
+        "This", "is", "a", "normal", "paragraph.", "And",
+        "some", "list", "items", "follow:", NULL };
+    const char *wordsItem[] = {
+        "This", "is", "a", "list", "item.", "Here",
+        "comes", "some", "more", "text", "to",
+        "demonstrate", "word", "wrapping.", NULL };
 
 
-   for(int i = 0; wordsPar[i]; i++) {
-      if(i != 0)
-         textblock->addSpace (wordStyle);
-      textblock->addText (wordsPar[i], wordStyle);
-   }
-   textblock->addParbreak (5, wordStyle);
+    for(int i = 0; wordsPar[i]; i++) {
+        if(i != 0)
+            textblock->addSpace (wordStyle);
+        textblock->addText (wordsPar[i], wordStyle);
+    }
+    textblock->addParbreak (5, wordStyle);
 
-   ListItem *refItem = NULL;
+    ListItem *refItem = NULL;
 
-   for(int i = 1; i <= 100; i++) {
-      ListItem *listItem = new ListItem (refItem, false);
-      refItem = listItem;
+    for(int i = 1; i <= 100; i++) {
+        ListItem *listItem = new ListItem (refItem, false);
+        refItem = listItem;
 
-      textblock->addWidget (listItem, itemStyle);
-      textblock->addParbreak (2, wordStyle);
+        textblock->addWidget (listItem, itemStyle);
+        textblock->addParbreak (2, wordStyle);
 
-      char buf[16];
-      sprintf (buf, "%d.", i);
-      listItem->initWithText (buf, wordStyle);
+        char buf[16];
+        sprintf (buf, "%d.", i);
+        listItem->initWithText (buf, wordStyle);
 
-      for(int j = 0; wordsItem[j]; j++) {
-         if(j != 0)
-            listItem->addSpace (wordStyle);
-         listItem->addText (wordsItem[j], wordStyle);
-      }
+        for(int j = 0; wordsItem[j]; j++) {
+            if(j != 0)
+                listItem->addSpace (wordStyle);
+            listItem->addText (wordsItem[j], wordStyle);
+        }
 
-      listItem->flush ();
-   }
+        listItem->flush ();
+    }
 
-   wordStyle->unref();
+    wordStyle->unref();
 
-   textblock->flush ();
+    textblock->flush ();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

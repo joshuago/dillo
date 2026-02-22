@@ -31,76 +31,76 @@
 
 int main(int argc, char **argv)
 {
-   dw::fltk::FltkPlatform *platform = new dw::fltk::FltkPlatform ();
-   dw::core::Layout *layout = new dw::core::Layout (platform);
+    dw::fltk::FltkPlatform *platform = new dw::fltk::FltkPlatform ();
+    dw::core::Layout *layout = new dw::core::Layout (platform);
 
-   Fl_Window *window = new Fl_Window(200, 300, "Dw Example");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(200, 300, "Dw Example");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   dw::fltk::FltkViewport *viewport =
-      new dw::fltk::FltkViewport (0, 0, 200, 300);
-   layout->attachView (viewport);
+    dw::fltk::FltkViewport *viewport =
+        new dw::fltk::FltkViewport (0, 0, 200, 300);
+    layout->attachView (viewport);
 
-   dw::core::style::StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    dw::core::style::StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   dw::core::style::FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = dw::core::style::FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = dw::core::style::FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    dw::core::style::FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = dw::core::style::FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = dw::core::style::FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color =
-      dw::core::style::Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor =
-      dw::core::style::Color::create (layout, 0xffffff);
+    styleAttrs.color =
+        dw::core::style::Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor =
+        dw::core::style::Color::create (layout, 0xffffff);
 
-   dw::core::style::Style *widgetStyle =
-      dw::core::style::Style::create (&styleAttrs);
+    dw::core::style::Style *widgetStyle =
+        dw::core::style::Style::create (&styleAttrs);
 
-   dw::Textblock *textblock = new dw::Textblock (false);
-   textblock->setStyle (widgetStyle);
-   layout->setWidget (textblock);
+    dw::Textblock *textblock = new dw::Textblock (false);
+    textblock->setStyle (widgetStyle);
+    layout->setWidget (textblock);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.backgroundColor = NULL;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
 
-   dw::core::style::Style *wordStyle =
-      dw::core::style::Style::create (&styleAttrs);
+    dw::core::style::Style *wordStyle =
+        dw::core::style::Style::create (&styleAttrs);
 
-   for(int i = 1; i <= 10; i++) {
-      char buf[4];
-      sprintf(buf, "%d.", i);
+    for(int i = 1; i <= 10; i++) {
+        char buf[4];
+        sprintf(buf, "%d.", i);
 
-      const char *words[] = { "This", "is", "the", buf, "paragraph.",
-                              "Here", "comes", "some", "more", "text",
-                              "to", "demonstrate", "word", "wrapping.",
-                              NULL };
+        const char *words[] = { "This", "is", "the", buf, "paragraph.",
+                                        "Here", "comes", "some", "more", "text",
+                                        "to", "demonstrate", "word", "wrapping.",
+                                        NULL };
 
-      for(int j = 0; words[j]; j++) {
-         textblock->addText(words[j], wordStyle);
-         textblock->addSpace(wordStyle);
-      }
+        for(int j = 0; words[j]; j++) {
+            textblock->addText(words[j], wordStyle);
+            textblock->addSpace(wordStyle);
+        }
 
-      textblock->addParbreak(10, wordStyle);
-   }
+        textblock->addParbreak(10, wordStyle);
+    }
 
-   wordStyle->unref();
+    wordStyle->unref();
 
-   textblock->flush ();
+    textblock->flush ();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

@@ -28,56 +28,56 @@ namespace dw {
 int ListItem::CLASS_ID = -1;
 
 ListItem::ListItem (ListItem *ref, bool limitTextWidth):
-   AlignedTextblock (limitTextWidth)
+    AlignedTextblock (limitTextWidth)
 {
-   DBG_OBJ_CREATE ("dw::ListItem");
-   registerName ("dw::ListItem", &CLASS_ID);
-   setRefTextblock (ref);
+    DBG_OBJ_CREATE ("dw::ListItem");
+    registerName ("dw::ListItem", &CLASS_ID);
+    setRefTextblock (ref);
 }
 
 ListItem::~ListItem()
 {
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 bool ListItem::usesMaxGeneratorWidth ()
 {
-   return true;
+    return true;
 }
 
 void ListItem::initWithWidget (core::Widget *widget,
                                 core::style::Style *style)
 {
-   hasListitemValue = true;
-   addWidget (widget, style);
-   addSpace (style);
-   if (style->listStylePosition == core::style::LIST_STYLE_POSITION_OUTSIDE)
-      updateValue ();
+    hasListitemValue = true;
+    addWidget (widget, style);
+    addSpace (style);
+    if (style->listStylePosition == core::style::LIST_STYLE_POSITION_OUTSIDE)
+        updateValue ();
 }
 
 void ListItem::initWithText (const char *text, core::style::Style *style)
 {
-   hasListitemValue = true;
-   addText (text, style);
-   addSpace (style);
-   if (style->listStylePosition == core::style::LIST_STYLE_POSITION_OUTSIDE)
-      updateValue ();
+    hasListitemValue = true;
+    addText (text, style);
+    addSpace (style);
+    if (style->listStylePosition == core::style::LIST_STYLE_POSITION_OUTSIDE)
+        updateValue ();
 }
 
 int ListItem::getValue ()
 {
-   if (words->size () == 0)
-      return 0;
-   else
-      return words->getRef(0)->size.width + words->getRef(0)->origSpace;
+    if (words->size () == 0)
+        return 0;
+    else
+        return words->getRef(0)->size.width + words->getRef(0)->origSpace;
 }
 
 void ListItem::setMaxValue (int maxValue, int value)
 {
-   leftInnerPadding = maxValue;
-   line1Offset = - value;
-   redrawY = 0;
-   queueResize (0, true);
+    leftInnerPadding = maxValue;
+    line1Offset = - value;
+    redrawY = 0;
+    queueResize (0, true);
 }
 
 } // namespace dw

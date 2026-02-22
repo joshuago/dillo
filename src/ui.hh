@@ -1,3 +1,13 @@
+/*
+ * File: ui.hh
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __UI_HH__
 #define __UI_HH__
 
@@ -15,21 +25,21 @@
 #include "findbar.hh"
 
 typedef enum {
-   UI_BACK = 0,
-   UI_FORW,
-   UI_HOME,
-   UI_RELOAD,
-   UI_SAVE,
-   UI_STOP,
-   UI_BOOK,
-   UI_TOOLS,
-   UI_CLEAR,
-   UI_SEARCH
+    UI_BACK = 0,
+    UI_FORW,
+    UI_HOME,
+    UI_RELOAD,
+    UI_SAVE,
+    UI_STOP,
+    UI_BOOK,
+    UI_TOOLS,
+    UI_CLEAR,
+    UI_SEARCH
 } UIButton;
 
 typedef enum {
-   UI_NORMAL = 0,     /**< make sure it's compatible with bool */
-   UI_HIDDEN = 1
+    UI_NORMAL = 0,     /**< make sure it's compatible with bool */
+    UI_HIDDEN = 1
 } UIPanelmode;
 
 
@@ -49,7 +59,7 @@ class CustTabs;
  * The resizable child gets the remaining space.
  */
 class CustGroupHorizontal : public Fl_Group {
-   Fl_Widget *rsz;
+    Fl_Widget *rsz;
 public:
   CustGroupHorizontal(int x,int y,int w ,int h,const char *l = 0) :
     Fl_Group(x,y,w,h,l) { };
@@ -121,69 +131,69 @@ public:
 // UI class definition -------------------------------------------------------
 //
 class UI : public CustGroupVertical {
-   CustTabs *Tabs;
+    CustTabs *Tabs;
 
-   CustGroupVertical *TopGroup;
-   CustButton *Back, *Forw, *Home, *Reload, *Save, *Stop, *Bookmarks,
+    CustGroupVertical *TopGroup;
+    CustButton *Back, *Forw, *Home, *Reload, *Save, *Stop, *Bookmarks,
               *Tools, *Clear, *Search, *Help, *BugMeter, *FileButton;
-   CustGroupHorizontal *LocBar, *NavBar, *StatusBar;
-   Fl_Input *Location;
-   CustProgressBox *PProg, *IProg;
-   Fl_Group *Panel, *Main, *LocationGroup;
-   Fl_Output *StatusOutput;
-   Findbar *FindBar;
+    CustGroupHorizontal *LocBar, *NavBar, *StatusBar;
+    Fl_Input *Location;
+    CustProgressBox *PProg, *IProg;
+    Fl_Group *Panel, *Main, *LocationGroup;
+    Fl_Output *StatusOutput;
+    Findbar *FindBar;
 
-   int MainIdx;
-   // Panel customization variables
-   int PanelSize, Small_Icons;
-   int p_xpos, p_ypos, bw, bh, mh, lh, nh, fh, sh, pw, lbl;
-   bool PanelTemporary;
+    int MainIdx;
+    // Panel customization variables
+    int PanelSize, Small_Icons;
+    int p_xpos, p_ypos, bw, bh, mh, lh, nh, fh, sh, pw, lbl;
+    bool PanelTemporary;
 
-   UIPanelmode Panelmode;
-   CustButton *make_button(const char *label, Fl_Image *img, Fl_Image*deimg,
-                           int b_n, int start = 0);
-   void make_toolbar(int tw, int th);
-   void make_location(int ww);
-   void make_progress_bars(int wide, int thin_up);
-   void make_menubar(int x, int y, int w, int h);
-   void make_filemenu_button();
-   void make_panel(int ww);
-   void make_status_bar(int ww, int wh);
+    UIPanelmode Panelmode;
+    CustButton *make_button(const char *label, Fl_Image *img, Fl_Image*deimg,
+                                    int b_n, int start = 0);
+    void make_toolbar(int tw, int th);
+    void make_location(int ww);
+    void make_progress_bars(int wide, int thin_up);
+    void make_menubar(int x, int y, int w, int h);
+    void make_filemenu_button();
+    void make_panel(int ww);
+    void make_status_bar(int ww, int wh);
 
 public:
 
-   UI(int x,int y,int w,int h, const char* label = 0, const UI *cur_ui=NULL);
-   ~UI();
+    UI(int x,int y,int w,int h, const char* label = 0, const UI *cur_ui=NULL);
+    ~UI();
 
-   /** To manage what events to catch and which to let pass */
-   int handle(int event);
+    /** To manage what events to catch and which to let pass */
+    int handle(int event);
 
-   const char *get_location();
-   void set_location(const char *str);
-   void focus_location();
-   void focus_main();
-   void set_status(const char *str);
-   void set_page_prog(size_t nbytes, int cmd);
-   void set_img_prog(int n_img, int t_img, int cmd);
-   void set_bug_prog(int n_bug);
-   void set_render_layout(Fl_Group *nw);
-   void customize();
-   void button_set_sens(UIButton btn, int sens);
-   void paste_url();
-   int get_panelsize() { return PanelSize; }
-   int get_smallicons() { return Small_Icons; }
-   void change_panel(int new_size, int small_icons);
-   void findbar_toggle(bool add);
-   void panels_toggle();
+    const char *get_location();
+    void set_location(const char *str);
+    void focus_location();
+    void focus_main();
+    void set_status(const char *str);
+    void set_page_prog(size_t nbytes, int cmd);
+    void set_img_prog(int n_img, int t_img, int cmd);
+    void set_bug_prog(int n_bug);
+    void set_render_layout(Fl_Group *nw);
+    void customize();
+    void button_set_sens(UIButton btn, int sens);
+    void paste_url();
+    int get_panelsize() { return PanelSize; }
+    int get_smallicons() { return Small_Icons; }
+    void change_panel(int new_size, int small_icons);
+    void findbar_toggle(bool add);
+    void panels_toggle();
 
-   CustTabs *tabs() { return Tabs; }
-   void tabs(CustTabs *tabs) { Tabs = tabs; }
-   bool temporaryPanels() { return PanelTemporary; }
-   void temporaryPanels(bool val) { PanelTemporary = val; }
+    CustTabs *tabs() { return Tabs; }
+    void tabs(CustTabs *tabs) { Tabs = tabs; }
+    bool temporaryPanels() { return PanelTemporary; }
+    void temporaryPanels(bool val) { PanelTemporary = val; }
 
-   // Hooks to method callbacks
-   void color_change_cb_i();
-   void toggle_cb_i();
+    // Hooks to method callbacks
+    void color_change_cb_i();
+    void toggle_cb_i();
 };
 
 #endif // __UI_HH__

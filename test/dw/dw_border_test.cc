@@ -36,93 +36,93 @@ using namespace dw::fltk;
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(200, 300, "Dw Border Test");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(200, 300, "Dw Border Test");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
-   styleAttrs.borderWidth.setVal (2);
-   styleAttrs.setBorderColor (Color::create (layout, 0xffffff));
-   styleAttrs.setBorderStyle (BORDER_INSET);
-   styleAttrs.padding.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
+    styleAttrs.borderWidth.setVal (2);
+    styleAttrs.setBorderColor (Color::create (layout, 0xffffff));
+    styleAttrs.setBorderStyle (BORDER_INSET);
+    styleAttrs.padding.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *widgetStyle1 = Style::create (&styleAttrs);
+    Style *widgetStyle1 = Style::create (&styleAttrs);
 
-   styleAttrs.backgroundColor = Color::create (layout, 0xffff80);
-   styleAttrs.margin.setVal (0);
-   styleAttrs.borderWidth.setVal (1);
-   styleAttrs.setBorderColor (Color::create (layout, 0x4040ff));
-   styleAttrs.setBorderStyle (BORDER_SOLID);
-   styleAttrs.padding.setVal (1);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffff80);
+    styleAttrs.margin.setVal (0);
+    styleAttrs.borderWidth.setVal (1);
+    styleAttrs.setBorderColor (Color::create (layout, 0x4040ff));
+    styleAttrs.setBorderStyle (BORDER_SOLID);
+    styleAttrs.padding.setVal (1);
 
-   Style *widgetStyle2 = Style::create (&styleAttrs);
+    Style *widgetStyle2 = Style::create (&styleAttrs);
 
-   Textblock *textblock1 = new Textblock (false);
-   textblock1->setStyle (widgetStyle1);
-   layout->setWidget (textblock1);
+    Textblock *textblock1 = new Textblock (false);
+    textblock1->setStyle (widgetStyle1);
+    layout->setWidget (textblock1);
 
-   widgetStyle1->unref();
+    widgetStyle1->unref();
 
-   styleAttrs.borderWidth.setVal (0);
-   styleAttrs.padding.setVal (0);
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.cursor = CURSOR_TEXT;
+    styleAttrs.borderWidth.setVal (0);
+    styleAttrs.padding.setVal (0);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.cursor = CURSOR_TEXT;
 
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   const char *words1[] = { "Some", "random", "text.", NULL };
-   const char *words2[] = { "A", "nested", "paragraph.", NULL };
+    const char *words1[] = { "Some", "random", "text.", NULL };
+    const char *words2[] = { "A", "nested", "paragraph.", NULL };
 
-   for(int i = 0; words1[i]; i++) {
-      if(i != 0)
-         textblock1->addSpace (wordStyle);
-      textblock1->addText (words1[i], wordStyle);
-   }
+    for(int i = 0; words1[i]; i++) {
+        if(i != 0)
+            textblock1->addSpace (wordStyle);
+        textblock1->addText (words1[i], wordStyle);
+    }
 
-   for(int i = 0; i < 1; i++) {
-      textblock1->addParbreak(0, wordStyle);
+    for(int i = 0; i < 1; i++) {
+        textblock1->addParbreak(0, wordStyle);
 
-      Textblock *textblock2 = new Textblock (false);
-      textblock1->addWidget (textblock2, widgetStyle2);
+        Textblock *textblock2 = new Textblock (false);
+        textblock1->addWidget (textblock2, widgetStyle2);
 
-      for(int j = 0; words2[j]; j++) {
-         if(j != 0)
-            textblock2->addSpace (wordStyle);
-         textblock2->addText (words2[j], wordStyle);
-      }
+        for(int j = 0; words2[j]; j++) {
+            if(j != 0)
+                textblock2->addSpace (wordStyle);
+            textblock2->addText (words2[j], wordStyle);
+        }
 
-      textblock2->flush ();
-   }
+        textblock2->flush ();
+    }
 
-   textblock1->flush ();
+    textblock1->flush ();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   widgetStyle2->unref();
-   wordStyle->unref();
-   delete layout;
+    widgetStyle2->unref();
+    wordStyle->unref();
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

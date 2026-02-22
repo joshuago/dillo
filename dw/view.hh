@@ -16,34 +16,34 @@ namespace core {
 class View: public lout::object::Object
 {
 public:
-   /*
+    /*
     * ----------------------------
     *    Operations on the view
     * ----------------------------
     */
 
-   /**
+    /**
     * \brief This methods notifies the view, that it has been attached to a
     *    layout.
     */
-   virtual void setLayout (Layout *layout) = 0;
+    virtual void setLayout (Layout *layout) = 0;
 
-   /**
+    /**
     * \brief Set the canvas size.
     */
-   virtual void setCanvasSize (int width, int ascent, int descent) = 0;
+    virtual void setCanvasSize (int width, int ascent, int descent) = 0;
 
-   /**
+    /**
     * \brief Set the cursor appearance.
     */
-   virtual void setCursor (style::Cursor cursor) = 0;
+    virtual void setCursor (style::Cursor cursor) = 0;
 
-   /**
+    /**
     * \brief Set the background of the view.
     */
-   virtual void setBgColor (style::Color *color) = 0;
+    virtual void setBgColor (style::Color *color) = 0;
 
-   /*
+    /*
     * ---------------------------------------------------------
     *    Scrolling and Related. Only usesViewport must be
     *    implemented, if it returns false, the other methods
@@ -51,42 +51,42 @@ public:
     * ---------------------------------------------------------
     */
 
-   /**
+    /**
     * \brief Return, whether this view uses a viewport.
     */
-   virtual bool usesViewport () = 0;
+    virtual bool usesViewport () = 0;
 
-   /**
+    /**
     * \brief Get the thickness of the horizontal scrollbar, when it is
     *    visible.
     *
     * Does not have to be implemented, when usesViewport returns false.
     */
-   virtual int getHScrollbarThickness () = 0;
+    virtual int getHScrollbarThickness () = 0;
 
-   /**
+    /**
     * \brief Get the thickness of the vertical scrollbar, when it is
     *    visible.
     *
     * Does not have to be implemented, when usesViewport returns false.
     */
-   virtual int getVScrollbarThickness () = 0;
+    virtual int getVScrollbarThickness () = 0;
 
-   virtual int getScrollbarOnLeft () = 0;
+    virtual int getScrollbarOnLeft () = 0;
 
-   /**
+    /**
     * \brief Scroll the viewport to the given position.
     *
     * Does not have to be implemented, when usesViewport returns false.
     */
-   virtual void scrollTo (int x, int y) = 0;
+    virtual void scrollTo (int x, int y) = 0;
 
-   /**
+    /**
     * \brief Scroll the viewport as commanded.
     */
-   virtual void scroll (ScrollCommand) { };
+    virtual void scroll (ScrollCommand) { };
 
-   /**
+    /**
     * \brief Set the viewport size.
     *
     * Does not have to be implemented, when usesViewport returns false.
@@ -95,17 +95,17 @@ public:
     * the dimensions of the new size, \em including the scrollbar thicknesses.
     *
     */
-   virtual void setViewportSize (int width, int height,
-                                 int hScrollbarThickness,
-                                 int vScrollbarThickness) = 0;
+    virtual void setViewportSize (int width, int height,
+                                            int hScrollbarThickness,
+                                            int vScrollbarThickness) = 0;
 
-   /*
+    /*
     * -----------------------
     *    Drawing functions
     * -----------------------
     */
 
-   /**
+    /**
     * \brief Called before drawing.
     *
     * All actual drawing operations will be enclosed into calls of
@@ -115,16 +115,16 @@ public:
     * initialize the backing pixmap, all other drawing operations will draw
     * into it, and finishDrawing() will merge it into the window.
     */
-   virtual void startDrawing (Rectangle *area) = 0;
+    virtual void startDrawing (Rectangle *area) = 0;
 
-   /**
+    /**
     * \brief Called after drawing.
     *
     * \sa dw::core:View::startDrawing
     */
-   virtual void finishDrawing (Rectangle *area) = 0;
+    virtual void finishDrawing (Rectangle *area) = 0;
 
-   /**
+    /**
     * \brief Queue a region, which is given in \em canvas coordinates, for
     *    drawing.
     *
@@ -133,16 +133,16 @@ public:
     * are collected, combined (as far as possible), and the drawing is later
     * done in an idle function.
     */
-   virtual void queueDraw (Rectangle *area) = 0;
+    virtual void queueDraw (Rectangle *area) = 0;
 
-   /**
+    /**
     * \brief Queue the total viewport for drawing.
     *
     * \sa dw::core::View::queueDraw
     */
-   virtual void queueDrawTotal () = 0;
+    virtual void queueDrawTotal () = 0;
 
-   /**
+    /**
     * \brief Cancel a draw queue request.
     *
     * If dw::core::View::queueDraw or dw::core::View::queueDrawTotal have been
@@ -150,51 +150,51 @@ public:
     * drawing should be cancelled. Otherwise, the cancellation should be
     * ignored.
     */
-   virtual void cancelQueueDraw () = 0;
+    virtual void cancelQueueDraw () = 0;
 
-   /*
+    /*
     * The following methods should be self-explaining.
     */
 
-   virtual void drawPoint     (style::Color *color,
+    virtual void drawPoint     (style::Color *color,
                                style::Color::Shading shading,
                                int x, int y) = 0;
-   virtual void drawLine      (style::Color *color,
+    virtual void drawLine      (style::Color *color,
                                style::Color::Shading shading,
                                int x1, int y1, int x2, int y2) = 0;
-   virtual void drawTypedLine (style::Color *color,
+    virtual void drawTypedLine (style::Color *color,
                                style::Color::Shading shading,
                                style::LineType type, int width,
                                int x1, int y1, int x2, int y2) = 0;
-   virtual void drawRectangle (style::Color *color,
+    virtual void drawRectangle (style::Color *color,
                                style::Color::Shading shading, bool filled,
                                int x, int y, int width, int height) = 0;
-   virtual void drawArc       (style::Color *color,
+    virtual void drawArc       (style::Color *color,
                                style::Color::Shading shading, bool filled,
                                int centerX, int centerY, int width, int height,
                                int angle1, int angle2) = 0;
-   virtual void drawPolygon    (style::Color *color,
+    virtual void drawPolygon    (style::Color *color,
                                 style::Color::Shading shading,
                                 bool filled, bool convex, Point *points,
                                 int npoints) = 0;
-   virtual void drawText       (style::Font *font,
+    virtual void drawText       (style::Font *font,
                                 style::Color *color,
                                 style::Color::Shading shading,
                                 int x, int y, const char *text, int len) = 0;
-   virtual void drawSimpleWrappedText (style::Font *font, style::Color *color,
-                                       style::Color::Shading shading,
-                                       int x, int y, int w, int h,
-                                       const char *text) = 0;
-   virtual void drawImage (Imgbuf *imgbuf, int xRoot, int yRoot,
-                           int x, int y, int width, int height) = 0;
+    virtual void drawSimpleWrappedText (style::Font *font, style::Color *color,
+                                                    style::Color::Shading shading,
+                                                    int x, int y, int w, int h,
+                                                    const char *text) = 0;
+    virtual void drawImage (Imgbuf *imgbuf, int xRoot, int yRoot,
+                                    int x, int y, int width, int height) = 0;
 
-   /*
+    /*
     * --------------
     *    Clipping
     * --------------
     */
 
-   /*
+    /*
     * To prevent drawing outside of a given area, a clipping view may be
     * requested, which also implements this interface. The clipping view is
     * related to the parent view (clipping views may be nested!), anything
@@ -203,8 +203,8 @@ public:
     * which are later merged into the parent view pixmap/window.
     */
 
-   virtual View *getClippingView (int x, int y, int width, int height) = 0;
-   virtual void mergeClippingView (View *clippingView) = 0;
+    virtual View *getClippingView (int x, int y, int width, int height) = 0;
+    virtual void mergeClippingView (View *clippingView) = 0;
 };
 
 } // namespace core

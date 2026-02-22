@@ -37,67 +37,67 @@ using namespace dw::fltk;
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(410, 210, "Dw Resource test");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(410, 210, "Dw Resource test");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 410, 210);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 410, 210);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *widgetStyle = Style::create (&styleAttrs);
+    Style *widgetStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock = new Textblock (false);
-   textblock->setStyle (widgetStyle);
-   layout->setWidget (textblock);
+    Textblock *textblock = new Textblock (false);
+    textblock->setStyle (widgetStyle);
+    layout->setWidget (textblock);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   styleAttrs.margin.setVal (0);
-   styleAttrs.backgroundColor = NULL;
+    styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
 
-   widgetStyle = Style::create (&styleAttrs);
+    widgetStyle = Style::create (&styleAttrs);
 
-   SelectionResource *res = layout->getResourceFactory()->createListResource
-      (ListResource::SELECTION_AT_MOST_ONE, 4);
-   //SelectionResource *res =
-   //   layout->getResourceFactory()->createOptionMenuResource ();
+    SelectionResource *res = layout->getResourceFactory()->createListResource
+        (ListResource::SELECTION_AT_MOST_ONE, 4);
+    //SelectionResource *res =
+    //   layout->getResourceFactory()->createOptionMenuResource ();
 
-   Embed *embed = new Embed (res);
-   textblock->addWidget (embed, widgetStyle);
-   textblock->addSpace (widgetStyle);
+    Embed *embed = new Embed (res);
+    textblock->addWidget (embed, widgetStyle);
+    textblock->addSpace (widgetStyle);
 
-   widgetStyle->unref();
+    widgetStyle->unref();
 
-   for(int i = 0; i < 50; i++)
-      res->addItem ("Hello, world!", true, i == 0 ? true : false);
+    for(int i = 0; i < 50; i++)
+        res->addItem ("Hello, world!", true, i == 0 ? true : false);
 
-   textblock->flush ();
+    textblock->flush ();
 
-   window->resizable(viewport);
-   window->show();
+    window->resizable(viewport);
+    window->show();
 
-   int errorCode = Fl::run();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

@@ -27,13 +27,13 @@ int RegardingBorder::CLASS_ID = -1;
 
 RegardingBorder::RegardingBorder ()
 {
-   DBG_OBJ_CREATE ("dw::RegardingBorder");
-   registerName ("dw::RegardingBorder", &CLASS_ID);
+    DBG_OBJ_CREATE ("dw::RegardingBorder");
+    registerName ("dw::RegardingBorder", &CLASS_ID);
 }
 
 RegardingBorder::~RegardingBorder ()
 {
-   DBG_OBJ_DELETE ();
+    DBG_OBJ_DELETE ();
 }
 
 } // namespace dw

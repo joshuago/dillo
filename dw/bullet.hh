@@ -14,16 +14,16 @@ namespace dw {
 class Bullet: public core::Widget
 {
 protected:
-   void sizeRequestSimpl (core::Requisition *requisition);
-   void getExtremesSimpl (core::Extremes *extremes);
-   void containerSizeChangedForChildren ();
-   void draw (core::View *view, core::Rectangle *area,
+    void sizeRequestSimpl (core::Requisition *requisition);
+    void getExtremesSimpl (core::Extremes *extremes);
+    void containerSizeChangedForChildren ();
+    void draw (core::View *view, core::Rectangle *area,
               core::DrawingContext *context);
-   core::Iterator *iterator (core::Content::Type mask, bool atEnd);
+    core::Iterator *iterator (core::Content::Type mask, bool atEnd);
 
 public:
-   Bullet ();
-   ~Bullet ();
+    Bullet ();
+    ~Bullet ();
 };
 
 } // namespace dw

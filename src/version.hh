@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_HH
-#define VERSION_HH
+#ifndef __VERSION_HH__
+#define __VERSION_HH__
 
 void a_Version_print_info();
 
-#endif /* VERSION_HH */
+#endif /* __VERSION_HH__ */

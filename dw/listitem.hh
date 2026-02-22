@@ -9,19 +9,19 @@ namespace dw {
 class ListItem: public AlignedTextblock
 {
 protected:
-   int getValue ();
-   void setMaxValue (int maxValue, int value);
+    int getValue ();
+    void setMaxValue (int maxValue, int value);
 
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   ListItem(ListItem *ref, bool limitTextWidth);
-   ~ListItem();
+    ListItem(ListItem *ref, bool limitTextWidth);
+    ~ListItem();
 
-   bool usesMaxGeneratorWidth ();
+    bool usesMaxGeneratorWidth ();
 
-   void initWithWidget (core::Widget *widget, core::style::Style *style);
-   void initWithText (const char *text, core::style::Style *style);
+    void initWithWidget (core::Widget *widget, core::style::Style *style);
+    void initWithText (const char *text, core::style::Style *style);
 };
 
 } // namespace dw

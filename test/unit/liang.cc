@@ -34,73 +34,73 @@ dw::fltk::FltkPlatform *platform;
 
 void hyph(dw::Hyphenator *h, const char *word, const char *parts)
 {
-	int p = 0;
-	char buf[1024];
-	int numBreaks;
-	int *breakPos = h->hyphenateWord(platform, word, &numBreaks);
-	memset(buf, 0, 1024);
-	for (int i = 0; i < numBreaks + 1; i++) {
-		int start = (i == 0 ? 0 : breakPos[i - 1]);
-		int end = (i == numBreaks ? strlen (word) : breakPos[i]);
-		if (i != 0)
-			buf[p++] = '-';
-		for (int j = start; j < end; j++)
-			buf[p++] = word[j];
-	}
+    int p = 0;
+    char buf[1024];
+    int numBreaks;
+    int *breakPos = h->hyphenateWord(platform, word, &numBreaks);
+    memset(buf, 0, 1024);
+    for (int i = 0; i < numBreaks + 1; i++) {
+        int start = (i == 0 ? 0 : breakPos[i - 1]);
+        int end = (i == numBreaks ? strlen (word) : breakPos[i]);
+        if (i != 0)
+                buf[p++] = '-';
+        for (int j = start; j < end; j++)
+                buf[p++] = word[j];
+    }
 
-	if (strcmp(parts, buf) != 0) {
-		fprintf(stderr, "mismatch input=%s output=%s expected=%s\n",
-				word, buf, parts);
-		exit(1);
-	}
+    if (strcmp(parts, buf) != 0) {
+        fprintf(stderr, "mismatch input=%s output=%s expected=%s\n",
+                word, buf, parts);
+        exit(1);
+    }
 
-	printf("%s\n", buf);
+    printf("%s\n", buf);
 
-	if (breakPos)
-		free(breakPos);
+    if (breakPos)
+        free(breakPos);
 }
 
 dw::Hyphenator get_hyphenator(const char *path)
 {
-	if (access(path, F_OK) != 0) {
-		fprintf(stderr, "cannot access %s file: %s", path,
-				strerror(errno));
-		exit(1);
-	}
+    if (access(path, F_OK) != 0) {
+        fprintf(stderr, "cannot access %s file: %s", path,
+                strerror(errno));
+        exit(1);
+    }
 
-	return dw::Hyphenator(path, "", 512);
+    return dw::Hyphenator(path, "", 512);
 }
 
 void hyph_en_us()
 {
-	dw::Hyphenator h = get_hyphenator(CUR_SRC_DIR "/hyph-en-us.pat");
+    dw::Hyphenator h = get_hyphenator(CUR_SRC_DIR "/hyph-en-us.pat");
 
-	hyph(&h, "supercalifragilisticexpialidocious", "su-per-cal-ifrag-ilis-tic-ex-pi-ali-do-cious");
-	hyph(&h, "incredible", "in-cred-i-ble");
-	hyph(&h, "hyphenation", "hy-phen-ation");
-	hyph(&h, "...", "...");
+    hyph(&h, "supercalifragilisticexpialidocious", "su-per-cal-ifrag-ilis-tic-ex-pi-ali-do-cious");
+    hyph(&h, "incredible", "in-cred-i-ble");
+    hyph(&h, "hyphenation", "hy-phen-ation");
+    hyph(&h, "...", "...");
 }
 
 void hyph_de()
 {
-	dw::Hyphenator h = get_hyphenator(CUR_SRC_DIR "/hyph-de.pat");
+    dw::Hyphenator h = get_hyphenator(CUR_SRC_DIR "/hyph-de.pat");
 
-	hyph(&h, "...", "...");
-	hyph(&h, "weiß", "weiß");
-	hyph(&h, "Ackermann", "Acker-mann");
-	hyph(&h, "Grundstücksverkehrsgenehmigungszuständigkeits",
-			"Grund-stücks-ver-kehrs-ge-neh-mi-gungs-zu-stän-dig-keits");
-	hyph(&h, "Donaudampfschifffahrtskapitänsmützenknopf",
-			"Do-nau-dampf-schiff-fahrts-ka-pi-täns-müt-zen-knopf");
-	hyph(&h, "www.dillo.org", "www.dil-lo.org");
+    hyph(&h, "...", "...");
+    hyph(&h, "weiß", "weiß");
+    hyph(&h, "Ackermann", "Acker-mann");
+    hyph(&h, "Grundstücksverkehrsgenehmigungszuständigkeits",
+                "Grund-stücks-ver-kehrs-ge-neh-mi-gungs-zu-stän-dig-keits");
+    hyph(&h, "Donaudampfschifffahrtskapitänsmützenknopf",
+                "Do-nau-dampf-schiff-fahrts-ka-pi-täns-müt-zen-knopf");
+    hyph(&h, "www.dillo.org", "www.dil-lo.org");
 }
 
 int main(void)
 {
-	platform = new dw::fltk::FltkPlatform();
+    platform = new dw::fltk::FltkPlatform();
 
-	hyph_en_us();
-	hyph_de();
+    hyph_en_us();
+    hyph_de();
 
-   return 0;
+    return 0;
 }

@@ -230,24 +230,26 @@ fi
 
 
 dnl -------------------------
-dnl Test for FLTK 1.3 library
+dnl Test for FLTK 1.3/1.4 library
 dnl -------------------------
 dnl
 dnl For debugging and to be user friendly
-AC_PATH_PROGS(FLTK_CONFIG,[fltk-config1.3 fltk-config])
-AC_MSG_CHECKING([FLTK 1.3])
+AC_PATH_PROGS(FLTK_CONFIG,[fltk-config])
+AC_MSG_CHECKING([FLTK 1.3/1.4])
 fltk_version="`$FLTK_CONFIG --version 2>/dev/null`"
 case $fltk_version in
   1.3.*) AC_MSG_RESULT(yes)
          LIBFLTK_CXXFLAGS=`$FLTK_CONFIG --cxxflags`
          LIBFLTK_CFLAGS=`$FLTK_CONFIG --cflags`
          LIBFLTK_LIBS=`$FLTK_CONFIG --ldflags`;;
-  1.4.*) AC_MSG_RESULT(no)
-         AC_MSG_ERROR([FLTK $fltk_version not supported yet; use FLTK 1.3]);;
+  1.4.*) AC_MSG_RESULT(yes)
+         LIBFLTK_CXXFLAGS=`$FLTK_CONFIG --cxxflags`
+         LIBFLTK_CFLAGS=`$FLTK_CONFIG --cflags`
+         LIBFLTK_LIBS=`$FLTK_CONFIG --ldflags`;;
   ?*)    AC_MSG_RESULT(no)
-         AC_MSG_ERROR(FLTK 1.3 required; version found: $fltk_version);;
+         AC_MSG_ERROR(FLTK 1.3 or 1.4 required; version found: $fltk_version);;
   *)     AC_MSG_RESULT(no)
-         AC_MSG_ERROR(FLTK 1.3 required; fltk-config not found)
+         AC_MSG_ERROR(FLTK 1.3 or 1.4 required; fltk-config not found)
 esac
 
 dnl -----------------------------------

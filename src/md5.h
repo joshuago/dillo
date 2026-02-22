@@ -1,4 +1,7 @@
 /*
+ * External library - formatting exempt from project style guidelines.
+ * Original source: http://sourceforge.net/projects/libmd5-rfc/
+ *
  * md5.h was taken from "RFC1321-based (RSA-free) MD5 library" by L. Peter
  * Deutsch at http://sourceforge.net/projects/libmd5-rfc/ in October 2011.
  *
@@ -80,7 +83,7 @@ typedef struct md5_state_s {
 } md5_state_t;
 
 #ifdef __cplusplus
-extern "C" 
+extern "C"
 {
 #endif
 

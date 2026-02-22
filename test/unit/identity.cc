@@ -17,39 +17,39 @@ using namespace lout::identity;
 class A: virtual public IdentifiableObject
 {
 public:
-   static int CLASS_ID;
-   inline A () { registerName ("A", &CLASS_ID); }
+    static int CLASS_ID;
+    inline A () { registerName ("A", &CLASS_ID); }
 };
 
 class B: virtual public IdentifiableObject
 {
 public:
-   static int CLASS_ID;
-   inline B () { registerName ("B", &CLASS_ID); }
+    static int CLASS_ID;
+    inline B () { registerName ("B", &CLASS_ID); }
 };
 
 class C: public A, public B
 {
 public:
-   static int CLASS_ID;
-   inline C () { registerName ("C", &CLASS_ID); }
+    static int CLASS_ID;
+    inline C () { registerName ("C", &CLASS_ID); }
 };
 
 int A::CLASS_ID = -1, B::CLASS_ID = -1, C::CLASS_ID = -1;
 
 int main (int argc, char *argv[])
 {
-   printf ("A: %d, B: %d, C: %d\n", A::CLASS_ID, B::CLASS_ID, C::CLASS_ID);
+    printf ("A: %d, B: %d, C: %d\n", A::CLASS_ID, B::CLASS_ID, C::CLASS_ID);
 
-   C x;
-   assert (x.instanceOf (A::CLASS_ID));
-   assert (x.instanceOf (B::CLASS_ID));
-   assert (x.instanceOf (C::CLASS_ID));
-   printf ("x: %d\n", x.getClassId ());
+    C x;
+    assert (x.instanceOf (A::CLASS_ID));
+    assert (x.instanceOf (B::CLASS_ID));
+    assert (x.instanceOf (C::CLASS_ID));
+    printf ("x: %d\n", x.getClassId ());
 
-   B y;
-   printf ("y: %d; instance of A: %s\n",
+    B y;
+    printf ("y: %d; instance of A: %s\n",
            y.getClassId (), y.instanceOf (B::CLASS_ID) ? "true" : "false");
 
-   return 0;
+    return 0;
 }

@@ -20,26 +20,26 @@ extern "C" {
 #define   DPIP_NONBLOCK   8   /**< Nonblocking IO          */
 
 typedef enum {
-   DPIP_EAGAIN,
-   DPIP_ERROR,
-   DPIP_EOF
+    DPIP_EAGAIN,
+    DPIP_ERROR,
+    DPIP_EOF
 } DpipDshStatus;
 
 /**
  * Dpip socket handler type.
  */
 typedef struct {
-   int fd_in;
-   int fd_out;
-   /* FILE *in;    --Unused. The stream functions block when reading. */
-   FILE *out;
+    int fd_in;
+    int fd_out;
+    /* FILE *in;    --Unused. The stream functions block when reading. */
+    FILE *out;
 
-   Dstr *wrbuf;    /**< write buffer */
-   Dstr *rdbuf;    /**< read buffer */
-   int flush_sz;   /**< max size before flush */
+    Dstr *wrbuf;    /**< write buffer */
+    Dstr *rdbuf;    /**< read buffer */
+    int flush_sz;   /**< max size before flush */
 
-   int mode;       /**< mode flags: DPIP_TAG | DPIP_LAST_TAG | DPIP_RAW */
-   int status;     /**< status code: DPIP_EAGAIN | DPIP_ERROR | DPIP_EOF */
+    int mode;       /**< mode flags: DPIP_TAG | DPIP_LAST_TAG | DPIP_RAW */
+    int status;     /**< status code: DPIP_EAGAIN | DPIP_ERROR | DPIP_EOF */
 } Dsh;
 
 
@@ -75,12 +75,12 @@ void a_Dpip_dsh_close(Dsh *dsh);
 void a_Dpip_dsh_free(Dsh *dsh);
 
 #define a_Dpip_dsh_printf(sh, flush, ...)                   \
-   D_STMT_START {                                           \
-      Dstr *dstr = dStr_sized_new(128);                     \
-      dStr_sprintf(dstr, __VA_ARGS__);                      \
-      a_Dpip_dsh_write(sh, flush, dstr->str, dstr->len);    \
-      dStr_free(dstr, 1);                                   \
-   } D_STMT_END
+    D_STMT_START {                                           \
+        Dstr *dstr = dStr_sized_new(128);                     \
+        dStr_sprintf(dstr, __VA_ARGS__);                      \
+        a_Dpip_dsh_write(sh, flush, dstr->str, dstr->len);    \
+        dStr_free(dstr, 1);                                   \
+    } D_STMT_END
 
 #ifdef __cplusplus
 }

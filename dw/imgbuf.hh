@@ -161,70 +161,70 @@ namespace core {
 class Imgbuf: public lout::object::Object, public lout::signal::ObservedObject
 {
 public:
-   enum Type { RGB, RGBA, GRAY, INDEXED, INDEXED_ALPHA };
+    enum Type { RGB, RGBA, GRAY, INDEXED, INDEXED_ALPHA };
 
-   inline Imgbuf () {
-      DBG_OBJ_CREATE ("dw::core::Imgbuf");
-      DBG_OBJ_BASECLASS (lout::object::Object);
-      DBG_OBJ_BASECLASS (lout::signal::ObservedObject);
-   }
+    inline Imgbuf () {
+        DBG_OBJ_CREATE ("dw::core::Imgbuf");
+        DBG_OBJ_BASECLASS (lout::object::Object);
+        DBG_OBJ_BASECLASS (lout::signal::ObservedObject);
+    }
 
-   inline ~Imgbuf () {
-      DBG_OBJ_DELETE ();
-   }
+    inline ~Imgbuf () {
+        DBG_OBJ_DELETE ();
+    }
 
-   /*
+    /*
     * Methods called from the image decoding
     */
 
-   virtual void setCMap (int *colors, int num_colors) = 0;
-   virtual void copyRow (int row, const byte *data) = 0;
-   virtual void newScan () = 0;
+    virtual void setCMap (int *colors, int num_colors) = 0;
+    virtual void copyRow (int row, const byte *data) = 0;
+    virtual void newScan () = 0;
 
-   /*
+    /*
     * Methods called from dw::Image
     */
 
-   virtual Imgbuf* getScaledBuf (int width, int height) = 0;
-   virtual void getRowArea (int row, dw::core::Rectangle *area) = 0;
-   virtual int getRootWidth () = 0;
-   virtual int getRootHeight () = 0;
+    virtual Imgbuf* getScaledBuf (int width, int height) = 0;
+    virtual void getRowArea (int row, dw::core::Rectangle *area) = 0;
+    virtual int getRootWidth () = 0;
+    virtual int getRootHeight () = 0;
 
 
-   /**
+    /**
     * Creates an image buffer with same parameters (type, gamma etc.)
     * except size.
     */
-   virtual Imgbuf *createSimilarBuf (int width, int height) = 0;
+    virtual Imgbuf *createSimilarBuf (int width, int height) = 0;
 
-   /**
+    /**
     * Copies another image buffer into this image buffer.
     */
-   virtual void copyTo (Imgbuf *dest, int xDestRoot, int yDestRoot,
-                        int xSrc, int ySrc, int widthSrc, int heightSrc) = 0;
+    virtual void copyTo (Imgbuf *dest, int xDestRoot, int yDestRoot,
+                                int xSrc, int ySrc, int widthSrc, int heightSrc) = 0;
 
-   /*
+    /*
     * Reference counting.
     */
 
-   virtual void ref () = 0;
-   virtual void unref () = 0;
+    virtual void ref () = 0;
+    virtual void unref () = 0;
 
-   /**
+    /**
     * \todo Comment
     */
-   virtual bool lastReference () = 0;
+    virtual bool lastReference () = 0;
 
 
-   /**
+    /**
     * \todo Comment
     */
-   virtual void setDeleteOnUnref (bool deleteOnUnref) = 0;
+    virtual void setDeleteOnUnref (bool deleteOnUnref) = 0;
 
-   /**
+    /**
     * \todo Comment
     */
-   virtual bool isReferred () = 0;
+    virtual bool isReferred () = 0;
 };
 
 } // namespace core

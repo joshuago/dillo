@@ -27,27 +27,27 @@
  */
 Dstr *a_Misc_rdtag(int socket)
 {
-   char c = '\0';
-   ssize_t rdlen;
-   Dstr *tag;
+    char c = '\0';
+    ssize_t rdlen;
+    Dstr *tag;
 
-   tag = dStr_sized_new(64);
+    tag = dStr_sized_new(64);
 
-   errno = 0;
+    errno = 0;
 
-   do {
-      rdlen = read(socket, &c, 1);
-      if (rdlen == -1 && errno != EINTR)
-         break;
-      dStr_append_c(tag, c);
-   } while (c != '>');
+    do {
+        rdlen = read(socket, &c, 1);
+        if (rdlen == -1 && errno != EINTR)
+            break;
+        dStr_append_c(tag, c);
+    } while (c != '>');
 
-   if (rdlen == -1) {
-      perror("a_Misc_rdtag");
-      dStr_free(tag, TRUE);
-      return (NULL);
-   }
-   return (tag);
+    if (rdlen == -1) {
+        perror("a_Misc_rdtag");
+        dStr_free(tag, TRUE);
+        return (NULL);
+    }
+    return (tag);
 }
 
 /*!
@@ -57,31 +57,31 @@ Dstr *a_Misc_rdtag(int socket)
  */
 char *a_Misc_readtag(int sock)
 {
-   char *tag, c;
-   size_t i;
-   size_t tagmem = 10;
-   ssize_t rdln = 1;
+    char *tag, c;
+    size_t i;
+    size_t tagmem = 10;
+    ssize_t rdln = 1;
 
-   tag = NULL;
-   // new start
-   tag = (char *) dMalloc(tagmem + 1);
-   for (i = 0; (rdln = read(sock, &c, 1)) != 0; i++) {
-      if (i == tagmem) {
-         tagmem += tagmem;
-         tag = (char *) dRealloc(tag, tagmem + 1);
-      }
-      tag[i] = c;
-      if (c == '>') {
-         tag[i + 1] = '\0';
-         break;
-      }
-   }
-   // new end
-   if (rdln == -1) {
-      ERRMSG("a_Misc_readtag", "read", errno);
-   }
+    tag = NULL;
+    // new start
+    tag = (char *) dMalloc(tagmem + 1);
+    for (i = 0; (rdln = read(sock, &c, 1)) != 0; i++) {
+        if (i == tagmem) {
+            tagmem += tagmem;
+            tag = (char *) dRealloc(tag, tagmem + 1);
+        }
+        tag[i] = c;
+        if (c == '>') {
+            tag[i + 1] = '\0';
+            break;
+        }
+    }
+    // new end
+    if (rdln == -1) {
+        ERRMSG("a_Misc_readtag", "read", errno);
+    }
 
-   return (tag);
+    return (tag);
 }
 
 /*! Reads a dpi tag from a socket without hanging on read.
@@ -95,32 +95,32 @@ char *a_Misc_readtag(int sock)
 /* Is this useful?
 int a_Misc_nohang_rdtag(int socket, int timeout, Dstr **tag)
 {
-   int n_fd;
-   fd_set sock_set, select_set;
-   struct timeval tout;
+    int n_fd;
+    fd_set sock_set, select_set;
+    struct timeval tout;
 
-   FD_ZERO(&sock_set);
-   FD_SET(socket, &sock_set);
+    FD_ZERO(&sock_set);
+    FD_SET(socket, &sock_set);
 
-   errno = 0;
-   do {
-      select_set = sock_set;
-      tout.tv_sec = 0;
-      tout.tv_usec = timeout;
-      n_fd = select(socket + 1, &select_set, NULL, NULL, &tout);
-   } while (n_fd == -1 && errno == EINTR);
+    errno = 0;
+    do {
+        select_set = sock_set;
+        tout.tv_sec = 0;
+        tout.tv_usec = timeout;
+        n_fd = select(socket + 1, &select_set, NULL, NULL, &tout);
+    } while (n_fd == -1 && errno == EINTR);
 
-   if (n_fd == -1) {
-      MSG_ERR("%s:%d: a_Misc_nohang_rdtag: %s\n",
+    if (n_fd == -1) {
+        MSG_ERR("%s:%d: a_Misc_nohang_rdtag: %s\n",
               __FILE__, __LINE__, dStrerror(errno));
-      return(-1);
-   }
-   if (n_fd == 0) {
-      return(0);
-   } else {
-      *tag = a_Misc_rdtag(socket);
-      return(1);
-   }
+        return(-1);
+    }
+    if (n_fd == 0) {
+        return(0);
+    } else {
+        *tag = a_Misc_rdtag(socket);
+        return(1);
+    }
 }
 */
 
@@ -130,14 +130,14 @@ int a_Misc_nohang_rdtag(int socket, int timeout, Dstr **tag)
  */
 char *a_Misc_mkdtemp(char *template)
 {
-   for (;;) {
-      if (a_Misc_mkfname(template) && mkdir(template, 0700) == 0)
-         break;
-      if (errno == EEXIST)
-         continue;
-      return 0;
-   }
-   return template;
+    for (;;) {
+        if (a_Misc_mkfname(template) && mkdir(template, 0700) == 0)
+            break;
+        if (errno == EEXIST)
+            continue;
+        return 0;
+    }
+    return template;
 }
 
 /**
@@ -146,33 +146,33 @@ char *a_Misc_mkdtemp(char *template)
  */
 char *a_Misc_mkfname(char *template)
 {
-   char *tmp = template + strlen(template) - 6;
-   int i;
-   uint_t random;
-   struct stat stat_buf;
+    char *tmp = template + strlen(template) - 6;
+    int i;
+    uint_t random;
+    struct stat stat_buf;
 
-   if (tmp < template)
-      goto error;
-   for (i = 0; i < 6; ++i)
-      if (tmp[i] != 'X') {
+    if (tmp < template)
+        goto error;
+    for (i = 0; i < 6; ++i)
+        if (tmp[i] != 'X') {
        error:
-         errno = EINVAL;
-         return 0;
-      }
-   srand((uint_t)(time(0) ^ getpid()));
+            errno = EINVAL;
+            return 0;
+        }
+    srand((uint_t)(time(0) ^ getpid()));
 
-   for (;;) {
-      random = (unsigned) rand();
-      for (i = 0; i < 6; ++i) {
-         int hexdigit = (random >> (i * 5)) & 0x1f;
+    for (;;) {
+        random = (unsigned) rand();
+        for (i = 0; i < 6; ++i) {
+            int hexdigit = (random >> (i * 5)) & 0x1f;
 
-         tmp[i] = hexdigit > 9 ? hexdigit + 'a' - 10 : hexdigit + '0';
-      }
-      if (stat(template, &stat_buf) == -1 && errno == ENOENT)
-         return template;
+            tmp[i] = hexdigit > 9 ? hexdigit + 'a' - 10 : hexdigit + '0';
+        }
+        if (stat(template, &stat_buf) == -1 && errno == ENOENT)
+            return template;
 
-      MSG_ERR("a_Misc_mkfname: another round for %s \n", template);
-   }
+        MSG_ERR("a_Misc_mkfname: another round for %s \n", template);
+    }
 }
 
 /**
@@ -180,20 +180,20 @@ char *a_Misc_mkfname(char *template)
  */
 char *a_Misc_mksecret(int nchar)
 {
-   int i;
-   uint_t random;
-   char *secret = dNew(char, nchar + 1);
+    int i;
+    uint_t random;
+    char *secret = dNew(char, nchar + 1);
 
-   srand((uint_t)(time(0) ^ getpid()));
-   random = (unsigned) rand();
-   for (i = 0; i < nchar; ++i) {
-      int hexdigit = (random >> (i * 5)) & 0x0f;
+    srand((uint_t)(time(0) ^ getpid()));
+    random = (unsigned) rand();
+    for (i = 0; i < nchar; ++i) {
+        int hexdigit = (random >> (i * 5)) & 0x0f;
 
-      secret[i] = hexdigit > 9 ? hexdigit + 'a' - 10 : hexdigit + '0';
-   }
-   secret[i] = 0;
-   MSG("a_Misc_mksecret: %s\n", secret);
+        secret[i] = hexdigit > 9 ? hexdigit + 'a' - 10 : hexdigit + '0';
+    }
+    secret[i] = 0;
+    MSG("a_Misc_mksecret: %s\n", secret);
 
-   return secret;
+    return secret;
 }
 

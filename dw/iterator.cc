@@ -33,14 +33,14 @@ namespace core {
 
 Iterator::Iterator(Widget *widget, Content::Type mask, bool atEnd)
 {
-   this->widget = widget;
-   this->mask = mask;
+    this->widget = widget;
+    this->mask = mask;
 }
 
 Iterator::Iterator(Iterator &it): object::Comparable ()
 {
-   widget = it.widget;
-   content = it.content;
+    widget = it.widget;
+    content = it.content;
 }
 
 Iterator::~Iterator()
@@ -49,28 +49,28 @@ Iterator::~Iterator()
 
 bool Iterator::equals (Object *other)
 {
-   Iterator *otherIt = (Iterator*)other;
-   return
-      this == otherIt ||
-      (getWidget() == otherIt->getWidget() && compareTo(otherIt) == 0);
+    Iterator *otherIt = (Iterator*)other;
+    return
+        this == otherIt ||
+        (getWidget() == otherIt->getWidget() && compareTo(otherIt) == 0);
 }
 
 void Iterator::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append ("{ widget = ");
-   //widget->intoStringBuffer (sb);
-   sb->appendPointer (widget);
-   sb->append (" (");
-   sb->append (widget->getClassName());
-   sb->append (")>");
+    sb->append ("{ widget = ");
+    //widget->intoStringBuffer (sb);
+    sb->appendPointer (widget);
+    sb->append (" (");
+    sb->append (widget->getClassName());
+    sb->append (")>");
 
-   sb->append (", mask = ");
-   Content::maskIntoStringBuffer (mask, sb);
+    sb->append (", mask = ");
+    Content::maskIntoStringBuffer (mask, sb);
 
-   sb->append (", content = ");
-   Content::intoStringBuffer (&content, sb);
+    sb->append (", content = ");
+    Content::intoStringBuffer (&content, sb);
 
-   sb->append (" }");
+    sb->append (" }");
 }
 
 /**
@@ -81,7 +81,7 @@ void Iterator::intoStringBuffer(misc::StringBuffer *sb)
  */
 void Iterator::unref ()
 {
-   delete this;
+    delete this;
 }
 
 /**
@@ -98,110 +98,110 @@ void Iterator::unref ()
 void Iterator::scrollTo (Iterator *it1, Iterator *it2, int start, int end,
                          HPosition hpos, VPosition vpos)
 {
-   Allocation alloc1, alloc2, alloc;
-   int x1, x2, y1, y2;
-   DeepIterator *eit1, *eit2, *eit3;
-   int curStart, curEnd, cmp;
-   bool atStart;
+    Allocation alloc1, alloc2, alloc;
+    int x1, x2, y1, y2;
+    DeepIterator *eit1, *eit2, *eit3;
+    int curStart, curEnd, cmp;
+    bool atStart;
 
-   if (it1->equals(it2)) {
-      it1->getAllocation (start, end, &alloc);
-      it1->getWidget()->getLayout()->scrollTo (hpos, vpos, alloc.x, alloc.y,
+    if (it1->equals(it2)) {
+        it1->getAllocation (start, end, &alloc);
+        it1->getWidget()->getLayout()->scrollTo (hpos, vpos, alloc.x, alloc.y,
                                                alloc.width,
                                                alloc.ascent + alloc.descent);
-   } else {
-      // First, determine the rectangle all iterators from it1 and it2
-      // allocate, i.e. the smallest rectangle containing all allocations of
-      // these iterators.
-      eit1 = new DeepIterator (it1);
-      eit2 = new DeepIterator (it2);
+    } else {
+        // First, determine the rectangle all iterators from it1 and it2
+        // allocate, i.e. the smallest rectangle containing all allocations of
+        // these iterators.
+        eit1 = new DeepIterator (it1);
+        eit2 = new DeepIterator (it2);
 
-      x1 = INT_MAX;
-      x2 = INT_MIN;
-      y1 = INT_MAX;
-      y2 = INT_MIN;
+        x1 = INT_MAX;
+        x2 = INT_MIN;
+        y1 = INT_MAX;
+        y2 = INT_MIN;
 
-      for (atStart = true, eit3 = (DeepIterator*)eit1->clone ();
+        for (atStart = true, eit3 = (DeepIterator*)eit1->clone ();
            (cmp = eit3->compareTo (eit2)) <= 0;
            eit3->next (), atStart = false) {
-         if (atStart)
-            curStart = start;
-         else
-            curStart = 0;
+            if (atStart)
+                curStart = start;
+            else
+                curStart = 0;
 
-         if (cmp == 0)
-            curEnd = end;
-         else
-            curEnd = INT_MAX;
+            if (cmp == 0)
+                curEnd = end;
+            else
+                curEnd = INT_MAX;
 
-         eit3->getAllocation (curStart, curEnd, &alloc);
-         x1 = misc::min (x1, alloc.x);
-         x2 = misc::max (x2, alloc.x + alloc.width);
-         y1 = misc::min (y1, alloc.y);
-         y2 = misc::max (y2, alloc.y + alloc.ascent + alloc.descent);
-      }
+            eit3->getAllocation (curStart, curEnd, &alloc);
+            x1 = misc::min (x1, alloc.x);
+            x2 = misc::max (x2, alloc.x + alloc.width);
+            y1 = misc::min (y1, alloc.y);
+            y2 = misc::max (y2, alloc.y + alloc.ascent + alloc.descent);
+        }
 
-      delete eit3;
-      delete eit2;
-      delete eit1;
+        delete eit3;
+        delete eit2;
+        delete eit1;
 
-      it1->getAllocation (start, INT_MAX, &alloc1);
-      it2->getAllocation (0, end, &alloc2);
+        it1->getAllocation (start, INT_MAX, &alloc1);
+        it2->getAllocation (0, end, &alloc2);
 
-      if (alloc1.x > alloc2.x) {
-         //
-         // This is due to a line break within the region. When the line is
-         // longer than the viewport, and the region is actually quite short,
-         // the user would not see anything of the region, as in this figure
-         // (with region marked as "#"):
-         //
-         //            +----------+   ,-- alloc1
-         //            |          |   V
-         //            |          |  ### ###
-         //   ### ###  |          |
-         //        ^   |          | <-- viewport
-         //        |   +----------+
-         //        `-- alloc2
-         //   |----------------------------|
-         //               width
-         //
-         // Therefore, we make the region smaller, so that the region will be
-         // displayed like this:
-         //
-         //                           ,-- alloc1
-         //                      +----|-----+
-         //                      |    V     |
-         //                      |   ### ###|
-         //   ### ###            |          |
-         //        ^             |          | <-- viewport
-         //        `-- alloc2    +----------+
-         //                      |----------|
-         //                         width
-         //
+        if (alloc1.x > alloc2.x) {
+            //
+            // This is due to a line break within the region. When the line is
+            // longer than the viewport, and the region is actually quite short,
+            // the user would not see anything of the region, as in this figure
+            // (with region marked as "#"):
+            //
+            //            +----------+   ,-- alloc1
+            //            |          |   V
+            //            |          |  ### ###
+            //   ### ###  |          |
+            //        ^   |          | <-- viewport
+            //        |   +----------+
+            //        `-- alloc2
+            //   |----------------------------|
+            //               width
+            //
+            // Therefore, we make the region smaller, so that the region will be
+            // displayed like this:
+            //
+            //                           ,-- alloc1
+            //                      +----|-----+
+            //                      |    V     |
+            //                      |   ### ###|
+            //   ### ###            |          |
+            //        ^             |          | <-- viewport
+            //        `-- alloc2    +----------+
+            //                      |----------|
+            //                         width
+            //
 
-         /** \todo Changes in the viewport size, until the idle function is
+            /** \todo Changes in the viewport size, until the idle function is
           *      called, are not regarded. */
 
-         if (it1->getWidget()->getLayout()->getUsesViewport() &&
+            if (it1->getWidget()->getLayout()->getUsesViewport() &&
              x2 - x1 > it1->getWidget()->getLayout()->getWidthViewport()) {
-            x1 = x2 - it1->getWidget()->getLayout()->getWidthViewport();
-            x2 = x1 + it1->getWidget()->getLayout()->getWidthViewport();
-         }
-      }
+                x1 = x2 - it1->getWidget()->getLayout()->getWidthViewport();
+                x2 = x1 + it1->getWidget()->getLayout()->getWidthViewport();
+            }
+        }
 
-      if (alloc1.y > alloc2.y) {
-         // This is similar to the case above, e.g. if the region ends in
-         // another table column.
-         if (it1->getWidget()->getLayout()->getUsesViewport() &&
+        if (alloc1.y > alloc2.y) {
+            // This is similar to the case above, e.g. if the region ends in
+            // another table column.
+            if (it1->getWidget()->getLayout()->getUsesViewport() &&
              y2 - y1 > it1->getWidget()->getLayout()->getHeightViewport()) {
-            y1 = y2 - it1->getWidget()->getLayout()->getHeightViewport();
-            y2 = y1 + it1->getWidget()->getLayout()->getHeightViewport();
-         }
-      }
+                y1 = y2 - it1->getWidget()->getLayout()->getHeightViewport();
+                y2 = y1 + it1->getWidget()->getLayout()->getHeightViewport();
+            }
+        }
 
-      it1->getWidget()->getLayout()->scrollTo (hpos, vpos,
+        it1->getWidget()->getLayout()->scrollTo (hpos, vpos,
                                                x1, y1, x2 - x1, y2 - y1);
-   }
+    }
 }
 
 // -------------------
@@ -209,9 +209,9 @@ void Iterator::scrollTo (Iterator *it1, Iterator *it2, int start, int end,
 // -------------------
 
 EmptyIterator::EmptyIterator (Widget *widget, Content::Type mask, bool atEnd):
-   Iterator (widget, mask, atEnd)
+    Iterator (widget, mask, atEnd)
 {
-   this->content.type = (atEnd ? Content::END : Content::START);
+    this->content.type = (atEnd ? Content::END : Content::START);
 }
 
 EmptyIterator::EmptyIterator (EmptyIterator &it): Iterator (it)
@@ -220,31 +220,31 @@ EmptyIterator::EmptyIterator (EmptyIterator &it): Iterator (it)
 
 object::Object *EmptyIterator::clone ()
 {
-   return new EmptyIterator (*this);
+    return new EmptyIterator (*this);
 }
 
 int EmptyIterator::compareTo (object::Comparable *other)
 {
-   EmptyIterator *otherIt = (EmptyIterator*)other;
+    EmptyIterator *otherIt = (EmptyIterator*)other;
 
-   if (content.type == otherIt->content.type)
-      return 0;
-   else if (content.type == Content::START)
-      return -1;
-   else
-      return +1;
+    if (content.type == otherIt->content.type)
+        return 0;
+    else if (content.type == Content::START)
+        return -1;
+    else
+        return +1;
 }
 
 bool EmptyIterator::next ()
 {
-   content.type = Content::END;
-   return false;
+    content.type = Content::END;
+    return false;
 }
 
 bool EmptyIterator::prev ()
 {
-   content.type = Content::START;
-   return false;
+    content.type = Content::START;
+    return false;
 }
 
 void EmptyIterator::highlight (int start, int end, HighlightLayer layer)
@@ -266,69 +266,69 @@ void EmptyIterator::getAllocation (int start, int end, Allocation *allocation)
 TextIterator::TextIterator (Widget *widget, Content::Type mask, bool atEnd,
                             const char *text): Iterator (widget, mask, atEnd)
 {
-   this->content.type = (atEnd ? Content::END : Content::START);
-   this->text = (mask & Content::TEXT) ? text : NULL;
+    this->content.type = (atEnd ? Content::END : Content::START);
+    this->text = (mask & Content::TEXT) ? text : NULL;
 }
 
 TextIterator::TextIterator (TextIterator &it): Iterator (it)
 {
-   text = it.text;
+    text = it.text;
 }
 
 int TextIterator::compareTo (object::Comparable *other)
 {
-   TextIterator *otherIt = (TextIterator*)other;
+    TextIterator *otherIt = (TextIterator*)other;
 
-   if (content.type == otherIt->content.type)
-      return 0;
+    if (content.type == otherIt->content.type)
+        return 0;
 
-   switch (content.type) {
-   case Content::START:
-      return -1;
+    switch (content.type) {
+    case Content::START:
+        return -1;
 
-   case Content::TEXT:
-      if (otherIt->content.type == Content::START)
-         return +1;
-      else
-         return -1;
+    case Content::TEXT:
+        if (otherIt->content.type == Content::START)
+            return +1;
+        else
+            return -1;
 
-   case Content::END:
-      return +1;
+    case Content::END:
+        return +1;
 
-   default:
-      misc::assertNotReached();
-      return 0;
-   }
+    default:
+        misc::assertNotReached();
+        return 0;
+    }
 }
 
 bool TextIterator::next ()
 {
-   if (content.type == Content::START && text != NULL) {
-      content.type = Content::TEXT;
-      content.text = text;
-      return true;
-   } else {
-      content.type = Content::END;
-      return false;
-   }
+    if (content.type == Content::START && text != NULL) {
+        content.type = Content::TEXT;
+        content.text = text;
+        return true;
+    } else {
+        content.type = Content::END;
+        return false;
+    }
 }
 
 bool TextIterator::prev ()
 {
-   if (content.type == Content::END && text != NULL) {
-      content.type = Content::TEXT;
-      content.text = text;
-      return true;
-   } else {
-      content.type = Content::START;
-      return false;
-   }
+    if (content.type == Content::END && text != NULL) {
+        content.type = Content::TEXT;
+        content.text = text;
+        return true;
+    } else {
+        content.type = Content::START;
+        return false;
+    }
 }
 
 void TextIterator::getAllocation (int start, int end, Allocation *allocation)
 {
-   // Return the allocation of the widget.
-   *allocation = *(getWidget()->getAllocation ());
+    // Return the allocation of the widget.
+    *allocation = *(getWidget()->getAllocation ());
 }
 
 // ------------------
@@ -337,8 +337,8 @@ void TextIterator::getAllocation (int start, int end, Allocation *allocation)
 
 DeepIterator::Stack::~Stack ()
 {
-   for (int i = 0; i < size (); i++)
-      get(i)->unref ();
+    for (int i = 0; i < size (); i++)
+        get(i)->unref ();
 }
 
 /*
@@ -356,44 +356,44 @@ DeepIterator::Stack::~Stack ()
 Iterator *DeepIterator::searchDownward (Iterator *it, Content::Type mask,
                                         bool fromEnd)
 {
-   Iterator *it2, *it3;
+    Iterator *it2, *it3;
 
-   //DEBUG_MSG (1, "%*smoving down (%swards) from %s\n",
-   //          indent, "", from_end ? "back" : "for", a_Dw_iterator_text (it));
+    //DEBUG_MSG (1, "%*smoving down (%swards) from %s\n",
+    //          indent, "", from_end ? "back" : "for", a_Dw_iterator_text (it));
 
-   assert (it->getContent()->type & Content::ANY_WIDGET);
-   it2 = it->getContent()->getWidget()->iterator (mask, fromEnd);
+    assert (it->getContent()->type & Content::ANY_WIDGET);
+    it2 = it->getContent()->getWidget()->iterator (mask, fromEnd);
 
-   if (it2 == NULL) {
-      // Moving downwards failed.
-      //DEBUG_MSG (1, "%*smoving down failed\n", indent, "");
-      return NULL;
-   }
+    if (it2 == NULL) {
+        // Moving downwards failed.
+        //DEBUG_MSG (1, "%*smoving down failed\n", indent, "");
+        return NULL;
+    }
 
-   while (fromEnd ? it2->prev () : it2->next ()) {
-      //DEBUG_MSG (1, "%*sexamining %s\n",
-      //           indent, "", a_Dw_iterator_text (it2));
+    while (fromEnd ? it2->prev () : it2->next ()) {
+        //DEBUG_MSG (1, "%*sexamining %s\n",
+        //           indent, "", a_Dw_iterator_text (it2));
 
-      if (it2->getContent()->type & Content::ANY_WIDGET) {
-         // Another widget. Search in it downwards.
-         it3 = searchDownward (it2, mask, fromEnd);
-         if (it3 != NULL) {
-            it2->unref ();
-            return it3;
-         }
-         // Else continue in this widget.
-      } else {
-         // Success!
-         //DEBUG_MSG (1, "%*smoving down succeeded: %s\n",
-         //           indent, "", a_Dw_iterator_text (it2));
-         return it2;
-      }
-   }
+        if (it2->getContent()->type & Content::ANY_WIDGET) {
+            // Another widget. Search in it downwards.
+            it3 = searchDownward (it2, mask, fromEnd);
+            if (it3 != NULL) {
+                it2->unref ();
+                return it3;
+            }
+            // Else continue in this widget.
+        } else {
+            // Success!
+            //DEBUG_MSG (1, "%*smoving down succeeded: %s\n",
+            //           indent, "", a_Dw_iterator_text (it2));
+            return it2;
+        }
+    }
 
-   // Nothing found.
-   it2->unref ();
-   //DEBUG_MSG (1, "%*smoving down failed (nothing found)\n", indent, "");
-   return NULL;
+    // Nothing found.
+    it2->unref ();
+    //DEBUG_MSG (1, "%*smoving down failed (nothing found)\n", indent, "");
+    return NULL;
 }
 
 /*
@@ -403,81 +403,81 @@ Iterator *DeepIterator::searchDownward (Iterator *it, Content::Type mask,
 Iterator *DeepIterator::searchSideward (Iterator *it, Content::Type mask,
                                         bool fromEnd)
 {
-   Iterator *it2, *it3;
+    Iterator *it2, *it3;
 
-   //DEBUG_MSG (1, "%*smoving %swards from %s\n",
-   //          indent, "", from_end ? "back" : "for", a_Dw_iterator_text (it));
+    //DEBUG_MSG (1, "%*smoving %swards from %s\n",
+    //          indent, "", from_end ? "back" : "for", a_Dw_iterator_text (it));
 
-   assert (it->getContent()->type & Content::ANY_WIDGET);
-   it2 = it->cloneIterator ();
+    assert (it->getContent()->type & Content::ANY_WIDGET);
+    it2 = it->cloneIterator ();
 
-   while (fromEnd ? it2->prev () : it2->next ()) {
-      if (it2->getContent()->type & Content::ANY_WIDGET) {
-         // Search downwards in this widget.
-         it3 = searchDownward (it2, mask, fromEnd);
-         if (it3 != NULL) {
-            it2->unref ();
-            //DEBUG_MSG (1, "%*smoving %swards succeeded: %s\n",
-            //           indent, "", from_end ? "back" : "for",
-            //           a_Dw_iterator_text (it3));
-            return it3;
-         }
-         // Else continue in this widget.
-      } else {
-         // Success!
-         // DEBUG_MSG (1, "%*smoving %swards succeeded: %s\n",
-         //            indent, "", from_end ? "back" : "for",
-         //            a_Dw_iterator_text (it2));
-         return it2;
-      }
-   }
+    while (fromEnd ? it2->prev () : it2->next ()) {
+        if (it2->getContent()->type & Content::ANY_WIDGET) {
+            // Search downwards in this widget.
+            it3 = searchDownward (it2, mask, fromEnd);
+            if (it3 != NULL) {
+                it2->unref ();
+                //DEBUG_MSG (1, "%*smoving %swards succeeded: %s\n",
+                //           indent, "", from_end ? "back" : "for",
+                //           a_Dw_iterator_text (it3));
+                return it3;
+            }
+            // Else continue in this widget.
+        } else {
+            // Success!
+            // DEBUG_MSG (1, "%*smoving %swards succeeded: %s\n",
+            //            indent, "", from_end ? "back" : "for",
+            //            a_Dw_iterator_text (it2));
+            return it2;
+        }
+    }
 
-   /* Nothing found, go upwards in the tree (if possible). */
-   it2->unref ();
-   Widget *respParent = getRespectiveParent (it->getWidget(), it->getMask());
-   if (respParent) {
-      it2 = respParent->iterator (mask, false);
-      while (true) {
-         if (!it2->next ())
-            misc::assertNotReached ();
+    /* Nothing found, go upwards in the tree (if possible). */
+    it2->unref ();
+    Widget *respParent = getRespectiveParent (it->getWidget(), it->getMask());
+    if (respParent) {
+        it2 = respParent->iterator (mask, false);
+        while (true) {
+            if (!it2->next ())
+                misc::assertNotReached ();
 
-         if (it2->getContent()->type & Content::ANY_WIDGET &&
+            if (it2->getContent()->type & Content::ANY_WIDGET &&
              it2->getContent()->getWidget () == it->getWidget ()) {
-            it3 = searchSideward (it2, mask, fromEnd);
-            it2->unref ();
-            //DEBUG_MSG (1, "%*smoving %swards succeeded: %s\n",
-            //           indent, "", from_end ? "back" : "for",
-            //           a_Dw_iterator_text (it3));
-            return it3;
-         }
-      }
-   }
+                it3 = searchSideward (it2, mask, fromEnd);
+                it2->unref ();
+                //DEBUG_MSG (1, "%*smoving %swards succeeded: %s\n",
+                //           indent, "", from_end ? "back" : "for",
+                //           a_Dw_iterator_text (it3));
+                return it3;
+            }
+        }
+    }
 
-   // Nothing found at all.
-   // DEBUG_MSG (1, "%*smoving %swards failed (nothing found)\n",
-   //            indent, "", from_end ? "back" : "for");
-   return NULL;
+    // Nothing found at all.
+    // DEBUG_MSG (1, "%*smoving %swards failed (nothing found)\n",
+    //            indent, "", from_end ? "back" : "for");
+    return NULL;
 }
 
 Widget *DeepIterator::getRespectiveParent (Widget *widget, Content::Type mask)
 {
-   // Return, depending on which is requested indirectly (follow
-   // references or containments) the parent (container) or the
-   // generator.  At this point, the type of the parent/generator is
-   // not known (since the parent/generator is not known), so we have
-   // to examine the mask. This is the reason why only one of
-   // WIDGET_OOF_CONT and WIDGET_OOF_REF is allowed.
+    // Return, depending on which is requested indirectly (follow
+    // references or containments) the parent (container) or the
+    // generator.  At this point, the type of the parent/generator is
+    // not known (since the parent/generator is not known), so we have
+    // to examine the mask. This is the reason why only one of
+    // WIDGET_OOF_CONT and WIDGET_OOF_REF is allowed.
 
-   return (mask & Content::WIDGET_OOF_REF) ?
-      widget->getGenerator() : widget->getParent();
+    return (mask & Content::WIDGET_OOF_REF) ?
+        widget->getGenerator() : widget->getParent();
 }
 
 int DeepIterator::getRespectiveLevel (Widget *widget, Content::Type mask)
 {
-   // Similar to getRespectiveParent.
+    // Similar to getRespectiveParent.
 
-   return (mask & Content::WIDGET_OOF_REF) ?
-      widget->getGeneratorLevel() : widget->getLevel();
+    return (mask & Content::WIDGET_OOF_REF) ?
+        widget->getGeneratorLevel() : widget->getLevel();
 }
 
 /**
@@ -496,171 +496,171 @@ int DeepIterator::getRespectiveLevel (Widget *widget, Content::Type mask)
  */
 DeepIterator::DeepIterator (Iterator *it)
 {
-   //printf ("Starting creating DeepIterator %p ...\n", this);
-   //printf ("Initial iterator: ");
-   //it->print ();
-   //printf ("\n");
+    //printf ("Starting creating DeepIterator %p ...\n", this);
+    //printf ("Initial iterator: ");
+    //it->print ();
+    //printf ("\n");
 
-   // Widgets out of flow are either followed widtin containers, or
-   // generators. Both (and also nothing at all) is not allowed. See
-   // also comment in getRespectiveParent.
-   int oofMask =
-      it->getMask() & (Content::WIDGET_OOF_CONT | Content::WIDGET_OOF_REF);
-   assert (oofMask == Content::WIDGET_OOF_CONT ||
+    // Widgets out of flow are either followed widtin containers, or
+    // generators. Both (and also nothing at all) is not allowed. See
+    // also comment in getRespectiveParent.
+    int oofMask =
+        it->getMask() & (Content::WIDGET_OOF_CONT | Content::WIDGET_OOF_REF);
+    assert (oofMask == Content::WIDGET_OOF_CONT ||
            oofMask == Content::WIDGET_OOF_REF);
 
-   //DEBUG_MSG (1, "a_Dw_ext_iterator_new: %s\n", a_Dw_iterator_text (it));
+    //DEBUG_MSG (1, "a_Dw_ext_iterator_new: %s\n", a_Dw_iterator_text (it));
 
-   // Clone input iterator, so the iterator passed as parameter
-   // remains untouched.
-   it = it->cloneIterator ();
-   this->mask = it->getMask ();
+    // Clone input iterator, so the iterator passed as parameter
+    // remains untouched.
+    it = it->cloneIterator ();
+    this->mask = it->getMask ();
 
-   hasContents = true;
+    hasContents = true;
 
-   // If it points to a widget, find a near non-widget content,
-   // since an DeepIterator should never return widgets.
-   if (it->getContent()->type & Content::ANY_WIDGET) {
-      Iterator *it2;
+    // If it points to a widget, find a near non-widget content,
+    // since an DeepIterator should never return widgets.
+    if (it->getContent()->type & Content::ANY_WIDGET) {
+        Iterator *it2;
 
-      // The second argument of searchDownward is actually a matter of
-      // taste :-)
-      if ((it2 = searchDownward (it, mask, false)) ||
+        // The second argument of searchDownward is actually a matter of
+        // taste :-)
+        if ((it2 = searchDownward (it, mask, false)) ||
           (it2 = searchSideward (it, mask, false)) ||
           (it2 = searchSideward (it, mask, true))) {
-         it->unref ();
-         it = it2;
-      } else {
-         // This may happen, when a page does not contain any non-widget
-         // content.
-         //DEBUG_MSG (1, "a_Dw_ext_iterator_new got totally helpless!\n");
-         it->unref ();
-         hasContents = false;
-      }
-   }
+            it->unref ();
+            it = it2;
+        } else {
+            // This may happen, when a page does not contain any non-widget
+            // content.
+            //DEBUG_MSG (1, "a_Dw_ext_iterator_new got totally helpless!\n");
+            it->unref ();
+            hasContents = false;
+        }
+    }
 
-   //DEBUG_MSG (1, "  => %s\n", a_Dw_iterator_text (it));
+    //DEBUG_MSG (1, "  => %s\n", a_Dw_iterator_text (it));
 
-   if (hasContents) {
-      // If this widget has parents, we must construct appropriate iterators.
-      //
-      // \todo There may be a faster way instead of iterating through the
-      //    parent widgets.
+    if (hasContents) {
+        // If this widget has parents, we must construct appropriate iterators.
+        //
+        // \todo There may be a faster way instead of iterating through the
+        //    parent widgets.
 
-      //printf ("Starting with: ");
-      //it->print ();
-      //printf ("\n");
+        //printf ("Starting with: ");
+        //it->print ();
+        //printf ("\n");
 
-      // Construct the iterators.
-      int thisLevel = getRespectiveLevel (it->getWidget()), level;
-      Widget *w;
-      for (w = it->getWidget (), level = thisLevel;
+        // Construct the iterators.
+        int thisLevel = getRespectiveLevel (it->getWidget()), level;
+        Widget *w;
+        for (w = it->getWidget (), level = thisLevel;
            getRespectiveParent (w) != NULL;
            w = getRespectiveParent (w), level--) {
-         Iterator *it = getRespectiveParent(w)->iterator (mask, false);
+            Iterator *it = getRespectiveParent(w)->iterator (mask, false);
 
-         //printf ("   parent: %s %p\n", w->getClassName (), w);
+            //printf ("   parent: %s %p\n", w->getClassName (), w);
 
-         stack.put (it, level - 1);
-         while (true) {
-            //printf ("         ");
+            stack.put (it, level - 1);
+            while (true) {
+                //printf ("         ");
+                //it->print ();
+                //printf ("\n");
+
+                bool hasNext = it->next();
+                assert (hasNext);
+
+                if (it->getContent()->type & Content::ANY_WIDGET &&
+                it->getContent()->getWidget () == w)
+                    break;
+            }
+
+            //printf ("      %d: ", level - 1);
             //it->print ();
             //printf ("\n");
+        }
 
-            bool hasNext = it->next();
-            assert (hasNext);
+        stack.put (it, thisLevel);
+        content = *(it->getContent());
+    }
 
-            if (it->getContent()->type & Content::ANY_WIDGET &&
-                it->getContent()->getWidget () == w)
-               break;
-         }
-
-         //printf ("      %d: ", level - 1);
-         //it->print ();
-         //printf ("\n");
-      }
-
-      stack.put (it, thisLevel);
-      content = *(it->getContent());
-   }
-
-   //printf ("... done creating DeepIterator %p.\n", this);
+    //printf ("... done creating DeepIterator %p.\n", this);
 }
 
 
 DeepIterator::~DeepIterator ()
 {
-   //printf ("Deleting DeepIterator %p ...\n", this);
+    //printf ("Deleting DeepIterator %p ...\n", this);
 }
 
 object::Object *DeepIterator::clone ()
 {
-   DeepIterator *it = new DeepIterator ();
+    DeepIterator *it = new DeepIterator ();
 
-   for (int i = 0; i < stack.size (); i++)
-      it->stack.put (stack.get(i)->cloneIterator (), i);
+    for (int i = 0; i < stack.size (); i++)
+        it->stack.put (stack.get(i)->cloneIterator (), i);
 
-   it->mask = mask;
-   it->content = content;
-   it->hasContents = hasContents;
+    it->mask = mask;
+    it->content = content;
+    it->hasContents = hasContents;
 
-   return it;
+    return it;
 }
 
 int DeepIterator::compareTo (object::Comparable *other)
 {
-   DeepIterator *otherDeepIterator = (DeepIterator*)other;
+    DeepIterator *otherDeepIterator = (DeepIterator*)other;
 
-   //printf ("Compare: %s\n", stack.toString ());
-   //printf ("     to: %s\n", otherDeepIterator->stack.toString ());
+    //printf ("Compare: %s\n", stack.toString ());
+    //printf ("     to: %s\n", otherDeepIterator->stack.toString ());
 
-   // Search the highest level, where the widgets are the same.
-   int level = 0;
+    // Search the highest level, where the widgets are the same.
+    int level = 0;
 
-   // The Comparable interface does not define "uncomparable". Deep
-   // iterators are only comparable if they belong to the same widget
-   // tree, so have the same widget at the bottom at the
-   // stack. If this is not the case, we abort.
+    // The Comparable interface does not define "uncomparable". Deep
+    // iterators are only comparable if they belong to the same widget
+    // tree, so have the same widget at the bottom at the
+    // stack. If this is not the case, we abort.
 
-   assert (stack.size() > 0);
-   assert (otherDeepIterator->stack.size() > 0);
+    assert (stack.size() > 0);
+    assert (otherDeepIterator->stack.size() > 0);
 
-   //printf ("Equal? The %s %p (of %p) and the %s %p (of %p)?\n",
-   //        stack.get(0)->getWidget()->getClassName(),
-   //        stack.get(0)->getWidget(), this,
-   //        otherDeepIterator->stack.get(0)->getWidget()->getClassName(),
-   //        otherDeepIterator->stack.get(0)->getWidget(), otherDeepIterator);
+    //printf ("Equal? The %s %p (of %p) and the %s %p (of %p)?\n",
+    //        stack.get(0)->getWidget()->getClassName(),
+    //        stack.get(0)->getWidget(), this,
+    //        otherDeepIterator->stack.get(0)->getWidget()->getClassName(),
+    //        otherDeepIterator->stack.get(0)->getWidget(), otherDeepIterator);
 
-   assert (stack.get(0)->getWidget()
+    assert (stack.get(0)->getWidget()
            == otherDeepIterator->stack.get(level)->getWidget());
 
-   while (stack.get(level)->getWidget ()
+    while (stack.get(level)->getWidget ()
           == otherDeepIterator->stack.get(level)->getWidget ()) {
-      if (level == stack.size() - 1 ||
+        if (level == stack.size() - 1 ||
           level == otherDeepIterator->stack.size() - 1)
-         break;
-      level++;
-   }
+            break;
+        level++;
+    }
 
-   //printf ("      => level = %d (temorally)\n", level);
+    //printf ("      => level = %d (temorally)\n", level);
 
-   while (stack.get(level)->getWidget ()
+    while (stack.get(level)->getWidget ()
           != otherDeepIterator->stack.get(level)->getWidget ())
-      level--;
+        level--;
 
-   //printf ("      => level = %d (finally)\n", level);
+    //printf ("      => level = %d (finally)\n", level);
 
-   return stack.get(level)->compareTo (otherDeepIterator->stack.get(level));
+    return stack.get(level)->compareTo (otherDeepIterator->stack.get(level));
 }
 
 DeepIterator *DeepIterator::createVariant(Iterator *it)
 {
-   /** \todo Not yet implemented, and actually not yet needed very much. */
-   return new DeepIterator (it);
+    /** \todo Not yet implemented, and actually not yet needed very much. */
+    return new DeepIterator (it);
 }
 
 bool DeepIterator::isEmpty () {
-   return !hasContents;
+    return !hasContents;
 }
 
 /**
@@ -670,30 +670,30 @@ bool DeepIterator::isEmpty () {
  */
 bool DeepIterator::next ()
 {
-   Iterator *it = stack.getTop ();
+    Iterator *it = stack.getTop ();
 
-   if (it->next ()) {
-      if (it->getContent()->type & Content::ANY_WIDGET) {
-         // Widget: new iterator on stack, to search in this widget.
-         stack.push (it->getContent()->getWidget()->iterator (mask, false));
-         return next ();
-      } else {
-         // Simply return the content of the iterartor.
-         content = *(it->getContent ());
-         return true;
-      }
-   } else {
-      // No more data in the top-most widget.
-      if (stack.size () > 1) {
-         // Pop iterator from stack, and move to next item in the old one.
-         stack.pop ();
-         return next ();
-      } else {
-         // Stack is empty.
-         content.type = Content::END;
-         return false;
-      }
-   }
+    if (it->next ()) {
+        if (it->getContent()->type & Content::ANY_WIDGET) {
+            // Widget: new iterator on stack, to search in this widget.
+            stack.push (it->getContent()->getWidget()->iterator (mask, false));
+            return next ();
+        } else {
+            // Simply return the content of the iterartor.
+            content = *(it->getContent ());
+            return true;
+        }
+    } else {
+        // No more data in the top-most widget.
+        if (stack.size () > 1) {
+            // Pop iterator from stack, and move to next item in the old one.
+            stack.pop ();
+            return next ();
+        } else {
+            // Stack is empty.
+            content.type = Content::END;
+            return false;
+        }
+    }
 }
 
 /**
@@ -703,30 +703,30 @@ bool DeepIterator::next ()
  */
 bool DeepIterator::prev ()
 {
-   Iterator *it = stack.getTop ();
+    Iterator *it = stack.getTop ();
 
-   if (it->prev ()) {
-      if (it->getContent()->type & Content::ANY_WIDGET) {
-         // Widget: new iterator on stack, to search in this widget.
-         stack.push (it->getContent()->getWidget()->iterator (mask, true));
-         return prev ();
-      } else {
-         // Simply return the content of the iterartor.
-         content = *(it->getContent ());
-         return true;
-      }
-   } else {
-      // No more data in the top-most widget.
-      if (stack.size () > 1) {
-         // Pop iterator from stack, and move to next item in the old one.
-         stack.pop ();
-         return prev ();
-      } else {
-         // Stack is empty.
-         content.type = Content::START;
-         return false;
-      }
-   }
+    if (it->prev ()) {
+        if (it->getContent()->type & Content::ANY_WIDGET) {
+            // Widget: new iterator on stack, to search in this widget.
+            stack.push (it->getContent()->getWidget()->iterator (mask, true));
+            return prev ();
+        } else {
+            // Simply return the content of the iterartor.
+            content = *(it->getContent ());
+            return true;
+        }
+    } else {
+        // No more data in the top-most widget.
+        if (stack.size () > 1) {
+            // Pop iterator from stack, and move to next item in the old one.
+            stack.pop ();
+            return prev ();
+        } else {
+            // Stack is empty.
+            content.type = Content::START;
+            return false;
+        }
+    }
 }
 
 // -----------------
@@ -735,7 +735,7 @@ bool DeepIterator::prev ()
 
 CharIterator::CharIterator ()
 {
-   it = NULL;
+    it = NULL;
 }
 
 /**
@@ -747,155 +747,155 @@ CharIterator::CharIterator ()
  */
 CharIterator::CharIterator (Widget *widget, bool followReferences)
 {
-   Iterator *i =
-      widget->iterator (Content::maskForSelection (followReferences), false);
-   it = new DeepIterator (i);
-   i->unref ();
-   ch = START;
+    Iterator *i =
+        widget->iterator (Content::maskForSelection (followReferences), false);
+    it = new DeepIterator (i);
+    i->unref ();
+    ch = START;
 }
 
 CharIterator::~CharIterator ()
 {
-   if (it)
-      delete it;
+    if (it)
+        delete it;
 }
 
 object::Object *CharIterator::clone()
 {
-   CharIterator *cloned = new CharIterator ();
-   cloned->it = it->cloneDeepIterator ();
-   cloned->ch = ch;
-   cloned->pos = pos;
-   return cloned;
+    CharIterator *cloned = new CharIterator ();
+    cloned->it = it->cloneDeepIterator ();
+    cloned->ch = ch;
+    cloned->pos = pos;
+    return cloned;
 }
 
 int CharIterator::compareTo(object::Comparable *other)
 {
-   CharIterator *otherIt = (CharIterator*)other;
-   int c = it->compareTo(otherIt->it);
-   if (c != 0)
-      return c;
-   else
-      return pos - otherIt->pos;
+    CharIterator *otherIt = (CharIterator*)other;
+    int c = it->compareTo(otherIt->it);
+    if (c != 0)
+        return c;
+    else
+        return pos - otherIt->pos;
 }
 
 bool CharIterator::next ()
 {
-   if (ch == START || it->getContent()->type == Content::BREAK ||
+    if (ch == START || it->getContent()->type == Content::BREAK ||
        (it->getContent()->type == Content::TEXT &&
         it->getContent()->text[pos] == 0)) {
-      if (it->next()) {
-         if (it->getContent()->type == Content::BREAK)
-            ch = '\n';
-         else { // if (it->getContent()->type == Content::TEXT)
-            pos = 0;
-            ch = it->getContent()->text[pos];
-            if (ch == 0)
-               // should not happen, actually
-               return next ();
-         }
-         return true;
-      }
-      else {
-         ch = END;
-         return false;
-      }
-   } else if (ch == END)
-      return false;
-   else {
-      // at this point, it->getContent()->type == Content::TEXT
-      pos++;
-      ch = it->getContent()->text[pos];
-      if (ch == 0) {
-         if (it->getContent()->space) {
-            ch = ' ';
-         } else {
-            return next ();
-         }
-      }
+        if (it->next()) {
+            if (it->getContent()->type == Content::BREAK)
+                ch = '\n';
+            else { // if (it->getContent()->type == Content::TEXT)
+                pos = 0;
+                ch = it->getContent()->text[pos];
+                if (ch == 0)
+                    // should not happen, actually
+                    return next ();
+            }
+            return true;
+        }
+        else {
+            ch = END;
+            return false;
+        }
+    } else if (ch == END)
+        return false;
+    else {
+        // at this point, it->getContent()->type == Content::TEXT
+        pos++;
+        ch = it->getContent()->text[pos];
+        if (ch == 0) {
+            if (it->getContent()->space) {
+                ch = ' ';
+            } else {
+                return next ();
+            }
+        }
 
-      return true;
-   }
+        return true;
+    }
 }
 
 bool CharIterator::prev ()
 {
-   if (ch == END || it->getContent()->type == Content::BREAK ||
+    if (ch == END || it->getContent()->type == Content::BREAK ||
        (it->getContent()->type == Content::TEXT && pos == 0)) {
-      if (it->prev()) {
-         if (it->getContent()->type == Content::BREAK)
-            ch = '\n';
-         else { // if (it->getContent()->type == Content::TEXT)
-            if (it->getContent()->text[0] == 0)
-               return prev ();
-            else {
-               pos = strlen (it->getContent()->text);
-               if (it->getContent()->space) {
-                  ch = ' ';
-               } else {
-                  pos--;
-                  ch = it->getContent()->text[pos];
-               }
+        if (it->prev()) {
+            if (it->getContent()->type == Content::BREAK)
+                ch = '\n';
+            else { // if (it->getContent()->type == Content::TEXT)
+                if (it->getContent()->text[0] == 0)
+                    return prev ();
+                else {
+                    pos = strlen (it->getContent()->text);
+                    if (it->getContent()->space) {
+                        ch = ' ';
+                    } else {
+                        pos--;
+                        ch = it->getContent()->text[pos];
+                    }
+                }
             }
-         }
-         return true;
-      }
-      else {
-         ch = START;
-         return false;
-      }
-   } else if (ch == START)
-      return false;
-   else {
-      // at this point, it->getContent()->type == Content::TEXT
-      pos--;
-      ch = it->getContent()->text[pos];
-      return true;
-   }
+            return true;
+        }
+        else {
+            ch = START;
+            return false;
+        }
+    } else if (ch == START)
+        return false;
+    else {
+        // at this point, it->getContent()->type == Content::TEXT
+        pos--;
+        ch = it->getContent()->text[pos];
+        return true;
+    }
 }
 
 void CharIterator::highlight (CharIterator *it1, CharIterator *it2,
-                              HighlightLayer layer)
+                                        HighlightLayer layer)
 {
-   if (it2->getChar () == CharIterator::END)
-      it2->prev ();
+    if (it2->getChar () == CharIterator::END)
+        it2->prev ();
 
-   if (it1->it->compareTo (it2->it) == 0)
-      // Only one content => highlight part of it.
-      it1->it->highlight (it1->pos, it2->pos, layer);
-   else {
-      DeepIterator *it = it1->it->cloneDeepIterator ();
-      int c;
-      bool start;
-      for (start = true;
+    if (it1->it->compareTo (it2->it) == 0)
+        // Only one content => highlight part of it.
+        it1->it->highlight (it1->pos, it2->pos, layer);
+    else {
+        DeepIterator *it = it1->it->cloneDeepIterator ();
+        int c;
+        bool start;
+        for (start = true;
            (c = it->compareTo (it2->it)) <= 0;
            it->next (), start = false) {
-         int endOfWord =
-            it->getContent()->type == Content::TEXT ?
-            strlen (it->getContent()->text) : 1;
-         if (start) // first iteration
-            it->highlight (it1->pos, endOfWord, layer);
-         else if (c == 0) // last iteration
-            it->highlight (0, it2->pos, layer);
-         else
-            it->highlight (0, endOfWord, layer);
-      }
-      delete it;
-   }
+            int endOfWord =
+                it->getContent()->type == Content::TEXT ?
+                strlen (it->getContent()->text) : 1;
+            if (start) // first iteration
+                it->highlight (it1->pos, endOfWord, layer);
+            else if (c == 0) // last iteration
+                it->highlight (0, it2->pos, layer);
+            else
+                it->highlight (0, endOfWord, layer);
+        }
+        delete it;
+    }
 }
 
 void CharIterator::unhighlight (CharIterator *it1, CharIterator *it2,
                                 HighlightLayer layer)
 {
-   if (it1->it->compareTo (it2->it) == 0)
-      // Only one content => unhighlight it (only for efficiency).
-      it1->it->unhighlight (0, layer);
-   else {
-      DeepIterator *it = it1->it->cloneDeepIterator ();
-      for (; it->compareTo (it2->it) <= 0; it->next ())
-         it->unhighlight (-1, layer);
-      delete it;
-   }
+    if (it1->it->compareTo (it2->it) == 0)
+        // Only one content => unhighlight it (only for efficiency).
+        it1->it->unhighlight (0, layer);
+    else {
+        DeepIterator *it = it1->it->cloneDeepIterator ();
+        for (; it->compareTo (it2->it) <= 0; it->next ())
+            it->unhighlight (-1, layer);
+        delete it;
+    }
 }
 
 } // namespace core

@@ -36,87 +36,87 @@ using namespace dw::fltk;
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(200, 300, "Dw Table Aligned");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(200, 300, "Dw Table Aligned");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
-   styleAttrs.borderWidth.setVal (1);
-   styleAttrs.setBorderStyle (BORDER_OUTSET);
-   styleAttrs.setBorderColor (Color::create (layout, 0x808080));
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
+    styleAttrs.borderWidth.setVal (1);
+    styleAttrs.setBorderStyle (BORDER_OUTSET);
+    styleAttrs.setBorderColor (Color::create (layout, 0x808080));
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = dw::core::style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xa0a0a0);
-   styleAttrs.hBorderSpacing = 5;
-   styleAttrs.vBorderSpacing = 5;
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xa0a0a0);
+    styleAttrs.hBorderSpacing = 5;
+    styleAttrs.vBorderSpacing = 5;
 
-   Style *tableStyle = Style::create (&styleAttrs);
+    Style *tableStyle = Style::create (&styleAttrs);
 
-   Table *table = new Table (false);
-   table->setStyle (tableStyle);
-   layout->setWidget (table);
+    Table *table = new Table (false);
+    table->setStyle (tableStyle);
+    layout->setWidget (table);
 
-   tableStyle->unref();
+    tableStyle->unref();
 
-   styleAttrs.borderWidth.setVal (1);
-   styleAttrs.setBorderStyle (BORDER_INSET);
+    styleAttrs.borderWidth.setVal (1);
+    styleAttrs.setBorderStyle (BORDER_INSET);
 
-   Style *cellStyle = Style::create (&styleAttrs);
+    Style *cellStyle = Style::create (&styleAttrs);
 
-   styleAttrs.borderWidth.setVal (0);
-   styleAttrs.margin.setVal (0);
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.cursor = CURSOR_TEXT;
-   styleAttrs.textAlignChar = '.';
+    styleAttrs.borderWidth.setVal (0);
+    styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.cursor = CURSOR_TEXT;
+    styleAttrs.textAlignChar = '.';
 
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   AlignedTableCell *ref = NULL;
-   for(int i = 0; i < 10; i++) {
-      //for(int i = 0; i < 1; i++) {
-      AlignedTableCell *cell = new AlignedTableCell (ref, false);
-      cell->setStyle (cellStyle);
-      ref = cell;
-      table->addRow (wordStyle);
-      table->addCell (cell, 1, 1);
+    AlignedTableCell *ref = NULL;
+    for(int i = 0; i < 10; i++) {
+        //for(int i = 0; i < 1; i++) {
+        AlignedTableCell *cell = new AlignedTableCell (ref, false);
+        cell->setStyle (cellStyle);
+        ref = cell;
+        table->addRow (wordStyle);
+        table->addCell (cell, 1, 1);
 
-      char buf[16];
-      for(int j = 0; j < i; j++)
-         buf[j] = '0' + j;
-      buf[i] = '.';
-      for(int j = i + 1; j < 11; j++)
-         buf[j] = '0' + (j - 1);
-      buf[11] = 0;
+        char buf[16];
+        for(int j = 0; j < i; j++)
+            buf[j] = '0' + j;
+        buf[i] = '.';
+        for(int j = i + 1; j < 11; j++)
+            buf[j] = '0' + (j - 1);
+        buf[11] = 0;
 
-      cell->addText (buf, wordStyle);
-      cell->flush ();
-   }
+        cell->addText (buf, wordStyle);
+        cell->flush ();
+    }
 
-   wordStyle->unref();
-   cellStyle->unref();
+    wordStyle->unref();
+    cellStyle->unref();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

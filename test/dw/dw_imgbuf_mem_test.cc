@@ -27,83 +27,83 @@ using namespace dw::fltk;
 
 void solution1 ()
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Imgbuf *rootbuf = layout->createImgbuf (Imgbuf::RGB, 100, 100, 1);
-   rootbuf->ref (); // Extra reference by the dicache.
-   printf ("=== Can be deleted? %s.\n",
+    Imgbuf *rootbuf = layout->createImgbuf (Imgbuf::RGB, 100, 100, 1);
+    rootbuf->ref (); // Extra reference by the dicache.
+    printf ("=== Can be deleted? %s.\n",
            rootbuf->lastReference () ? "Yes" : "No");
-   Imgbuf *scaledbuf = rootbuf->getScaledBuf (50, 50);
-   printf ("=== Can be deleted? %s.\n",
+    Imgbuf *scaledbuf = rootbuf->getScaledBuf (50, 50);
+    printf ("=== Can be deleted? %s.\n",
            rootbuf->lastReference () ? "Yes" : "No");
-   rootbuf->unref ();
-   printf ("=== Can be deleted? %s.\n",
+    rootbuf->unref ();
+    printf ("=== Can be deleted? %s.\n",
            rootbuf->lastReference () ? "Yes" : "No");
-   scaledbuf->unref ();
-   printf ("=== Can be deleted? %s.\n",
+    scaledbuf->unref ();
+    printf ("=== Can be deleted? %s.\n",
            rootbuf->lastReference () ? "Yes" : "No");
-   rootbuf->unref (); // Extra reference by the dicache.
+    rootbuf->unref (); // Extra reference by the dicache.
 
-   delete layout;
+    delete layout;
 }
 
 void solution2 ()
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Imgbuf *rootbuf = layout->createImgbuf (Imgbuf::RGB, 100, 100, 1);
-   rootbuf->setDeleteOnUnref (false);
-   printf ("=== Can be deleted? %s.\n",
+    Imgbuf *rootbuf = layout->createImgbuf (Imgbuf::RGB, 100, 100, 1);
+    rootbuf->setDeleteOnUnref (false);
+    printf ("=== Can be deleted? %s.\n",
            !rootbuf->isReferred () ? "Yes" : "No");
-   Imgbuf *scaledbuf = rootbuf->getScaledBuf (50, 50);
-   printf ("=== Can be deleted? %s.\n",
+    Imgbuf *scaledbuf = rootbuf->getScaledBuf (50, 50);
+    printf ("=== Can be deleted? %s.\n",
            !rootbuf->isReferred () ? "Yes" : "No");
-   rootbuf->unref ();
-   printf ("=== Can be deleted? %s.\n",
+    rootbuf->unref ();
+    printf ("=== Can be deleted? %s.\n",
            !rootbuf->isReferred () ? "Yes" : "No");
-   scaledbuf->unref ();
-   printf ("=== Can be deleted? %s.\n",
+    scaledbuf->unref ();
+    printf ("=== Can be deleted? %s.\n",
            !rootbuf->isReferred () ? "Yes" : "No");
-   delete rootbuf;
+    delete rootbuf;
 
-   delete layout;
+    delete layout;
 }
 
 class RootbufDeletionReceiver: public ObservedObject::DeletionReceiver
 {
-   void deleted (ObservedObject *object);
+    void deleted (ObservedObject *object);
 };
 
 void RootbufDeletionReceiver::deleted (ObservedObject *object)
 {
-   printf ("=== Is deleted now.\n");
-   delete this;
+    printf ("=== Is deleted now.\n");
+    delete this;
 }
 
 void solution3 ()
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Imgbuf *rootbuf = layout->createImgbuf (Imgbuf::RGB, 100, 100, 1);
-   rootbuf->connectDeletion (new RootbufDeletionReceiver ());
-   Imgbuf *scaledbuf = rootbuf->getScaledBuf (50, 50);
-   rootbuf->unref ();
-   scaledbuf->unref ();
+    Imgbuf *rootbuf = layout->createImgbuf (Imgbuf::RGB, 100, 100, 1);
+    rootbuf->connectDeletion (new RootbufDeletionReceiver ());
+    Imgbuf *scaledbuf = rootbuf->getScaledBuf (50, 50);
+    rootbuf->unref ();
+    scaledbuf->unref ();
 
-   delete layout;
+    delete layout;
 }
 
 int main (int argc, char **argv)
 {
-   printf ("========== SOLUTION 1 ==========\n");
-   solution1 ();
-   printf ("========== SOLUTION 2 ==========\n");
-   solution2 ();
-   printf ("========== SOLUTION 3 ==========\n");
-   solution3 ();
+    printf ("========== SOLUTION 1 ==========\n");
+    solution1 ();
+    printf ("========== SOLUTION 2 ==========\n");
+    solution2 ();
+    printf ("========== SOLUTION 3 ==========\n");
+    solution3 ();
 
-   return 0;
+    return 0;
 }

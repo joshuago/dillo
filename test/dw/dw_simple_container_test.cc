@@ -36,80 +36,80 @@ using namespace dw::fltk;
 
 int main(int argc, char **argv)
 {
-   FltkPlatform *platform = new FltkPlatform ();
-   Layout *layout = new Layout (platform);
+    FltkPlatform *platform = new FltkPlatform ();
+    Layout *layout = new Layout (platform);
 
-   Fl_Window *window = new Fl_Window(200, 300, "Dw Example");
-   window->box(FL_NO_BOX);
-   window->begin();
+    Fl_Window *window = new Fl_Window(200, 300, "Dw Example");
+    window->box(FL_NO_BOX);
+    window->begin();
 
-   FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
-   layout->attachView (viewport);
+    FltkViewport *viewport = new FltkViewport (0, 0, 200, 300);
+    layout->attachView (viewport);
 
-   StyleAttrs styleAttrs;
-   styleAttrs.initValues ();
-   styleAttrs.margin.setVal (5);
+    StyleAttrs styleAttrs;
+    styleAttrs.initValues ();
+    styleAttrs.margin.setVal (5);
 
-   FontAttrs fontAttrs;
-   fontAttrs.name = "Bitstream Charter";
-   fontAttrs.size = 14;
-   fontAttrs.weight = 400;
-   fontAttrs.style = FONT_STYLE_NORMAL;
-   fontAttrs.letterSpacing = 0;
-   fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
-   styleAttrs.font = style::Font::create (layout, &fontAttrs);
+    FontAttrs fontAttrs;
+    fontAttrs.name = "Bitstream Charter";
+    fontAttrs.size = 14;
+    fontAttrs.weight = 400;
+    fontAttrs.style = FONT_STYLE_NORMAL;
+    fontAttrs.letterSpacing = 0;
+    fontAttrs.fontVariant = FONT_VARIANT_NORMAL;
+    styleAttrs.font = style::Font::create (layout, &fontAttrs);
 
-   styleAttrs.color = Color::create (layout, 0x000000);
-   styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
+    styleAttrs.color = Color::create (layout, 0x000000);
+    styleAttrs.backgroundColor = Color::create (layout, 0xffffff);
 
-   Style *textblockStyle1 = Style::create (&styleAttrs);
+    Style *textblockStyle1 = Style::create (&styleAttrs);
 
-   styleAttrs.backgroundColor = NULL;
-   styleAttrs.margin.setVal (0);
+    styleAttrs.backgroundColor = NULL;
+    styleAttrs.margin.setVal (0);
 
-   Style *textblockStyle2 = Style::create (&styleAttrs);
-   Style *wordStyle = Style::create (&styleAttrs);
+    Style *textblockStyle2 = Style::create (&styleAttrs);
+    Style *wordStyle = Style::create (&styleAttrs);
 
-   styleAttrs.borderWidth.setVal (5);
-   styleAttrs.setBorderColor (Color::create (layout, 0x800080));
-   styleAttrs.setBorderStyle (BORDER_DASHED);
-   styleAttrs.padding.setVal (5);
+    styleAttrs.borderWidth.setVal (5);
+    styleAttrs.setBorderColor (Color::create (layout, 0x800080));
+    styleAttrs.setBorderStyle (BORDER_DASHED);
+    styleAttrs.padding.setVal (5);
 
-   Style *containerStyle = Style::create (&styleAttrs);
+    Style *containerStyle = Style::create (&styleAttrs);
 
-   Textblock *textblock1 = new Textblock (false);
-   textblock1->setStyle (textblockStyle1);
-   layout->setWidget (textblock1);
+    Textblock *textblock1 = new Textblock (false);
+    textblock1->setStyle (textblockStyle1);
+    layout->setWidget (textblock1);
 
-   SimpleContainer *simpleContainer = new SimpleContainer ();
-   simpleContainer->setStyle (containerStyle);
-   textblock1->addWidget (simpleContainer, containerStyle);
+    SimpleContainer *simpleContainer = new SimpleContainer ();
+    simpleContainer->setStyle (containerStyle);
+    textblock1->addWidget (simpleContainer, containerStyle);
 
-   Textblock *textblock2 = new Textblock (false);
-   textblock2->setStyle (textblockStyle2);
-   simpleContainer->setChild (textblock2);
+    Textblock *textblock2 = new Textblock (false);
+    textblock2->setStyle (textblockStyle2);
+    simpleContainer->setChild (textblock2);
 
-   const char *words[] = { "This", "is", "only", "a", "short", "paragraph.",
-                           NULL };
+    const char *words[] = { "This", "is", "only", "a", "short", "paragraph.",
+                                    NULL };
 
-   for(int j = 0; words[j]; j++) {
-      textblock2->addText(words[j], wordStyle);
-      textblock2->addSpace(wordStyle);
-   }
+    for(int j = 0; words[j]; j++) {
+        textblock2->addText(words[j], wordStyle);
+        textblock2->addSpace(wordStyle);
+    }
 
-   textblockStyle1->unref();
-   textblockStyle2->unref();
-   containerStyle->unref();
-   wordStyle->unref();
+    textblockStyle1->unref();
+    textblockStyle2->unref();
+    containerStyle->unref();
+    wordStyle->unref();
 
-   textblock1->flush ();
-   textblock2->flush ();
+    textblock1->flush ();
+    textblock2->flush ();
 
-   window->resizable(viewport);
-   window->show();
-   int errorCode = Fl::run();
+    window->resizable(viewport);
+    window->show();
+    int errorCode = Fl::run();
 
-   delete layout;
+    delete layout;
 
-   return errorCode;
+    return errorCode;
 }

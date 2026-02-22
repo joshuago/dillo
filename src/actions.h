@@ -19,8 +19,8 @@ extern "C" {
 #include "dlib/dlib.h"
 
 typedef struct {
-   char *label;
-   char *cmd;
+    char *label;
+    char *cmd;
 } Action;
 
 void a_Actions_init(void);

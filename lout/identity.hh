@@ -98,48 +98,48 @@ namespace identity {
 class IdentifiableObject: public object::Object
 {
 private:
-   class Class: public object::Object
-   {
-   public:
-      Class *parent;
-      int id;
-      const char *className;
+    class Class: public object::Object
+    {
+    public:
+        Class *parent;
+        int id;
+        const char *className;
 
-      Class (Class *parent, int id, const char *className);
+        Class (Class *parent, int id, const char *className);
 
-      void intoStringBuffer(misc::StringBuffer *sb);
-   };
+        void intoStringBuffer(misc::StringBuffer *sb);
+    };
 
-   static container::typed::HashTable <object::ConstString,
-                                       Class> *classesByName;
-   static container::typed::Vector <Class> *classesById;
-   static Class *currentlyConstructedClass;
+    static container::typed::HashTable <object::ConstString,
+                                                    Class> *classesByName;
+    static container::typed::Vector <Class> *classesById;
+    static Class *currentlyConstructedClass;
 
-   int classId;
+    int classId;
 
 protected:
-   void registerName (const char *className, int *classId);
+    void registerName (const char *className, int *classId);
 
 public:
-   IdentifiableObject ();
+    IdentifiableObject ();
 
-   void intoStringBuffer(misc::StringBuffer *sb);
+    void intoStringBuffer(misc::StringBuffer *sb);
 
-   /**
+    /**
     * \brief Returns the class identifier.
     *
     * This is rarely used, rather, tests with
     * identity::IdentifiableObject::instanceOf are done.
     */
-   int getClassId () { return classId; }
+    int getClassId () { return classId; }
 
-   /**
+    /**
     * \brief Return the name, under which the class of this object was
     *    registered.
     */
-   const char *getClassName() { return classesById->get(classId)->className; }
+    const char *getClassName() { return classesById->get(classId)->className; }
 
-   bool instanceOf (int otherClassId);
+    bool instanceOf (int otherClassId);
 };
 
 } // namespace identity

@@ -48,25 +48,25 @@
  */
 
 typedef struct {
-   const DilloUrl *Url;      /**< Cached Url. Url is used as a primary Key */
-   char *TypeDet;            /**< MIME type string (detected from data) */
-   char *TypeHdr;            /**< MIME type string as from the HTTP Header */
-   char *TypeMeta;           /**< MIME type string from META HTTP-EQUIV */
-   char *TypeNorm;           /**< MIME type string normalized */
-   char *ContentDisposition; /**< Content-Disposition header */
-   Dstr *Header;             /**< HTTP header */
-   const DilloUrl *Location; /**< New URI for redirects */
-   Dlist *Auth;              /**< Authentication fields */
-   Dstr *Data;               /**< Pointer to raw data */
-   Dstr *UTF8Data;           /**< Data after charset translation */
-   int DataRefcount;         /**< Reference count */
-   DecodeTransfer *TransferDecoder;  /**< Transfer decoder (e.g., chunked) */
-   Decode *ContentDecoder;   /**< Data decoder (e.g., gzip) */
-   Decode *CharsetDecoder;   /**< Translates text to UTF-8 encoding */
-   int ExpectedSize;         /**< Goal size of the HTTP transfer (0 if unknown)*/
-   int TransferSize;         /**< Actual length of the HTTP transfer */
-   uint_t Flags;             /**< See Flag Defines in cache.h */
-   int Hits;                 /**< Counter of hits for the entry */
+    const DilloUrl *Url;      /**< Cached Url. Url is used as a primary Key */
+    char *TypeDet;            /**< MIME type string (detected from data) */
+    char *TypeHdr;            /**< MIME type string as from the HTTP Header */
+    char *TypeMeta;           /**< MIME type string from META HTTP-EQUIV */
+    char *TypeNorm;           /**< MIME type string normalized */
+    char *ContentDisposition; /**< Content-Disposition header */
+    Dstr *Header;             /**< HTTP header */
+    const DilloUrl *Location; /**< New URI for redirects */
+    Dlist *Auth;              /**< Authentication fields */
+    Dstr *Data;               /**< Pointer to raw data */
+    Dstr *UTF8Data;           /**< Data after charset translation */
+    int DataRefcount;         /**< Reference count */
+    DecodeTransfer *TransferDecoder;  /**< Transfer decoder (e.g., chunked) */
+    Decode *ContentDecoder;   /**< Data decoder (e.g., gzip) */
+    Decode *CharsetDecoder;   /**< Translates text to UTF-8 encoding */
+    int ExpectedSize;         /**< Goal size of the HTTP transfer (0 if unknown)*/
+    int TransferSize;         /**< Actual length of the HTTP transfer */
+    uint_t Flags;             /**< See Flag Defines in cache.h */
+    int Hits;                 /**< Counter of hits for the entry */
 } CacheEntry_t;
 
 
@@ -100,9 +100,9 @@ static void Cache_entry_free(CacheEntry_t *entry, int deep);
  */
 static int Cache_entry_cmp(const void *v1, const void *v2)
 {
-   const CacheEntry_t *d1 = v1, *d2 = v2;
+    const CacheEntry_t *d1 = v1, *d2 = v2;
 
-   return a_Url_cmp(d1->Url, d2->Url);
+    return a_Url_cmp(d1->Url, d2->Url);
 }
 
 /**
@@ -110,10 +110,10 @@ static int Cache_entry_cmp(const void *v1, const void *v2)
  */
 static int Cache_entry_by_url_cmp(const void *v1, const void *v2)
 {
-   const DilloUrl *u1 = ((CacheEntry_t*)v1)->Url;
-   const DilloUrl *u2 = v2;
+    const DilloUrl *u1 = ((CacheEntry_t*)v1)->Url;
+    const DilloUrl *u2 = v2;
 
-   return a_Url_cmp(u1, u2);
+    return a_Url_cmp(u1, u2);
 }
 
 /**
@@ -121,19 +121,19 @@ static int Cache_entry_by_url_cmp(const void *v1, const void *v2)
  */
 void a_Cache_init(void)
 {
-   ClientQueue = dList_new(32);
-   DelayedQueue = dList_new(32);
-   CachedURLs = dList_new(256);
+    ClientQueue = dList_new(32);
+    DelayedQueue = dList_new(32);
+    CachedURLs = dList_new(256);
 
-   /* inject the splash screen in the cache */
-   {
-      DilloUrl *url = a_Url_new("about:splash", NULL);
-      Dstr *ds = dStr_new(AboutSplash);
-      a_Cache_entry_inject(url, ds->str, ds->len,
-            CA_GotHeader | CA_GotLength | CA_InternalUrl);
-      dStr_free(ds, 1);
-      a_Url_free(url);
-   }
+    /* inject the splash screen in the cache */
+    {
+        DilloUrl *url = a_Url_new("about:splash", NULL);
+        Dstr *ds = dStr_new(AboutSplash);
+        a_Cache_entry_inject(url, ds->str, ds->len,
+                CA_GotHeader | CA_GotLength | CA_InternalUrl);
+        dStr_free(ds, 1);
+        a_Url_free(url);
+    }
 }
 
 /* Client operations ------------------------------------------------------ */
@@ -144,29 +144,29 @@ void a_Cache_init(void)
  *  - Return a unique number for identifying the client.
  */
 static int Cache_client_enqueue(const DilloUrl *Url, DilloWeb *Web,
-                                 CA_Callback_t Callback, void *CbData)
+                                            CA_Callback_t Callback, void *CbData)
 {
-   static int ClientKey = 0; /* Provide a primary key for each client */
-   CacheClient_t *NewClient;
+    static int ClientKey = 0; /* Provide a primary key for each client */
+    CacheClient_t *NewClient;
 
-   if (ClientKey < INT_MAX) /* check for integer overflow */
-      ClientKey++;
-   else
-      ClientKey = 1;
+    if (ClientKey < INT_MAX) /* check for integer overflow */
+        ClientKey++;
+    else
+        ClientKey = 1;
 
-   NewClient = dNew(CacheClient_t, 1);
-   NewClient->Key = ClientKey;
-   NewClient->Url = Url;
-   NewClient->Version = 0;
-   NewClient->Buf = NULL;
-   NewClient->BufSize = 0;
-   NewClient->Callback = Callback;
-   NewClient->CbData = CbData;
-   NewClient->Web    = Web;
+    NewClient = dNew(CacheClient_t, 1);
+    NewClient->Key = ClientKey;
+    NewClient->Url = Url;
+    NewClient->Version = 0;
+    NewClient->Buf = NULL;
+    NewClient->BufSize = 0;
+    NewClient->Callback = Callback;
+    NewClient->CbData = CbData;
+    NewClient->Web    = Web;
 
-   dList_append(ClientQueue, NewClient);
+    dList_append(ClientQueue, NewClient);
 
-   return ClientKey;
+    return ClientKey;
 }
 
 /**
@@ -174,7 +174,7 @@ static int Cache_client_enqueue(const DilloUrl *Url, DilloWeb *Web,
  */
 static int Cache_client_by_key_cmp(const void *client, const void *key)
 {
-   return ((CacheClient_t *)client)->Key - VOIDP2INT(key);
+    return ((CacheClient_t *)client)->Key - VOIDP2INT(key);
 }
 
 /**
@@ -182,11 +182,11 @@ static int Cache_client_by_key_cmp(const void *client, const void *key)
  */
 static void Cache_client_dequeue(CacheClient_t *Client)
 {
-   if (Client) {
-      dList_remove(ClientQueue, Client);
-      a_Web_free(Client->Web);
-      dFree(Client);
-   }
+    if (Client) {
+        dList_remove(ClientQueue, Client);
+        a_Web_free(Client->Web);
+        dFree(Client);
+    }
 }
 
 
@@ -197,25 +197,25 @@ static void Cache_client_dequeue(CacheClient_t *Client)
  */
 static void Cache_entry_init(CacheEntry_t *NewEntry, const DilloUrl *Url)
 {
-   NewEntry->Url = a_Url_dup(Url);
-   NewEntry->TypeDet = NULL;
-   NewEntry->TypeHdr = NULL;
-   NewEntry->TypeMeta = NULL;
-   NewEntry->TypeNorm = NULL;
-   NewEntry->ContentDisposition = NULL;
-   NewEntry->Header = dStr_new("");
-   NewEntry->Location = NULL;
-   NewEntry->Auth = NULL;
-   NewEntry->Data = dStr_sized_new(8*1024);
-   NewEntry->UTF8Data = NULL;
-   NewEntry->DataRefcount = 0;
-   NewEntry->TransferDecoder = NULL;
-   NewEntry->ContentDecoder = NULL;
-   NewEntry->CharsetDecoder = NULL;
-   NewEntry->ExpectedSize = 0;
-   NewEntry->TransferSize = 0;
-   NewEntry->Flags = CA_IsEmpty | CA_InProgress | CA_KeepAlive;
-   NewEntry->Hits = 0;
+    NewEntry->Url = a_Url_dup(Url);
+    NewEntry->TypeDet = NULL;
+    NewEntry->TypeHdr = NULL;
+    NewEntry->TypeMeta = NULL;
+    NewEntry->TypeNorm = NULL;
+    NewEntry->ContentDisposition = NULL;
+    NewEntry->Header = dStr_new("");
+    NewEntry->Location = NULL;
+    NewEntry->Auth = NULL;
+    NewEntry->Data = dStr_sized_new(8*1024);
+    NewEntry->UTF8Data = NULL;
+    NewEntry->DataRefcount = 0;
+    NewEntry->TransferDecoder = NULL;
+    NewEntry->ContentDecoder = NULL;
+    NewEntry->CharsetDecoder = NULL;
+    NewEntry->ExpectedSize = 0;
+    NewEntry->TransferSize = 0;
+    NewEntry->Flags = CA_IsEmpty | CA_InProgress | CA_KeepAlive;
+    NewEntry->Hits = 0;
 }
 
 /**
@@ -224,7 +224,7 @@ static void Cache_entry_init(CacheEntry_t *NewEntry, const DilloUrl *Url)
  */
 static CacheEntry_t *Cache_entry_search(const DilloUrl *Url)
 {
-   return dList_find_sorted(CachedURLs, Url, Cache_entry_by_url_cmp);
+    return dList_find_sorted(CachedURLs, Url, Cache_entry_by_url_cmp);
 }
 
 /**
@@ -232,23 +232,23 @@ static CacheEntry_t *Cache_entry_search(const DilloUrl *Url)
  */
 static CacheEntry_t *Cache_entry_search_with_redirect(const DilloUrl *Url)
 {
-   int i;
-   CacheEntry_t *entry;
+    int i;
+    CacheEntry_t *entry;
 
-   for (i = 0; (entry = Cache_entry_search(Url)); ++i) {
+    for (i = 0; (entry = Cache_entry_search(Url)); ++i) {
 
-      /* Test for a redirection loop */
-      if (entry->Flags & CA_RedirectLoop || i == 3) {
-         _MSG_WARN("Redirect loop for URL: >%s<\n", URL_STR_(Url));
-         break;
-      }
-      /* Test for a working redirection */
-      if (entry->Flags & CA_Redirect && entry->Location) {
-         Url = entry->Location;
-      } else
-         break;
-   }
-   return entry;
+        /* Test for a redirection loop */
+        if (entry->Flags & CA_RedirectLoop || i == 3) {
+            _MSG_WARN("Redirect loop for URL: >%s<\n", URL_STR_(Url));
+            break;
+        }
+        /* Test for a working redirection */
+        if (entry->Flags & CA_Redirect && entry->Location) {
+            Url = entry->Location;
+        } else
+            break;
+    }
+    return entry;
 }
 
 /**
@@ -256,17 +256,17 @@ static CacheEntry_t *Cache_entry_search_with_redirect(const DilloUrl *Url)
  */
 static CacheEntry_t *Cache_entry_add(const DilloUrl *Url)
 {
-   CacheEntry_t *old_entry, *new_entry;
+    CacheEntry_t *old_entry, *new_entry;
 
-   if ((old_entry = Cache_entry_search(Url))) {
-      MSG_WARN("Cache_entry_add, leaking an entry.\n");
-      dList_remove(CachedURLs, old_entry);
-   }
+    if ((old_entry = Cache_entry_search(Url))) {
+        MSG_WARN("Cache_entry_add, leaking an entry.\n");
+        dList_remove(CachedURLs, old_entry);
+    }
 
-   new_entry = dNew(CacheEntry_t, 1);
-   Cache_entry_init(new_entry, Url);  /* Set safe values */
-   dList_insert_sorted(CachedURLs, new_entry, Cache_entry_cmp);
-   return new_entry;
+    new_entry = dNew(CacheEntry_t, 1);
+    Cache_entry_init(new_entry, Url);  /* Set safe values */
+    dList_insert_sorted(CachedURLs, new_entry, Cache_entry_cmp);
+    return new_entry;
 }
 
 /**
@@ -275,11 +275,11 @@ static CacheEntry_t *Cache_entry_add(const DilloUrl *Url)
  * The size is computed from the allocated buffer. */
 static int Cache_bufsize(CacheEntry_t *e)
 {
-   Dstr *buf = Cache_data(e);
-   if (buf)
-      return buf->len;
-   else
-      return 0;
+    Dstr *buf = Cache_data(e);
+    if (buf)
+        return buf->len;
+    else
+        return 0;
 }
 
 /**
@@ -290,28 +290,28 @@ static int Cache_bufsize(CacheEntry_t *e)
  * responsibility of the caller to free it.
  */
 void a_Cache_entry_inject(const DilloUrl *Url,
-      const char *buf, size_t len, int flags)
+        const char *buf, size_t len, int flags)
 {
-   CacheEntry_t *entry;
+    CacheEntry_t *entry;
 
-   if (!(entry = Cache_entry_search(Url)))
-      entry = Cache_entry_add(Url);
+    if (!(entry = Cache_entry_search(Url)))
+        entry = Cache_entry_add(Url);
 
-   if (flags & CA_GotLength) {
-      entry->Flags = flags;
-      if (len)
-         entry->Flags &= ~CA_IsEmpty;
-      dStr_truncate(entry->Data, 0);
-      dStr_append_l(entry->Data, buf, len);
-      dStr_fit(entry->Data);
-      entry->ExpectedSize = entry->TransferSize = entry->Data->len;
-   } else {
-      /* Inject a new empty entry and process it to parse the headers and setup
+    if (flags & CA_GotLength) {
+        entry->Flags = flags;
+        if (len)
+            entry->Flags &= ~CA_IsEmpty;
+        dStr_truncate(entry->Data, 0);
+        dStr_append_l(entry->Data, buf, len);
+        dStr_fit(entry->Data);
+        entry->ExpectedSize = entry->TransferSize = entry->Data->len;
+    } else {
+        /* Inject a new empty entry and process it to parse the headers and setup
        * any decoder or content handler. */
-      Cache_entry_free(entry, 0);
-      Cache_entry_init(entry, Url);
-      a_Cache_process_dbuf(IORead, buf, len, Url);
-   }
+        Cache_entry_free(entry, 0);
+        Cache_entry_init(entry, Url);
+        a_Cache_process_dbuf(IORead, buf, len, Url);
+    }
 }
 
 /**
@@ -319,11 +319,11 @@ void a_Cache_entry_inject(const DilloUrl *Url,
  */
 static void Cache_auth_free(Dlist *auth)
 {
-   int i;
-   void *auth_field;
-   for (i = 0; (auth_field = dList_nth_data(auth, i)); ++i)
-      dFree(auth_field);
-   dList_free(auth);
+    int i;
+    void *auth_field;
+    for (i = 0; (auth_field = dList_nth_data(auth, i)); ++i)
+        dFree(auth_field);
+    dList_free(auth);
 }
 
 /**
@@ -331,25 +331,25 @@ static void Cache_auth_free(Dlist *auth)
  */
 static void Cache_entry_free(CacheEntry_t *entry, int deep)
 {
-   a_Url_free((DilloUrl *)entry->Url);
-   dFree(entry->TypeDet);
-   dFree(entry->TypeHdr);
-   dFree(entry->TypeMeta);
-   dFree(entry->TypeNorm);
-   dFree(entry->ContentDisposition);
-   dStr_free(entry->Header, TRUE);
-   a_Url_free((DilloUrl *)entry->Location);
-   Cache_auth_free(entry->Auth);
-   dStr_free(entry->Data, 1);
-   dStr_free(entry->UTF8Data, 1);
-   if (entry->CharsetDecoder)
-      a_Decode_free(entry->CharsetDecoder);
-   if (entry->TransferDecoder)
-      a_Decode_transfer_free(entry->TransferDecoder);
-   if (entry->ContentDecoder)
-      a_Decode_free(entry->ContentDecoder);
-   if (deep)
-      dFree(entry);
+    a_Url_free((DilloUrl *)entry->Url);
+    dFree(entry->TypeDet);
+    dFree(entry->TypeHdr);
+    dFree(entry->TypeMeta);
+    dFree(entry->TypeNorm);
+    dFree(entry->ContentDisposition);
+    dStr_free(entry->Header, TRUE);
+    a_Url_free((DilloUrl *)entry->Location);
+    Cache_auth_free(entry->Auth);
+    dStr_free(entry->Data, 1);
+    dStr_free(entry->UTF8Data, 1);
+    if (entry->CharsetDecoder)
+        a_Decode_free(entry->CharsetDecoder);
+    if (entry->TransferDecoder)
+        a_Decode_transfer_free(entry->TransferDecoder);
+    if (entry->ContentDecoder)
+        a_Decode_free(entry->ContentDecoder);
+    if (deep)
+        dFree(entry);
 }
 
 /**
@@ -359,31 +359,31 @@ static void Cache_entry_free(CacheEntry_t *entry, int deep)
  */
 static void Cache_entry_remove(CacheEntry_t *entry, DilloUrl *url)
 {
-   int i;
-   CacheClient_t *Client;
+    int i;
+    CacheClient_t *Client;
 
-   if (!entry && !(entry = Cache_entry_search(url)))
-      return;
-   if (entry->Flags & CA_InternalUrl)
-      return;
+    if (!entry && !(entry = Cache_entry_search(url)))
+        return;
+    if (entry->Flags & CA_InternalUrl)
+        return;
 
-   /* remove all clients for this entry */
-   for (i = 0; (Client = dList_nth_data(ClientQueue, i)); ++i) {
-      if (Client->Url == entry->Url) {
-         a_Cache_stop_client(Client->Key);
-         --i;
-      }
-   }
+    /* remove all clients for this entry */
+    for (i = 0; (Client = dList_nth_data(ClientQueue, i)); ++i) {
+        if (Client->Url == entry->Url) {
+            a_Cache_stop_client(Client->Key);
+            --i;
+        }
+    }
 
-   /* remove from DelayedQueue */
-   dList_remove(DelayedQueue, entry);
+    /* remove from DelayedQueue */
+    dList_remove(DelayedQueue, entry);
 
-   /* remove from dicache */
-   a_Dicache_invalidate_entry(entry->Url);
+    /* remove from dicache */
+    a_Dicache_invalidate_entry(entry->Url);
 
-   /* remove from cache */
-   dList_remove(CachedURLs, entry);
-   Cache_entry_free(entry, 1);
+    /* remove from cache */
+    dList_remove(CachedURLs, entry);
+    Cache_entry_free(entry, 1);
 }
 
 /**
@@ -391,69 +391,69 @@ static void Cache_entry_remove(CacheEntry_t *entry, DilloUrl *url)
  */
 void a_Cache_entry_remove_by_url(DilloUrl *url)
 {
-   Cache_entry_remove(NULL, url);
+    Cache_entry_remove(NULL, url);
 }
 
 /* Misc. operations ------------------------------------------------------- */
 
 static Dstr *Cache_stats(void)
 {
-   float totalKB = 0.0f;
+    float totalKB = 0.0f;
 
-   Dstr *s = dStr_new(
-      "<!DOCTYPE HTML>\n"
-      "<html>\n"
-      "<head><title>Dillo Cache</title></head>\n"
-      "<body>\n");
+    Dstr *s = dStr_new(
+        "<!DOCTYPE HTML>\n"
+        "<html>\n"
+        "<head><title>Dillo Cache</title></head>\n"
+        "<body>\n");
 
-   int n = dList_length(CachedURLs);
-   dStr_sprintfa(s, "<h1>Cached URLs (%d)</h1>\n", n);
+    int n = dList_length(CachedURLs);
+    dStr_sprintfa(s, "<h1>Cached URLs (%d)</h1>\n", n);
 
-   dStr_append(s, "<table>\n");
-   dStr_append(s, "<tr>\n");
-   dStr_append(s, "<th>Hits</th>\n");
-   dStr_append(s, "<th>Size</th>\n");
-   dStr_append(s, "<th>URL</th>\n");
-   dStr_append(s, "</tr>\n");
-   for (int i = 0; i < n; i++) {
-      CacheEntry_t *e = dList_nth_data(CachedURLs, i);
-      float sizeKB = Cache_bufsize(e) / 1024.0f;
-      const char *url = URL_STR(e->Url);
-      dStr_append(s, "<tr>\n");
-      dStr_sprintfa(s, "<td style='text-align:right'>%d</td>\n", e->Hits);
-      dStr_sprintfa(s, "<td style='text-align:right'>%.2f KiB</td>\n", sizeKB);
-      dStr_sprintfa(s, "<td><a href='%s'>", url);
-      dStr_shorten(s, url, 60);
-      dStr_append(s, "</a></td>\n");
-      dStr_append(s, "</tr>\n");
-      totalKB += sizeKB;
-   }
-   dStr_append(s, "</table>\n");
-   dStr_sprintfa(s, "<p>Total cached: %.2f MiB</p>\n", totalKB / 1024.0f);
-   dStr_append(s,
-      "</body>\n"
-      "</html>\n");
+    dStr_append(s, "<table>\n");
+    dStr_append(s, "<tr>\n");
+    dStr_append(s, "<th>Hits</th>\n");
+    dStr_append(s, "<th>Size</th>\n");
+    dStr_append(s, "<th>URL</th>\n");
+    dStr_append(s, "</tr>\n");
+    for (int i = 0; i < n; i++) {
+        CacheEntry_t *e = dList_nth_data(CachedURLs, i);
+        float sizeKB = Cache_bufsize(e) / 1024.0f;
+        const char *url = URL_STR(e->Url);
+        dStr_append(s, "<tr>\n");
+        dStr_sprintfa(s, "<td style='text-align:right'>%d</td>\n", e->Hits);
+        dStr_sprintfa(s, "<td style='text-align:right'>%.2f KiB</td>\n", sizeKB);
+        dStr_sprintfa(s, "<td><a href='%s'>", url);
+        dStr_shorten(s, url, 60);
+        dStr_append(s, "</a></td>\n");
+        dStr_append(s, "</tr>\n");
+        totalKB += sizeKB;
+    }
+    dStr_append(s, "</table>\n");
+    dStr_sprintfa(s, "<p>Total cached: %.2f MiB</p>\n", totalKB / 1024.0f);
+    dStr_append(s,
+        "</body>\n"
+        "</html>\n");
 
-   return s;
+    return s;
 }
 
 static int Cache_internal_url(CacheEntry_t *entry)
 {
-   Dstr *s = NULL;
+    Dstr *s = NULL;
 
-   if (strcmp(URL_PATH(entry->Url), "cache") == 0) {
-      s = Cache_stats();
-   } else if (strcmp(URL_PATH(entry->Url), "dicache") == 0) {
-      s = a_Dicache_stats();
-   }
+    if (strcmp(URL_PATH(entry->Url), "cache") == 0) {
+        s = Cache_stats();
+    } else if (strcmp(URL_PATH(entry->Url), "dicache") == 0) {
+        s = a_Dicache_stats();
+    }
 
-   if (s != NULL) {
-      a_Cache_entry_inject(entry->Url, s->str, s->len,
-            CA_GotHeader | CA_GotLength);
-      dStr_free(s, 1);
-   }
+    if (s != NULL) {
+        a_Cache_entry_inject(entry->Url, s->str, s->len,
+                CA_GotHeader | CA_GotLength);
+        dStr_free(s, 1);
+    }
 
-   return 0;
+    return 0;
 }
 
 /**
@@ -470,48 +470,48 @@ static int Cache_internal_url(CacheEntry_t *entry)
  */
 int a_Cache_open_url(void *web, CA_Callback_t Call, void *CbData)
 {
-   int ClientKey;
-   CacheEntry_t *entry;
-   DilloWeb *Web = web;
-   DilloUrl *Url = Web->url;
-   int isInternal = 0;
+    int ClientKey;
+    CacheEntry_t *entry;
+    DilloWeb *Web = web;
+    DilloUrl *Url = Web->url;
+    int isInternal = 0;
 
-   if (dStrAsciiCasecmp(URL_SCHEME(Url), "about") == 0) {
-      _MSG("got internal URL: %s\n", URL_STR(Url));
-      isInternal = 1;
-      Cache_entry_remove(NULL, Url);
-   }
+    if (dStrAsciiCasecmp(URL_SCHEME(Url), "about") == 0) {
+        _MSG("got internal URL: %s\n", URL_STR(Url));
+        isInternal = 1;
+        Cache_entry_remove(NULL, Url);
+    }
 
-   if (URL_FLAGS(Url) & URL_E2EQuery) {
-      /* remove current entry */
-      Cache_entry_remove(NULL, Url);
-   }
+    if (URL_FLAGS(Url) & URL_E2EQuery) {
+        /* remove current entry */
+        Cache_entry_remove(NULL, Url);
+    }
 
-   if ((entry = Cache_entry_search(Url))) {
-      _MSG("serving cached entry: %s\n", URL_STR(Url));
-      /* URL is cached: feed our client with cached data */
-      ClientKey = Cache_client_enqueue(entry->Url, Web, Call, CbData);
-      Cache_delayed_process_queue(entry);
-      entry->Hits++;
+    if ((entry = Cache_entry_search(Url))) {
+        _MSG("serving cached entry: %s\n", URL_STR(Url));
+        /* URL is cached: feed our client with cached data */
+        ClientKey = Cache_client_enqueue(entry->Url, Web, Call, CbData);
+        Cache_delayed_process_queue(entry);
+        entry->Hits++;
 
-   } else {
-      _MSG("serving new entry: %s\n", URL_STR(Url));
-      /* URL not cached: create an entry, send our client to the queue,
+    } else {
+        _MSG("serving new entry: %s\n", URL_STR(Url));
+        /* URL not cached: create an entry, send our client to the queue,
        * and open a new connection */
-      entry = Cache_entry_add(Url);
+        entry = Cache_entry_add(Url);
 
-      /* URL is an internal call, populate */
-      if (isInternal) {
-         _MSG("handling internal: %s\n", URL_STR(Url));
-         Cache_internal_url(entry);
-         ClientKey = Cache_client_enqueue(entry->Url, Web, Call, CbData);
-         Cache_delayed_process_queue(entry);
-      } else {
-         ClientKey = Cache_client_enqueue(entry->Url, Web, Call, CbData);
-      }
-   }
+        /* URL is an internal call, populate */
+        if (isInternal) {
+            _MSG("handling internal: %s\n", URL_STR(Url));
+            Cache_internal_url(entry);
+            ClientKey = Cache_client_enqueue(entry->Url, Web, Call, CbData);
+            Cache_delayed_process_queue(entry);
+        } else {
+            ClientKey = Cache_client_enqueue(entry->Url, Web, Call, CbData);
+        }
+    }
 
-   return ClientKey;
+    return ClientKey;
 }
 
 /**
@@ -519,8 +519,8 @@ int a_Cache_open_url(void *web, CA_Callback_t Call, void *CbData)
  */
 uint_t a_Cache_get_flags(const DilloUrl *url)
 {
-   CacheEntry_t *entry = Cache_entry_search(url);
-   return (entry ? entry->Flags : 0);
+    CacheEntry_t *entry = Cache_entry_search(url);
+    return (entry ? entry->Flags : 0);
 }
 
 /**
@@ -528,8 +528,8 @@ uint_t a_Cache_get_flags(const DilloUrl *url)
  */
 uint_t a_Cache_get_flags_with_redirection(const DilloUrl *url)
 {
-   CacheEntry_t *entry = Cache_entry_search_with_redirect(url);
-   return (entry ? entry->Flags : 0);
+    CacheEntry_t *entry = Cache_entry_search_with_redirect(url);
+    return (entry ? entry->Flags : 0);
 }
 
 /**
@@ -537,17 +537,17 @@ uint_t a_Cache_get_flags_with_redirection(const DilloUrl *url)
  */
 static void Cache_ref_data(CacheEntry_t *entry)
 {
-   if (entry) {
-      entry->DataRefcount++;
-      _MSG("DataRefcount++: %d\n", entry->DataRefcount);
-      if (entry->CharsetDecoder &&
+    if (entry) {
+        entry->DataRefcount++;
+        _MSG("DataRefcount++: %d\n", entry->DataRefcount);
+        if (entry->CharsetDecoder &&
           (!entry->UTF8Data || entry->DataRefcount == 1)) {
-         dStr_free(entry->UTF8Data, 1);
-         entry->UTF8Data = a_Decode_process(entry->CharsetDecoder,
+            dStr_free(entry->UTF8Data, 1);
+            entry->UTF8Data = a_Decode_process(entry->CharsetDecoder,
                                             entry->Data->str,
                                             entry->Data->len);
-      }
-   }
+        }
+    }
 }
 
 /**
@@ -555,20 +555,20 @@ static void Cache_ref_data(CacheEntry_t *entry)
  */
 static void Cache_unref_data(CacheEntry_t *entry)
 {
-   if (entry) {
-      entry->DataRefcount--;
-      _MSG("DataRefcount--: %d\n", entry->DataRefcount);
+    if (entry) {
+        entry->DataRefcount--;
+        _MSG("DataRefcount--: %d\n", entry->DataRefcount);
 
-      if (entry->CharsetDecoder) {
-         if (entry->DataRefcount == 0) {
-            dStr_free(entry->UTF8Data, 1);
-            entry->UTF8Data = NULL;
-         } else if (entry->DataRefcount < 0) {
-            MSG_ERR("Cache_unref_data: negative refcount\n");
-            entry->DataRefcount = 0;
-         }
-      }
-   }
+        if (entry->CharsetDecoder) {
+            if (entry->DataRefcount == 0) {
+                dStr_free(entry->UTF8Data, 1);
+                entry->UTF8Data = NULL;
+            } else if (entry->DataRefcount < 0) {
+                MSG_ERR("Cache_unref_data: negative refcount\n");
+                entry->DataRefcount = 0;
+            }
+        }
+    }
 }
 
 /**
@@ -576,7 +576,7 @@ static void Cache_unref_data(CacheEntry_t *entry)
  */
 static const char *Cache_current_content_type(CacheEntry_t *entry)
 {
-   return entry->TypeNorm ? entry->TypeNorm : entry->TypeMeta ? entry->TypeMeta
+    return entry->TypeNorm ? entry->TypeNorm : entry->TypeMeta ? entry->TypeMeta
           : entry->TypeHdr ? entry->TypeHdr : entry->TypeDet;
 }
 
@@ -585,9 +585,9 @@ static const char *Cache_current_content_type(CacheEntry_t *entry)
  */
 const char *a_Cache_get_content_type(const DilloUrl *url)
 {
-   CacheEntry_t *entry = Cache_entry_search_with_redirect(url);
+    CacheEntry_t *entry = Cache_entry_search_with_redirect(url);
 
-   return (entry) ? Cache_current_content_type(entry) : NULL;
+    return (entry) ? Cache_current_content_type(entry) : NULL;
 }
 
 /**
@@ -595,7 +595,7 @@ const char *a_Cache_get_content_type(const DilloUrl *url)
  */
 static Dstr *Cache_data(CacheEntry_t *entry)
 {
-   return entry->UTF8Data ? entry->UTF8Data : entry->Data;
+    return entry->UTF8Data ? entry->UTF8Data : entry->Data;
 }
 
 /**
@@ -606,57 +606,57 @@ static Dstr *Cache_data(CacheEntry_t *entry)
 const char *a_Cache_set_content_type(const DilloUrl *url, const char *ctype,
                                      const char *from)
 {
-   const char *curr;
-   char *major, *minor, *charset;
-   CacheEntry_t *entry = Cache_entry_search(url);
+    const char *curr;
+    char *major, *minor, *charset;
+    CacheEntry_t *entry = Cache_entry_search(url);
 
-   dReturn_val_if_fail (entry != NULL, NULL);
+    dReturn_val_if_fail (entry != NULL, NULL);
 
-   _MSG("a_Cache_set_content_type {%s} {%s}\n", ctype, URL_STR(url));
+    _MSG("a_Cache_set_content_type {%s} {%s}\n", ctype, URL_STR(url));
 
-   curr = Cache_current_content_type(entry);
-   if (entry->TypeMeta || (*from == 'h' && entry->TypeHdr) ) {
-      /* Type is already been set. Do nothing.
+    curr = Cache_current_content_type(entry);
+    if (entry->TypeMeta || (*from == 'h' && entry->TypeHdr) ) {
+        /* Type is already been set. Do nothing.
        * BTW, META overrides TypeHdr */
-   } else {
-      if (*from == 'h') {
-         /* Content-Type from HTTP header */
-         entry->TypeHdr = dStrdup(ctype);
-      } else {
-         /* Content-Type from META */
-         entry->TypeMeta = dStrdup(ctype);
-      }
-      if (a_Misc_content_type_cmp(curr, ctype)) {
-         /* ctype gives one different from current */
-         a_Misc_parse_content_type(ctype, &major, &minor, &charset);
-         if (*from == 'm' && charset &&
+    } else {
+        if (*from == 'h') {
+            /* Content-Type from HTTP header */
+            entry->TypeHdr = dStrdup(ctype);
+        } else {
+            /* Content-Type from META */
+            entry->TypeMeta = dStrdup(ctype);
+        }
+        if (a_Misc_content_type_cmp(curr, ctype)) {
+            /* ctype gives one different from current */
+            a_Misc_parse_content_type(ctype, &major, &minor, &charset);
+            if (*from == 'm' && charset &&
              ((!major || !*major) && (!minor || !*minor))) {
-            /* META only gives charset; use detected MIME type too */
-            entry->TypeNorm = dStrconcat(entry->TypeDet, ctype, NULL);
-         } else if (*from == 'm' &&
+                /* META only gives charset; use detected MIME type too */
+                entry->TypeNorm = dStrconcat(entry->TypeDet, ctype, NULL);
+            } else if (*from == 'm' &&
                     !dStrnAsciiCasecmp(ctype, "text/xhtml", 10)) {
-            /* WORKAROUND: doxygen uses "text/xhtml" in META */
-            if (charset) {
-               entry->TypeNorm = dStrconcat("application/xhtml+xml",
-                        "; charset=", charset, NULL);
-            } else {
-               entry->TypeNorm = dStrdup("application/xhtml+xml");
+                /* WORKAROUND: doxygen uses "text/xhtml" in META */
+                if (charset) {
+                    entry->TypeNorm = dStrconcat("application/xhtml+xml",
+                                "; charset=", charset, NULL);
+                } else {
+                    entry->TypeNorm = dStrdup("application/xhtml+xml");
+                }
             }
-         }
-         if (charset) {
-            if (entry->CharsetDecoder)
-               a_Decode_free(entry->CharsetDecoder);
-            entry->CharsetDecoder = a_Decode_charset_init(charset);
-            curr = Cache_current_content_type(entry);
+            if (charset) {
+                if (entry->CharsetDecoder)
+                    a_Decode_free(entry->CharsetDecoder);
+                entry->CharsetDecoder = a_Decode_charset_init(charset);
+                curr = Cache_current_content_type(entry);
 
-            /* Invalidate UTF8Data */
-            dStr_free(entry->UTF8Data, 1);
-            entry->UTF8Data = NULL;
-         }
-         dFree(major); dFree(minor); dFree(charset);
-      }
-   }
-   return curr;
+                /* Invalidate UTF8Data */
+                dStr_free(entry->UTF8Data, 1);
+                entry->UTF8Data = NULL;
+            }
+            dFree(major); dFree(minor); dFree(charset);
+        }
+    }
+    return curr;
 }
 
 /**
@@ -665,27 +665,27 @@ const char *a_Cache_set_content_type(const DilloUrl *url, const char *ctype,
  */
 int a_Cache_get_buf(const DilloUrl *Url, char **PBuf, int *BufSize)
 {
-   CacheEntry_t *entry = Cache_entry_search_with_redirect(Url);
-   if (entry) {
-      Dstr *data;
-      Cache_ref_data(entry);
-      data = Cache_data(entry);
-      *PBuf = data->str;
-      *BufSize = data->len;
-   } else {
-      *PBuf = NULL;
-      *BufSize = 0;
-   }
-   return (entry ? 1 : 0);
+    CacheEntry_t *entry = Cache_entry_search_with_redirect(Url);
+    if (entry) {
+        Dstr *data;
+        Cache_ref_data(entry);
+        data = Cache_data(entry);
+        *PBuf = data->str;
+        *BufSize = data->len;
+    } else {
+        *PBuf = NULL;
+        *BufSize = 0;
+    }
+    return (entry ? 1 : 0);
 }
 
 Dstr *a_Cache_get_header(const DilloUrl *Url)
 {
-   CacheEntry_t *entry = Cache_entry_search_with_redirect(Url);
-   if (entry == NULL)
-      return NULL;
+    CacheEntry_t *entry = Cache_entry_search_with_redirect(Url);
+    if (entry == NULL)
+        return NULL;
 
-   return entry->Header;
+    return entry->Header;
 }
 
 /**
@@ -693,7 +693,7 @@ Dstr *a_Cache_get_header(const DilloUrl *Url)
  */
 void a_Cache_unref_buf(const DilloUrl *Url)
 {
-   Cache_unref_data(Cache_entry_search_with_redirect(Url));
+    Cache_unref_data(Cache_entry_search_with_redirect(Url));
 }
 
 
@@ -705,22 +705,22 @@ void a_Cache_unref_buf(const DilloUrl *Url)
  */
 static char *Cache_parse_field(const char *header, const char *fieldname)
 {
-   char *field;
-   uint_t i, j;
+    char *field;
+    uint_t i, j;
 
-   for (i = 0; header[i]; i++) {
-      /* Search fieldname */
-      for (j = 0; fieldname[j]; j++)
+    for (i = 0; header[i]; i++) {
+        /* Search fieldname */
+        for (j = 0; fieldname[j]; j++)
         if (D_ASCII_TOLOWER(fieldname[j]) != D_ASCII_TOLOWER(header[i + j]))
            break;
-      if (fieldname[j]) {
-         /* skip to next line */
-         for ( i += j; header[i] != '\n'; i++);
-         continue;
-      }
+        if (fieldname[j]) {
+            /* skip to next line */
+            for ( i += j; header[i] != '\n'; i++);
+            continue;
+        }
 
-      i += j;
-      if (header[i] == ':') {
+        i += j;
+        if (header[i] == ':') {
         /* Field found! */
         while (header[++i] == ' ' || header[i] == '\t');
         for (j = 0; header[i + j] != '\n'; j++);
@@ -728,52 +728,52 @@ static char *Cache_parse_field(const char *header, const char *fieldname)
            j--;
         field = dStrndup(header + i, j);
         return field;
-      }
-      while (header[i] != '\n') i++;
-   }
-   return NULL;
+        }
+        while (header[i] != '\n') i++;
+    }
+    return NULL;
 }
 
 /**
  * Extract multiple fields from the header.
  */
 static Dlist *Cache_parse_multiple_fields(const char *header,
-                                          const char *fieldname)
+                                                        const char *fieldname)
 {
-   uint_t i, j;
-   Dlist *fields = dList_new(8);
-   char *field;
+    uint_t i, j;
+    Dlist *fields = dList_new(8);
+    char *field;
 
-   for (i = 0; header[i]; i++) {
-      /* Search fieldname */
-      for (j = 0; fieldname[j]; j++)
-         if (D_ASCII_TOLOWER(fieldname[j]) != D_ASCII_TOLOWER(header[i + j]))
-            break;
-      if (fieldname[j]) {
-         /* skip to next line */
-         for (i += j; header[i] != '\n'; i++);
-         continue;
-      }
+    for (i = 0; header[i]; i++) {
+        /* Search fieldname */
+        for (j = 0; fieldname[j]; j++)
+            if (D_ASCII_TOLOWER(fieldname[j]) != D_ASCII_TOLOWER(header[i + j]))
+                break;
+        if (fieldname[j]) {
+            /* skip to next line */
+            for (i += j; header[i] != '\n'; i++);
+            continue;
+        }
 
-      i += j;
-      if (header[i] == ':') {
-         /* Field found! */
-         while (header[++i] == ' ' || header[i] == '\t');
-         for (j = 0; header[i + j] != '\n'; j++);
-         while (j && (header[i + j - 1] == ' ' || header[i + j - 1] == '\t'))
-            j--;
-         field = dStrndup(header + i, j);
-         dList_append(fields, field);
-      } else {
-         while (header[i] != '\n') i++;
-      }
-   }
+        i += j;
+        if (header[i] == ':') {
+            /* Field found! */
+            while (header[++i] == ' ' || header[i] == '\t');
+            for (j = 0; header[i + j] != '\n'; j++);
+            while (j && (header[i + j - 1] == ' ' || header[i + j - 1] == '\t'))
+                j--;
+            field = dStrndup(header + i, j);
+            dList_append(fields, field);
+        } else {
+            while (header[i] != '\n') i++;
+        }
+    }
 
-   if (dList_length(fields) == 0) {
-      dList_free(fields);
-      fields = NULL;
-   }
-   return fields;
+    if (dList_length(fields) == 0) {
+        dList_free(fields);
+        fields = NULL;
+    }
+    return fields;
 }
 
 /**
@@ -782,118 +782,118 @@ static Dlist *Cache_parse_multiple_fields(const char *header,
  */
 static void Cache_parse_header(CacheEntry_t *entry)
 {
-   char *header = entry->Header->str;
-   bool_t server1point0 = !strncmp(entry->Header->str, "HTTP/1.0", 8);
-   char *Length, *Type, *location_str, *encoding, *connection, *hsts;
+    char *header = entry->Header->str;
+    bool_t server1point0 = !strncmp(entry->Header->str, "HTTP/1.0", 8);
+    char *Length, *Type, *location_str, *encoding, *connection, *hsts;
 #ifndef DISABLE_COOKIES
-   Dlist *Cookies;
+    Dlist *Cookies;
 #endif
-   Dlist *warnings;
-   void *data;
-   int i;
+    Dlist *warnings;
+    void *data;
+    int i;
 
-   _MSG("Cache_parse_header\n");
+    _MSG("Cache_parse_header\n");
 
-   if (entry->Header->len > 12) {
-      if (header[9] == '1' && header[10] == '0' && header[11] == '0') {
-         /* 100: Continue. The "real" header has not come yet. */
-         MSG("An actual 100 Continue header!\n");
-         entry->Flags &= ~CA_GotHeader;
-         dStr_free(entry->Header, 1);
-         entry->Header = dStr_new("");
-         return;
-      }
-      if (header[9] == '3' && header[10] == '0' &&
+    if (entry->Header->len > 12) {
+        if (header[9] == '1' && header[10] == '0' && header[11] == '0') {
+            /* 100: Continue. The "real" header has not come yet. */
+            MSG("An actual 100 Continue header!\n");
+            entry->Flags &= ~CA_GotHeader;
+            dStr_free(entry->Header, 1);
+            entry->Header = dStr_new("");
+            return;
+        }
+        if (header[9] == '3' && header[10] == '0' &&
           (location_str = Cache_parse_field(header, "Location"))) {
-         /* 30x: URL redirection */
-         entry->Location = a_Url_new(location_str, URL_STR_(entry->Url));
+            /* 30x: URL redirection */
+            entry->Location = a_Url_new(location_str, URL_STR_(entry->Url));
 
-         if (!a_Domain_permit(entry->Url, entry->Location) ||
+            if (!a_Domain_permit(entry->Url, entry->Location) ||
              (URL_FLAGS(entry->Location) & (URL_Post + URL_Get) &&
               dStrAsciiCasecmp(URL_SCHEME(entry->Location), "dpi") == 0 &&
               dStrAsciiCasecmp(URL_SCHEME(entry->Url), "dpi") != 0)) {
-            /* Domain test, and forbid dpi GET and POST from non dpi-generated
+                /* Domain test, and forbid dpi GET and POST from non dpi-generated
              * urls.
              */
-            MSG("Redirection not followed from %s to %s\n",
+                MSG("Redirection not followed from %s to %s\n",
                 URL_HOST(entry->Url), URL_STR(entry->Location));
-         } else {
-            entry->Flags |= CA_Redirect;
-            if (header[11] == '1')
-               entry->Flags |= CA_ForceRedirect;  /* 301 Moved Permanently */
-            else if (header[11] == '2')
-               entry->Flags |= CA_TempRedirect;   /* 302 Temporary Redirect */
-         }
-         dFree(location_str);
-      } else if (strncmp(header + 9, "401", 3) == 0) {
-         entry->Auth =
-            Cache_parse_multiple_fields(header, "WWW-Authenticate");
-      } else if (strncmp(header + 9, "404", 3) == 0) {
-         entry->Flags |= CA_NotFound;
-      }
-   }
+            } else {
+                entry->Flags |= CA_Redirect;
+                if (header[11] == '1')
+                    entry->Flags |= CA_ForceRedirect;  /* 301 Moved Permanently */
+                else if (header[11] == '2')
+                    entry->Flags |= CA_TempRedirect;   /* 302 Temporary Redirect */
+            }
+            dFree(location_str);
+        } else if (strncmp(header + 9, "401", 3) == 0) {
+            entry->Auth =
+                Cache_parse_multiple_fields(header, "WWW-Authenticate");
+        } else if (strncmp(header + 9, "404", 3) == 0) {
+            entry->Flags |= CA_NotFound;
+        }
+    }
 
-   if ((warnings = Cache_parse_multiple_fields(header, "Warning"))) {
-      for (i = 0; (data = dList_nth_data(warnings, i)); ++i) {
-         MSG_HTTP("%s\n", (char *)data);
-         dFree(data);
-      }
-      dList_free(warnings);
-   }
+    if ((warnings = Cache_parse_multiple_fields(header, "Warning"))) {
+        for (i = 0; (data = dList_nth_data(warnings, i)); ++i) {
+            MSG_HTTP("%s\n", (char *)data);
+            dFree(data);
+        }
+        dList_free(warnings);
+    }
 
-   if (server1point0)
-      entry->Flags &= ~CA_KeepAlive;
+    if (server1point0)
+        entry->Flags &= ~CA_KeepAlive;
 
-   if ((connection = Cache_parse_field(header, "Connection"))) {
-      if (!dStrAsciiCasecmp(connection, "close"))
-         entry->Flags &= ~CA_KeepAlive;
-      else if (server1point0 && !dStrAsciiCasecmp(connection, "keep-alive"))
-         entry->Flags |= CA_KeepAlive;
-      dFree(connection);
-   }
+    if ((connection = Cache_parse_field(header, "Connection"))) {
+        if (!dStrAsciiCasecmp(connection, "close"))
+            entry->Flags &= ~CA_KeepAlive;
+        else if (server1point0 && !dStrAsciiCasecmp(connection, "keep-alive"))
+            entry->Flags |= CA_KeepAlive;
+        dFree(connection);
+    }
 
-   if (prefs.http_strict_transport_security &&
+    if (prefs.http_strict_transport_security &&
        !dStrAsciiCasecmp(URL_SCHEME(entry->Url), "https") &&
        a_Url_host_type(URL_HOST(entry->Url)) == URL_HOST_NAME &&
        (hsts = Cache_parse_field(header, "Strict-Transport-Security"))) {
-      a_Hsts_set(hsts, entry->Url);
-      dFree(hsts);
-   }
+        a_Hsts_set(hsts, entry->Url);
+        dFree(hsts);
+    }
 
-   /*
+    /*
     * Get Transfer-Encoding and initialize decoder
     */
-   encoding = Cache_parse_field(header, "Transfer-Encoding");
-   entry->TransferDecoder = a_Decode_transfer_init(encoding);
+    encoding = Cache_parse_field(header, "Transfer-Encoding");
+    entry->TransferDecoder = a_Decode_transfer_init(encoding);
 
 
-   if ((Length = Cache_parse_field(header, "Content-Length")) != NULL) {
-      if (encoding) {
-         /*
+    if ((Length = Cache_parse_field(header, "Content-Length")) != NULL) {
+        if (encoding) {
+            /*
           * If Transfer-Encoding is present, Content-Length must be ignored.
           * If the Transfer-Encoding is non-identity, it is an error.
           */
-         if (dStrAsciiCasecmp(encoding, "identity"))
-            MSG_HTTP("Content-Length and non-identity Transfer-Encoding "
-                     "headers both present.\n");
-      } else {
-         entry->Flags |= CA_GotLength;
-         entry->ExpectedSize = MAX(strtol(Length, NULL, 10), 0);
-      }
-      dFree(Length);
-   }
+            if (dStrAsciiCasecmp(encoding, "identity"))
+                MSG_HTTP("Content-Length and non-identity Transfer-Encoding "
+                            "headers both present.\n");
+        } else {
+            entry->Flags |= CA_GotLength;
+            entry->ExpectedSize = MAX(strtol(Length, NULL, 10), 0);
+        }
+        dFree(Length);
+    }
 
-   dFree(encoding); /* free Transfer-Encoding */
+    dFree(encoding); /* free Transfer-Encoding */
 
 #ifndef DISABLE_COOKIES
-   if ((Cookies = Cache_parse_multiple_fields(header, "Set-Cookie"))) {
-      CacheClient_t *client;
+    if ((Cookies = Cache_parse_multiple_fields(header, "Set-Cookie"))) {
+        CacheClient_t *client;
 
-      for (i = 0; (client = dList_nth_data(ClientQueue, i)); ++i) {
-         if (client->Url == entry->Url) {
-            DilloWeb *web = client->Web;
+        for (i = 0; (client = dList_nth_data(ClientQueue, i)); ++i) {
+            if (client->Url == entry->Url) {
+                DilloWeb *web = client->Web;
 
-            /* Only set cookies if any of:
+                /* Only set cookies if any of:
              * - User made request (requester == NULL)
              * - Is a redirect for the root url (safe)
              * - Same organization (first party cookie)
@@ -904,55 +904,55 @@ static void Cache_parse_header(CacheEntry_t *entry)
              * https://en.wikipedia.org/wiki/Third-party_cookies
              * https://support.mozilla.org/en-US/kb/third-party-trackers
              */
-            int safe_redirect =
-               entry->Flags & CA_Redirect && web->flags & WEB_RootUrl;
+                int safe_redirect =
+                    entry->Flags & CA_Redirect && web->flags & WEB_RootUrl;
 
-            if (!web->requester || safe_redirect ||
+                if (!web->requester || safe_redirect ||
                 a_Url_same_organization(entry->Url, web->requester)) {
-               char *server_date = Cache_parse_field(header, "Date");
-               a_Cookies_set(Cookies, entry->Url, server_date);
-               dFree(server_date);
-               break;
+                    char *server_date = Cache_parse_field(header, "Date");
+                    a_Cookies_set(Cookies, entry->Url, server_date);
+                    dFree(server_date);
+                    break;
+                }
             }
-         }
-      }
-      for (i = 0; (data = dList_nth_data(Cookies, i)); ++i)
-         dFree(data);
-      dList_free(Cookies);
-   }
+        }
+        for (i = 0; (data = dList_nth_data(Cookies, i)); ++i)
+            dFree(data);
+        dList_free(Cookies);
+    }
 #endif /* !DISABLE_COOKIES */
 
-   /*
+    /*
     * Get Content-Encoding and initialize decoder
     */
-   encoding = Cache_parse_field(header, "Content-Encoding");
-   entry->ContentDecoder = a_Decode_content_init(encoding);
-   dFree(encoding);
+    encoding = Cache_parse_field(header, "Content-Encoding");
+    entry->ContentDecoder = a_Decode_content_init(encoding);
+    dFree(encoding);
 
-   if (entry->ExpectedSize > 0) {
-      if (entry->ExpectedSize > HUGE_FILESIZE) {
-         entry->Flags |= CA_HugeFile;
-      }
-      /* Avoid some reallocs. With MAX_INIT_BUF we avoid a SEGFAULT
+    if (entry->ExpectedSize > 0) {
+        if (entry->ExpectedSize > HUGE_FILESIZE) {
+            entry->Flags |= CA_HugeFile;
+        }
+        /* Avoid some reallocs. With MAX_INIT_BUF we avoid a SEGFAULT
        * with huge files (e.g. iso files).
        * Note: the buffer grows automatically. */
-      dStr_free(entry->Data, 1);
-      entry->Data = dStr_sized_new(MIN(entry->ExpectedSize, MAX_INIT_BUF));
-   }
+        dStr_free(entry->Data, 1);
+        entry->Data = dStr_sized_new(MIN(entry->ExpectedSize, MAX_INIT_BUF));
+    }
 
-   /* Get Content-Type */
-   if ((Type = Cache_parse_field(header, "Content-Type"))) {
-      /* This HTTP Content-Type is not trusted. It's checked against real data
+    /* Get Content-Type */
+    if ((Type = Cache_parse_field(header, "Content-Type"))) {
+        /* This HTTP Content-Type is not trusted. It's checked against real data
        * in Cache_process_queue(); only then CA_GotContentType becomes true. */
-      a_Cache_set_content_type(entry->Url, Type, "http");
-      _MSG("TypeHdr  {%s} {%s}\n", Type, URL_STR(entry->Url));
-      _MSG("TypeMeta {%s}\n", entry->TypeMeta);
-      dFree(Type);
-   }
+        a_Cache_set_content_type(entry->Url, Type, "http");
+        _MSG("TypeHdr  {%s} {%s}\n", Type, URL_STR(entry->Url));
+        _MSG("TypeMeta {%s}\n", entry->TypeMeta);
+        dFree(Type);
+    }
 
-   entry->ContentDisposition = Cache_parse_field(header, "Content-Disposition");
+    entry->ContentDisposition = Cache_parse_field(header, "Content-Disposition");
 
-   Cache_ref_data(entry);
+    Cache_ref_data(entry);
 }
 
 /**
@@ -962,66 +962,66 @@ static void Cache_parse_header(CacheEntry_t *entry)
 static int Cache_get_header(CacheEntry_t *entry,
                             const char *buf, size_t buf_size)
 {
-   size_t N, i;
-   Dstr *hdr = entry->Header;
+    size_t N, i;
+    Dstr *hdr = entry->Header;
 
-   /* Header finishes when N = 2 */
-   N = (hdr->len && hdr->str[hdr->len - 1] == '\n');
-   for (i = 0; i < buf_size && N < 2; ++i) {
-      if (buf[i] == '\r' || !buf[i])
-         continue;
-      if (N == 1 && (buf[i] == ' ' || buf[i] == '\t')) {
-         /* unfold multiple-line header */
-         _MSG("Multiple-line header!\n");
-         dStr_erase(hdr, hdr->len - 1, 1);
-      }
-      N = (buf[i] == '\n') ? N + 1 : 0;
-      dStr_append_c(hdr, buf[i]);
-   }
+    /* Header finishes when N = 2 */
+    N = (hdr->len && hdr->str[hdr->len - 1] == '\n');
+    for (i = 0; i < buf_size && N < 2; ++i) {
+        if (buf[i] == '\r' || !buf[i])
+            continue;
+        if (N == 1 && (buf[i] == ' ' || buf[i] == '\t')) {
+            /* unfold multiple-line header */
+            _MSG("Multiple-line header!\n");
+            dStr_erase(hdr, hdr->len - 1, 1);
+        }
+        N = (buf[i] == '\n') ? N + 1 : 0;
+        dStr_append_c(hdr, buf[i]);
+    }
 
-   if (N == 2) {
-      /* Got whole header */
-      _MSG("Header [buf_size=%d]\n%s", i, hdr->str);
-      entry->Flags |= CA_GotHeader;
-      dStr_fit(hdr);
-      /* Return number of header bytes in 'buf' [1 based] */
-      return i;
-   }
-   return 0;
+    if (N == 2) {
+        /* Got whole header */
+        _MSG("Header [buf_size=%d]\n%s", i, hdr->str);
+        entry->Flags |= CA_GotHeader;
+        dStr_fit(hdr);
+        /* Return number of header bytes in 'buf' [1 based] */
+        return i;
+    }
+    return 0;
 }
 
 static void Cache_finish_msg(CacheEntry_t *entry)
 {
-   if (!(entry->Flags & CA_InProgress)) {
-      /* already finished */
-      return;
-   }
+    if (!(entry->Flags & CA_InProgress)) {
+        /* already finished */
+        return;
+    }
 
-   if ((entry->ExpectedSize || entry->TransferSize) &&
+    if ((entry->ExpectedSize || entry->TransferSize) &&
        entry->TypeHdr == NULL) {
-      MSG_HTTP("Message with a body lacked Content-Type header.\n");
-   }
-   if ((entry->Flags & CA_GotLength) &&
+        MSG_HTTP("Message with a body lacked Content-Type header.\n");
+    }
+    if ((entry->Flags & CA_GotLength) &&
        (entry->ExpectedSize != entry->TransferSize)) {
-      MSG_HTTP("Content-Length (%d) does NOT match message body (%d) for %s\n",
-               entry->ExpectedSize, entry->TransferSize, URL_STR_(entry->Url));
-   }
-   entry->Flags &= ~CA_InProgress;
-   if (entry->TransferDecoder) {
-      a_Decode_transfer_free(entry->TransferDecoder);
-      entry->TransferDecoder = NULL;
-   }
-   if (entry->ContentDecoder) {
-      a_Decode_free(entry->ContentDecoder);
-      entry->ContentDecoder = NULL;
-   }
-   dStr_fit(entry->Data);                /* fit buffer size! */
+        MSG_HTTP("Content-Length (%d) does NOT match message body (%d) for %s\n",
+                    entry->ExpectedSize, entry->TransferSize, URL_STR_(entry->Url));
+    }
+    entry->Flags &= ~CA_InProgress;
+    if (entry->TransferDecoder) {
+        a_Decode_transfer_free(entry->TransferDecoder);
+        entry->TransferDecoder = NULL;
+    }
+    if (entry->ContentDecoder) {
+        a_Decode_free(entry->ContentDecoder);
+        entry->ContentDecoder = NULL;
+    }
+    dStr_fit(entry->Data);                /* fit buffer size! */
 
-   if ((entry = Cache_process_queue(entry))) {
-      if (entry->Flags & CA_GotHeader) {
-         Cache_unref_data(entry);
-      }
-   }
+    if ((entry = Cache_process_queue(entry))) {
+        if (entry->Flags & CA_GotHeader) {
+            Cache_unref_data(entry);
+        }
+    }
 }
 
 /**
@@ -1035,96 +1035,96 @@ static void Cache_finish_msg(CacheEntry_t *entry)
 bool_t a_Cache_process_dbuf(int Op, const char *buf, size_t buf_size,
                             const DilloUrl *Url)
 {
-   int offset, len;
-   const char *str;
-   Dstr *dstr1, *dstr2, *dstr3;
-   bool_t done = FALSE;
-   CacheEntry_t *entry = Cache_entry_search(Url);
+    int offset, len;
+    const char *str;
+    Dstr *dstr1, *dstr2, *dstr3;
+    bool_t done = FALSE;
+    CacheEntry_t *entry = Cache_entry_search(Url);
 
-   /* Assert a valid entry (not aborted) */
-   dReturn_val_if_fail (entry != NULL, FALSE);
+    /* Assert a valid entry (not aborted) */
+    dReturn_val_if_fail (entry != NULL, FALSE);
 
-   _MSG("__a_Cache_process_dbuf__\n");
+    _MSG("__a_Cache_process_dbuf__\n");
 
-   if (Op == IORead) {
-      /*
+    if (Op == IORead) {
+        /*
        * Cache_get_header() will set CA_GotHeader if it has a full header, and
        * Cache_parse_header() will unset it if the header ends being
        * merely an informational response from the server (i.e., 100 Continue)
        */
-      for (offset = 0; !(entry->Flags & CA_GotHeader) &&
+        for (offset = 0; !(entry->Flags & CA_GotHeader) &&
            (len = Cache_get_header(entry, buf + offset, buf_size - offset));
            Cache_parse_header(entry) ) {
-         offset += len;
-      }
+            offset += len;
+        }
 
-      if (entry->Flags & CA_GotHeader) {
-         str = buf + offset;
-         len = buf_size - offset;
-         entry->TransferSize += len;
-         dstr1 = dstr2 = dstr3 = NULL;
+        if (entry->Flags & CA_GotHeader) {
+            str = buf + offset;
+            len = buf_size - offset;
+            entry->TransferSize += len;
+            dstr1 = dstr2 = dstr3 = NULL;
 
-         /* Decode arrived data (<= 3 stages) */
-         if (entry->TransferDecoder) {
-            dstr1 = a_Decode_transfer_process(entry->TransferDecoder, str,len);
-            done = a_Decode_transfer_finished(entry->TransferDecoder);
-            str = dstr1->str;
-            len = dstr1->len;
-         }
-         if (entry->ContentDecoder) {
-            dstr2 = a_Decode_process(entry->ContentDecoder, str, len);
-            str = dstr2->str;
-            len = dstr2->len;
-         }
-         dStr_append_l(entry->Data, str, len);
-         if (entry->CharsetDecoder && entry->UTF8Data) {
-            dstr3 = a_Decode_process(entry->CharsetDecoder, str, len);
-            dStr_append_l(entry->UTF8Data, dstr3->str, dstr3->len);
-         }
-         dStr_free(dstr1, 1);
-         dStr_free(dstr2, 1);
-         dStr_free(dstr3, 1);
-
-         if (entry->Data->len)
-            entry->Flags &= ~CA_IsEmpty;
-
-         if ((entry->Flags & CA_GotLength) &&
-             (entry->TransferSize >= entry->ExpectedSize)) {
-            done = TRUE;
-         }
-         if (!(entry->Flags & CA_KeepAlive)) {
-            /* Let IOClose finish it later */
-            done = FALSE;
-         }
-
-         entry = Cache_process_queue(entry);
-
-         if (entry && done)
-            Cache_finish_msg(entry);
-      }
-   } else if (Op == IOClose) {
-      Cache_finish_msg(entry);
-   } else if (Op == IOAbort) {
-      entry->Flags |= CA_Aborted;
-      if (entry->Data->len) {
-         MSG("Premature close for %s\n", URL_STR(entry->Url));
-         Cache_finish_msg(entry);
-      } else {
-         int i;
-         CacheClient_t *Client;
-
-         for (i = 0; (Client = dList_nth_data(ClientQueue, i)); ++i) {
-            if (Client->Url == entry->Url) {
-               DilloWeb *web = (DilloWeb *)Client->Web;
-
-               a_Bw_remove_client(web->bw, Client->Key);
-               Cache_client_dequeue(Client);
-               --i; /* Keep the index value in the next iteration */
+            /* Decode arrived data (<= 3 stages) */
+            if (entry->TransferDecoder) {
+                dstr1 = a_Decode_transfer_process(entry->TransferDecoder, str,len);
+                done = a_Decode_transfer_finished(entry->TransferDecoder);
+                str = dstr1->str;
+                len = dstr1->len;
             }
-         }
-      }
-   }
-   return done;
+            if (entry->ContentDecoder) {
+                dstr2 = a_Decode_process(entry->ContentDecoder, str, len);
+                str = dstr2->str;
+                len = dstr2->len;
+            }
+            dStr_append_l(entry->Data, str, len);
+            if (entry->CharsetDecoder && entry->UTF8Data) {
+                dstr3 = a_Decode_process(entry->CharsetDecoder, str, len);
+                dStr_append_l(entry->UTF8Data, dstr3->str, dstr3->len);
+            }
+            dStr_free(dstr1, 1);
+            dStr_free(dstr2, 1);
+            dStr_free(dstr3, 1);
+
+            if (entry->Data->len)
+                entry->Flags &= ~CA_IsEmpty;
+
+            if ((entry->Flags & CA_GotLength) &&
+             (entry->TransferSize >= entry->ExpectedSize)) {
+                done = TRUE;
+            }
+            if (!(entry->Flags & CA_KeepAlive)) {
+                /* Let IOClose finish it later */
+                done = FALSE;
+            }
+
+            entry = Cache_process_queue(entry);
+
+            if (entry && done)
+                Cache_finish_msg(entry);
+        }
+    } else if (Op == IOClose) {
+        Cache_finish_msg(entry);
+    } else if (Op == IOAbort) {
+        entry->Flags |= CA_Aborted;
+        if (entry->Data->len) {
+            MSG("Premature close for %s\n", URL_STR(entry->Url));
+            Cache_finish_msg(entry);
+        } else {
+            int i;
+            CacheClient_t *Client;
+
+            for (i = 0; (Client = dList_nth_data(ClientQueue, i)); ++i) {
+                if (Client->Url == entry->Url) {
+                    DilloWeb *web = (DilloWeb *)Client->Web;
+
+                    a_Bw_remove_client(web->bw, Client->Key);
+                    Cache_client_dequeue(Client);
+                    --i; /* Keep the index value in the next iteration */
+                }
+            }
+        }
+    }
+    return done;
 }
 
 /**
@@ -1133,56 +1133,56 @@ bool_t a_Cache_process_dbuf(int Op, const char *buf, size_t buf_size,
  */
 static int Cache_redirect(CacheEntry_t *entry, int Flags, BrowserWindow *bw)
 {
-   DilloUrl *NewUrl;
+    DilloUrl *NewUrl;
 
-   _MSG(" Cache_redirect: redirect_level = %d\n", bw->redirect_level);
+    _MSG(" Cache_redirect: redirect_level = %d\n", bw->redirect_level);
 
-   /* Don't allow redirection for SpamSafe/local URLs */
-   if (URL_FLAGS(entry->Url) & URL_SpamSafe) {
-      a_UIcmd_set_msg(bw, "WARNING: local URL with redirection.  Aborting.");
-      return 0;
-   }
+    /* Don't allow redirection for SpamSafe/local URLs */
+    if (URL_FLAGS(entry->Url) & URL_SpamSafe) {
+        a_UIcmd_set_msg(bw, "WARNING: local URL with redirection.  Aborting.");
+        return 0;
+    }
 
-   /* if there's a redirect loop, stop now */
-   if (bw->redirect_level >= 5)
-      entry->Flags |= CA_RedirectLoop;
+    /* if there's a redirect loop, stop now */
+    if (bw->redirect_level >= 5)
+        entry->Flags |= CA_RedirectLoop;
 
-   if (entry->Flags & CA_RedirectLoop) {
-      a_UIcmd_set_msg(bw, "ERROR: redirect loop for: %s", URL_STR_(entry->Url));
-      bw->redirect_level = 0;
-      return 0;
-   }
+    if (entry->Flags & CA_RedirectLoop) {
+        a_UIcmd_set_msg(bw, "ERROR: redirect loop for: %s", URL_STR_(entry->Url));
+        bw->redirect_level = 0;
+        return 0;
+    }
 
-   if ((entry->Flags & CA_Redirect && entry->Location) &&
+    if ((entry->Flags & CA_Redirect && entry->Location) &&
        (entry->Flags & CA_ForceRedirect || entry->Flags & CA_TempRedirect ||
         !entry->Data->len || entry->Data->len < 1024)) {
 
-      MSG("Redirect to: %s\n", URL_STR_(entry->Location));
-      _MSG("%s", entry->Header->str);
+        MSG("Redirect to: %s\n", URL_STR_(entry->Location));
+        _MSG("%s", entry->Header->str);
 
-      if (Flags & WEB_RootUrl) {
-         /* Redirection of the main page */
-         NewUrl = a_Url_new(URL_STR_(entry->Location), URL_STR_(entry->Url));
-         if (entry->Flags & CA_TempRedirect)
-            a_Url_set_flags(NewUrl, URL_FLAGS(NewUrl) | URL_E2EQuery);
-         a_Nav_push(bw, NewUrl, entry->Url);
-         a_Url_free(NewUrl);
-      } else {
-         /* Sub entity redirection (most probably an image) */
-         if (!entry->Data->len) {
-            _MSG(">>>> Image redirection without entity-content <<<<\n");
-         } else {
-            _MSG(">>>> Image redirection with entity-content <<<<\n");
-         }
-      }
-   }
-   return 0;
+        if (Flags & WEB_RootUrl) {
+            /* Redirection of the main page */
+            NewUrl = a_Url_new(URL_STR_(entry->Location), URL_STR_(entry->Url));
+            if (entry->Flags & CA_TempRedirect)
+                a_Url_set_flags(NewUrl, URL_FLAGS(NewUrl) | URL_E2EQuery);
+            a_Nav_push(bw, NewUrl, entry->Url);
+            a_Url_free(NewUrl);
+        } else {
+            /* Sub entity redirection (most probably an image) */
+            if (!entry->Data->len) {
+                _MSG(">>>> Image redirection without entity-content <<<<\n");
+            } else {
+                _MSG(">>>> Image redirection with entity-content <<<<\n");
+            }
+        }
+    }
+    return 0;
 }
 
 typedef struct {
-   Dlist *auth;
-   DilloUrl *url;
-   BrowserWindow *bw;
+    Dlist *auth;
+    DilloUrl *url;
+    BrowserWindow *bw;
 } CacheAuthData_t;
 
 /**
@@ -1190,14 +1190,14 @@ typedef struct {
  */
 static void Cache_auth_callback(void *vdata)
 {
-   CacheAuthData_t *data = (CacheAuthData_t *)vdata;
-   if (a_Auth_do_auth(data->auth, data->url))
-      a_Nav_reload(data->bw);
-   Cache_auth_free(data->auth);
-   a_Url_free(data->url);
-   dFree(data);
-   Cache_auth_entry(NULL, NULL);
-   a_Timeout_remove();
+    CacheAuthData_t *data = (CacheAuthData_t *)vdata;
+    if (a_Auth_do_auth(data->auth, data->url))
+        a_Nav_reload(data->bw);
+    Cache_auth_free(data->auth);
+    a_Url_free(data->url);
+    dFree(data);
+    Cache_auth_entry(NULL, NULL);
+    a_Timeout_remove();
 }
 
 /**
@@ -1205,22 +1205,22 @@ static void Cache_auth_callback(void *vdata)
  */
 static void Cache_auth_entry(CacheEntry_t *entry, BrowserWindow *bw)
 {
-   static int busy = 0;
-   CacheAuthData_t *data;
+    static int busy = 0;
+    CacheAuthData_t *data;
 
-   if (!entry) {
-      busy = 0;
-   } else if (busy) {
-      MSG_WARN("Cache_auth_entry: caught busy!\n");
-   } else if (entry->Auth) {
-      busy = 1;
-      data = dNew(CacheAuthData_t, 1);
-      data->auth = entry->Auth;
-      data->url = a_Url_dup(entry->Url);
-      data->bw = bw;
-      entry->Auth = NULL;
-      a_Timeout_add(0.0, Cache_auth_callback, data);
-   }
+    if (!entry) {
+        busy = 0;
+    } else if (busy) {
+        MSG_WARN("Cache_auth_entry: caught busy!\n");
+    } else if (entry->Auth) {
+        busy = 1;
+        data = dNew(CacheAuthData_t, 1);
+        data->auth = entry->Auth;
+        data->url = a_Url_dup(entry->Url);
+        data->bw = bw;
+        entry->Auth = NULL;
+        a_Timeout_add(0.0, Cache_auth_callback, data);
+    }
 }
 
 /**
@@ -1229,11 +1229,11 @@ static void Cache_auth_entry(CacheEntry_t *entry, BrowserWindow *bw)
  */
 int a_Cache_download_enabled(const DilloUrl *url)
 {
-   if (!dStrAsciiCasecmp(URL_SCHEME(url), "http") ||
+    if (!dStrAsciiCasecmp(URL_SCHEME(url), "http") ||
        !dStrAsciiCasecmp(URL_SCHEME(url), "https") ||
        !dStrAsciiCasecmp(URL_SCHEME(url), "ftp"))
-      return 1;
-   return 0;
+        return 1;
+    return 0;
 }
 
 /**
@@ -1243,25 +1243,25 @@ int a_Cache_download_enabled(const DilloUrl *url)
  */
 static void Cache_null_client(int Op, CacheClient_t *Client)
 {
-   DilloWeb *Web = Client->Web;
+    DilloWeb *Web = Client->Web;
 
-   /* make the stop button insensitive when done */
-   if (Op == CA_Close) {
-      if (Web->flags & WEB_RootUrl) {
-         /* Remove this client from our active list */
-         a_Bw_close_client(Web->bw, Client->Key);
-      }
-   }
+    /* make the stop button insensitive when done */
+    if (Op == CA_Close) {
+        if (Web->flags & WEB_RootUrl) {
+            /* Remove this client from our active list */
+            a_Bw_close_client(Web->bw, Client->Key);
+        }
+    }
 
-   /* else ignore */
+    /* else ignore */
 
-   return;
+    return;
 }
 
 typedef struct {
-   BrowserWindow *bw;
-   DilloUrl *url;
-   char* filename;
+    BrowserWindow *bw;
+    DilloUrl *url;
+    char* filename;
 } Cache_savelink_t;
 
 /**
@@ -1270,32 +1270,32 @@ typedef struct {
  */
 static void Cache_savelink_cb(void *vdata)
 {
-   Cache_savelink_t *data = (Cache_savelink_t*) vdata;
+    Cache_savelink_t *data = (Cache_savelink_t*) vdata;
 
-   a_UIcmd_save_link(data->bw, data->url, data->filename);
-   a_Url_free(data->url);
-   dFree(data);
+    a_UIcmd_save_link(data->bw, data->url, data->filename);
+    a_Url_free(data->url);
+    dFree(data);
 }
 
 /**
  * Let the client know that we're not following a redirection.
  */
 static void Cache_provide_redirection_blocked_page(CacheEntry_t *entry,
-                                                   CacheClient_t *client)
+                                                                    CacheClient_t *client)
 {
-   DilloWeb *clientWeb = client->Web;
+    DilloWeb *clientWeb = client->Web;
 
-   a_Web_dispatch_by_type("text/html", clientWeb, &client->Callback,
+    a_Web_dispatch_by_type("text/html", clientWeb, &client->Callback,
                           &client->CbData);
-   client->Buf = dStrconcat("<!doctype html><html><body>"
+    client->Buf = dStrconcat("<!doctype html><html><body>"
                     "Dillo blocked a redirection from <a href=\"",
                     URL_STR(entry->Url), "\">", URL_STR(entry->Url),
                     "</a> to <a href=\"", URL_STR(entry->Location), "\">",
                     URL_STR(entry->Location), "</a> based on your domainrc "
                     "settings.</body></html>", NULL);
-   client->BufSize = strlen(client->Buf);
-   (client->Callback)(CA_Send, client);
-   dFree(client->Buf);
+    client->BufSize = strlen(client->Buf);
+    (client->Callback)(CA_Send, client);
+    dFree(client->Buf);
 }
 
 /**
@@ -1312,198 +1312,198 @@ static void Cache_provide_redirection_blocked_page(CacheEntry_t *entry,
  */
 static CacheEntry_t *Cache_process_queue(CacheEntry_t *entry)
 {
-   uint_t i;
-   int st;
-   const char *Type;
-   Dstr *data;
-   CacheClient_t *Client;
-   DilloWeb *ClientWeb;
-   BrowserWindow *Client_bw = NULL;
-   static bool_t Busy = FALSE;
-   bool_t AbortEntry = FALSE;
-   bool_t OfferDownload = FALSE;
-   bool_t TypeMismatch = FALSE;
-   char *dtype = NULL;
-   char *dfilename = NULL;
+    uint_t i;
+    int st;
+    const char *Type;
+    Dstr *data;
+    CacheClient_t *Client;
+    DilloWeb *ClientWeb;
+    BrowserWindow *Client_bw = NULL;
+    static bool_t Busy = FALSE;
+    bool_t AbortEntry = FALSE;
+    bool_t OfferDownload = FALSE;
+    bool_t TypeMismatch = FALSE;
+    char *dtype = NULL;
+    char *dfilename = NULL;
 
-   if (Busy)
-      MSG_ERR("FATAL!: >>>> Cache_process_queue Caught busy!!! <<<<\n");
-   if (!(entry->Flags & CA_GotHeader))
-      return entry;
-   if (!(entry->Flags & CA_GotContentType)) {
-      st = a_Misc_get_content_type_from_data(
+    if (Busy)
+        MSG_ERR("FATAL!: >>>> Cache_process_queue Caught busy!!! <<<<\n");
+    if (!(entry->Flags & CA_GotHeader))
+        return entry;
+    if (!(entry->Flags & CA_GotContentType)) {
+        st = a_Misc_get_content_type_from_data(
               entry->Data->str, entry->Data->len, &Type);
-      _MSG("Cache: detected Content-Type '%s'\n", Type);
-      if (st == 0 || !(entry->Flags & CA_InProgress)) {
-         if (a_Misc_content_type_check(entry->TypeHdr, Type) < 0) {
-            MSG_HTTP("Content-Type '%s' doesn't match the real data.\n",
-                     entry->TypeHdr);
-            TypeMismatch = TRUE;
-         }
-         entry->TypeDet = dStrdup(Type);
-         entry->Flags |= CA_GotContentType;
-      } else
-         return entry;  /* i.e., wait for more data */
-   }
-
-   Busy = TRUE;
-   for (i = 0; (Client = dList_nth_data(ClientQueue, i)); ++i) {
-      if (Client->Url == entry->Url) {
-         ClientWeb = Client->Web;    /* It was a (void*) */
-         Client_bw = ClientWeb->bw;  /* 'bw' in a local var */
-
-         if (ClientWeb->flags & WEB_RootUrl) {
-            /* Only parse Content-Disposition on root URLs */
-            if (entry->ContentDisposition) {
-               a_Misc_parse_content_disposition(entry->ContentDisposition,
-                     &dtype, &dfilename);
+        _MSG("Cache: detected Content-Type '%s'\n", Type);
+        if (st == 0 || !(entry->Flags & CA_InProgress)) {
+            if (a_Misc_content_type_check(entry->TypeHdr, Type) < 0) {
+                MSG_HTTP("Content-Type '%s' doesn't match the real data.\n",
+                            entry->TypeHdr);
+                TypeMismatch = TRUE;
             }
-            if (!(entry->Flags & CA_MsgErased)) {
-               /* clear the "expecting for reply..." message */
-               a_UIcmd_set_msg(Client_bw, "");
-               entry->Flags |= CA_MsgErased;
-            }
-            if (TypeMismatch) {
-               a_UIcmd_set_msg(Client_bw,"HTTP warning: Content-Type '%s' "
+            entry->TypeDet = dStrdup(Type);
+            entry->Flags |= CA_GotContentType;
+        } else
+            return entry;  /* i.e., wait for more data */
+    }
+
+    Busy = TRUE;
+    for (i = 0; (Client = dList_nth_data(ClientQueue, i)); ++i) {
+        if (Client->Url == entry->Url) {
+            ClientWeb = Client->Web;    /* It was a (void*) */
+            Client_bw = ClientWeb->bw;  /* 'bw' in a local var */
+
+            if (ClientWeb->flags & WEB_RootUrl) {
+                /* Only parse Content-Disposition on root URLs */
+                if (entry->ContentDisposition) {
+                    a_Misc_parse_content_disposition(entry->ContentDisposition,
+                            &dtype, &dfilename);
+                }
+                if (!(entry->Flags & CA_MsgErased)) {
+                    /* clear the "expecting for reply..." message */
+                    a_UIcmd_set_msg(Client_bw, "");
+                    entry->Flags |= CA_MsgErased;
+                }
+                if (TypeMismatch) {
+                    a_UIcmd_set_msg(Client_bw,"HTTP warning: Content-Type '%s' "
                                "doesn't match the real data.", entry->TypeHdr);
-               OfferDownload = TRUE;
-            }
-            if (entry->Flags & CA_Redirect) {
-               if (!Client->Callback) {
-                  Client->Callback = Cache_null_client;
-                  Client_bw->redirect_level++;
-               }
-            } else {
-               Client_bw->redirect_level = 0;
-            }
-            if (entry->Flags & CA_HugeFile) {
-               a_UIcmd_set_msg(Client_bw, "Huge file! (%d MB)",
+                    OfferDownload = TRUE;
+                }
+                if (entry->Flags & CA_Redirect) {
+                    if (!Client->Callback) {
+                        Client->Callback = Cache_null_client;
+                        Client_bw->redirect_level++;
+                    }
+                } else {
+                    Client_bw->redirect_level = 0;
+                }
+                if (entry->Flags & CA_HugeFile) {
+                    a_UIcmd_set_msg(Client_bw, "Huge file! (%d MB)",
                                entry->ExpectedSize / (1024*1024));
-               AbortEntry = OfferDownload = TRUE;
-            }
-         } else {
-            /* For non root URLs, ignore redirections and 404 answers */
-            if (entry->Flags & CA_Redirect || entry->Flags & CA_NotFound)
-               Client->Callback = Cache_null_client;
-         }
-
-         /* Set the client function */
-         if (!Client->Callback) {
-            Client->Callback = Cache_null_client;
-
-            if (entry->Location && !(entry->Flags & CA_Redirect)) {
-               /* Not following redirection, so don't display page body. */
+                    AbortEntry = OfferDownload = TRUE;
+                }
             } else {
-               if (TypeMismatch) {
-                  AbortEntry = TRUE;
-               } else {
-                  const char *curr_type = Cache_current_content_type(entry);
-                  st = a_Web_dispatch_by_type(curr_type, ClientWeb,
+                /* For non root URLs, ignore redirections and 404 answers */
+                if (entry->Flags & CA_Redirect || entry->Flags & CA_NotFound)
+                    Client->Callback = Cache_null_client;
+            }
+
+            /* Set the client function */
+            if (!Client->Callback) {
+                Client->Callback = Cache_null_client;
+
+                if (entry->Location && !(entry->Flags & CA_Redirect)) {
+                    /* Not following redirection, so don't display page body. */
+                } else {
+                    if (TypeMismatch) {
+                        AbortEntry = TRUE;
+                    } else {
+                        const char *curr_type = Cache_current_content_type(entry);
+                        st = a_Web_dispatch_by_type(curr_type, ClientWeb,
                                               &Client->Callback,
                                               &Client->CbData);
-                  if (st == -1) {
-                     /* MIME type is not viewable */
-                     if (ClientWeb->flags & WEB_RootUrl) {
-                        MSG("Content-Type '%s' not viewable.\n", curr_type);
-                        /* prepare a download offer... */
-                        AbortEntry = OfferDownload = TRUE;
-                     } else {
-                        /* TODO: Resource Type not handled.
+                        if (st == -1) {
+                            /* MIME type is not viewable */
+                            if (ClientWeb->flags & WEB_RootUrl) {
+                                MSG("Content-Type '%s' not viewable.\n", curr_type);
+                                /* prepare a download offer... */
+                                AbortEntry = OfferDownload = TRUE;
+                            } else {
+                                /* TODO: Resource Type not handled.
                          * Not aborted to avoid multiple connections on the
                          * same resource. A better idea is to abort the
                          * connection and to keep a failed-resource flag in
                          * the cache entry. */
-                     }
-                  } else if (dtype && dStrnAsciiCasecmp(dtype, "inline", 6) != 0) {
-                     AbortEntry = OfferDownload = TRUE;
-                  }
-               }
-               if (AbortEntry) {
-                  if (ClientWeb->flags & WEB_RootUrl)
-                     a_Nav_cancel_expect_if_eq(Client_bw, Client->Url);
-                  a_Bw_remove_client(Client_bw, Client->Key);
-                  Cache_client_dequeue(Client);
-                  --i; /* Keep the index value in the next iteration */
-                  continue;
-               }
+                            }
+                        } else if (dtype && dStrnAsciiCasecmp(dtype, "inline", 6) != 0) {
+                            AbortEntry = OfferDownload = TRUE;
+                        }
+                    }
+                    if (AbortEntry) {
+                        if (ClientWeb->flags & WEB_RootUrl)
+                            a_Nav_cancel_expect_if_eq(Client_bw, Client->Url);
+                        a_Bw_remove_client(Client_bw, Client->Key);
+                        Cache_client_dequeue(Client);
+                        --i; /* Keep the index value in the next iteration */
+                        continue;
+                    }
+                }
             }
-         }
 
-         /* Send data to our client */
-         if (ClientWeb->flags & WEB_Download) {
-            /* for download, always provide original data, not translated */
-            data = entry->Data;
-         } else {
-            data = Cache_data(entry);
-         }
-         if ((Client->BufSize = data->len) > 0) {
-            Client->Buf = data->str;
-            (Client->Callback)(CA_Send, Client);
-            if (ClientWeb->flags & WEB_RootUrl) {
-               /* show size of page received */
-               a_UIcmd_set_page_prog(Client_bw, entry->Data->len, 1);
+            /* Send data to our client */
+            if (ClientWeb->flags & WEB_Download) {
+                /* for download, always provide original data, not translated */
+                data = entry->Data;
+            } else {
+                data = Cache_data(entry);
             }
-         }
+            if ((Client->BufSize = data->len) > 0) {
+                Client->Buf = data->str;
+                (Client->Callback)(CA_Send, Client);
+                if (ClientWeb->flags & WEB_RootUrl) {
+                    /* show size of page received */
+                    a_UIcmd_set_page_prog(Client_bw, entry->Data->len, 1);
+                }
+            }
 
-         /* Remove client when done */
-         if (!(entry->Flags & CA_InProgress)) {
-            /* Copy flags to a local var */
-            int flags = ClientWeb->flags;
+            /* Remove client when done */
+            if (!(entry->Flags & CA_InProgress)) {
+                /* Copy flags to a local var */
+                int flags = ClientWeb->flags;
 
-            if (ClientWeb->flags & WEB_RootUrl && entry->Location &&
+                if (ClientWeb->flags & WEB_RootUrl && entry->Location &&
                 !(entry->Flags & CA_Redirect)) {
-               Cache_provide_redirection_blocked_page(entry, Client);
+                    Cache_provide_redirection_blocked_page(entry, Client);
+                }
+                /* We finished sending data, let the client know */
+                (Client->Callback)(CA_Close, Client);
+                if (ClientWeb->flags & WEB_RootUrl) {
+                    if (entry->Flags & CA_Aborted) {
+                        a_UIcmd_set_msg(Client_bw, "ERROR: Connection closed early, "
+                                                            "read not complete.");
+                    }
+                    a_UIcmd_set_page_prog(Client_bw, 0, 0);
+                }
+                Cache_client_dequeue(Client);
+                --i; /* Keep the index value in the next iteration */
+
+                /* we assert just one redirect call */
+                if (entry->Flags & CA_Redirect)
+                    Cache_redirect(entry, flags, Client_bw);
             }
-            /* We finished sending data, let the client know */
-            (Client->Callback)(CA_Close, Client);
-            if (ClientWeb->flags & WEB_RootUrl) {
-               if (entry->Flags & CA_Aborted) {
-                  a_UIcmd_set_msg(Client_bw, "ERROR: Connection closed early, "
-                                             "read not complete.");
-               }
-               a_UIcmd_set_page_prog(Client_bw, 0, 0);
+        }
+    } /* for */
+
+    if (AbortEntry) {
+        /* Abort the entry, remove it from cache, and maybe offer download. */
+        DilloUrl *url = a_Url_dup(entry->Url);
+        a_Capi_conn_abort_by_url(url);
+        entry = NULL;
+        if (OfferDownload) {
+            /* Remove entry when 'conn' is already done */
+            Cache_entry_remove(NULL, url);
+            if (a_Cache_download_enabled(url)) {
+                Cache_savelink_t *data = dNew(Cache_savelink_t, 1);
+                data->bw = Client_bw;
+                data->url = a_Url_dup(url);
+                data->filename = dStrdup(dfilename);
+                a_Timeout_add(0.0, Cache_savelink_cb, data);
             }
-            Cache_client_dequeue(Client);
-            --i; /* Keep the index value in the next iteration */
+        }
+        a_Url_free(url);
+    } else if (entry->Auth && !(entry->Flags & CA_InProgress)) {
+        Cache_auth_entry(entry, Client_bw);
+    }
 
-            /* we assert just one redirect call */
-            if (entry->Flags & CA_Redirect)
-               Cache_redirect(entry, flags, Client_bw);
-         }
-      }
-   } /* for */
+    dFree(dtype); dFree(dfilename);
 
-   if (AbortEntry) {
-      /* Abort the entry, remove it from cache, and maybe offer download. */
-      DilloUrl *url = a_Url_dup(entry->Url);
-      a_Capi_conn_abort_by_url(url);
-      entry = NULL;
-      if (OfferDownload) {
-         /* Remove entry when 'conn' is already done */
-         Cache_entry_remove(NULL, url);
-         if (a_Cache_download_enabled(url)) {
-            Cache_savelink_t *data = dNew(Cache_savelink_t, 1);
-            data->bw = Client_bw;
-            data->url = a_Url_dup(url);
-            data->filename = dStrdup(dfilename);
-            a_Timeout_add(0.0, Cache_savelink_cb, data);
-         }
-      }
-      a_Url_free(url);
-   } else if (entry->Auth && !(entry->Flags & CA_InProgress)) {
-      Cache_auth_entry(entry, Client_bw);
-   }
+    /* Trigger cleanup when there are no cache clients */
+    if (dList_length(ClientQueue) == 0) {
+        a_Dicache_cleanup();
+    }
 
-   dFree(dtype); dFree(dfilename);
-
-   /* Trigger cleanup when there are no cache clients */
-   if (dList_length(ClientQueue) == 0) {
-      a_Dicache_cleanup();
-   }
-
-   Busy = FALSE;
-   _MSG("QueueSize ====> %d\n", dList_length(ClientQueue));
-   return entry;
+    Busy = FALSE;
+    _MSG("QueueSize ====> %d\n", dList_length(ClientQueue));
+    return entry;
 }
 
 /**
@@ -1511,18 +1511,18 @@ static CacheEntry_t *Cache_process_queue(CacheEntry_t *entry)
  */
 static void Cache_delayed_process_queue_callback(void *ptr)
 {
-   CacheEntry_t *entry;
-   (void) ptr; /* Unused */
+    CacheEntry_t *entry;
+    (void) ptr; /* Unused */
 
-   while ((entry = (CacheEntry_t *)dList_nth_data(DelayedQueue, 0))) {
-      Cache_ref_data(entry);
-      if ((entry = Cache_process_queue(entry))) {
-         Cache_unref_data(entry);
-         dList_remove(DelayedQueue, entry);
-      }
-   }
-   DelayedQueueIdleId = 0;
-   a_Timeout_remove();
+    while ((entry = (CacheEntry_t *)dList_nth_data(DelayedQueue, 0))) {
+        Cache_ref_data(entry);
+        if ((entry = Cache_process_queue(entry))) {
+            Cache_unref_data(entry);
+            dList_remove(DelayedQueue, entry);
+        }
+    }
+    DelayedQueueIdleId = 0;
+    a_Timeout_remove();
 }
 
 /**
@@ -1530,15 +1530,15 @@ static void Cache_delayed_process_queue_callback(void *ptr)
  */
 static void Cache_delayed_process_queue(CacheEntry_t *entry)
 {
-   /* there's no need to repeat entries in the queue */
-   if (!dList_find(DelayedQueue, entry))
-      dList_append(DelayedQueue, entry);
+    /* there's no need to repeat entries in the queue */
+    if (!dList_find(DelayedQueue, entry))
+        dList_append(DelayedQueue, entry);
 
-   if (DelayedQueueIdleId == 0) {
-      _MSG("  Setting timeout callback\n");
-      a_Timeout_add(0.0, Cache_delayed_process_queue_callback, NULL);
-      DelayedQueueIdleId = 1;
-   }
+    if (DelayedQueueIdleId == 0) {
+        _MSG("  Setting timeout callback\n");
+        a_Timeout_add(0.0, Cache_delayed_process_queue_callback, NULL);
+        DelayedQueueIdleId = 1;
+    }
 }
 
 /**
@@ -1548,18 +1548,18 @@ static void Cache_delayed_process_queue(CacheEntry_t *entry)
  */
 CacheClient_t *a_Cache_client_get_if_unique(int Key)
 {
-   int i, n = 0;
-   CacheClient_t *Client, *iClient;
+    int i, n = 0;
+    CacheClient_t *Client, *iClient;
 
-   if ((Client = dList_find_custom(ClientQueue, INT2VOIDP(Key),
+    if ((Client = dList_find_custom(ClientQueue, INT2VOIDP(Key),
                                    Cache_client_by_key_cmp))) {
-      for (i = 0; (iClient = dList_nth_data(ClientQueue, i)); ++i) {
-         if (iClient->Url == Client->Url) {
-            ++n;
-         }
-      }
-   }
-   return (n == 1) ? Client : NULL;
+        for (i = 0; (iClient = dList_nth_data(ClientQueue, i)); ++i) {
+            if (iClient->Url == Client->Url) {
+                ++n;
+            }
+        }
+    }
+    return (n == 1) ? Client : NULL;
 }
 
 /**
@@ -1568,27 +1568,27 @@ CacheClient_t *a_Cache_client_get_if_unique(int Key)
  */
 void a_Cache_stop_client(int Key)
 {
-   CacheClient_t *Client;
-   CacheEntry_t *entry;
-   DICacheEntry *DicEntry;
+    CacheClient_t *Client;
+    CacheEntry_t *entry;
+    DICacheEntry *DicEntry;
 
-   /* The client can be in both queues at the same time */
-   if ((Client = dList_find_custom(ClientQueue, INT2VOIDP(Key),
+    /* The client can be in both queues at the same time */
+    if ((Client = dList_find_custom(ClientQueue, INT2VOIDP(Key),
                                    Cache_client_by_key_cmp))) {
-      /* Dicache */
-      if ((DicEntry = a_Dicache_get_entry(Client->Url, Client->Version)))
-         a_Dicache_unref(Client->Url, Client->Version);
+        /* Dicache */
+        if ((DicEntry = a_Dicache_get_entry(Client->Url, Client->Version)))
+            a_Dicache_unref(Client->Url, Client->Version);
 
-      /* DelayedQueue */
-      if ((entry = Cache_entry_search(Client->Url)))
-         dList_remove(DelayedQueue, entry);
+        /* DelayedQueue */
+        if ((entry = Cache_entry_search(Client->Url)))
+            dList_remove(DelayedQueue, entry);
 
-      /* Main queue */
-      Cache_client_dequeue(Client);
+        /* Main queue */
+        Cache_client_dequeue(Client);
 
-   } else {
-      _MSG("WARNING: Cache_stop_client, nonexistent client\n");
-   }
+    } else {
+        _MSG("WARNING: Cache_stop_client, nonexistent client\n");
+    }
 }
 
 
@@ -1597,18 +1597,18 @@ void a_Cache_stop_client(int Key)
  */
 void a_Cache_freeall(void)
 {
-   CacheClient_t *Client;
-   void *data;
+    CacheClient_t *Client;
+    void *data;
 
-   /* free the client queue */
-   while ((Client = dList_nth_data(ClientQueue, 0)))
-      Cache_client_dequeue(Client);
+    /* free the client queue */
+    while ((Client = dList_nth_data(ClientQueue, 0)))
+        Cache_client_dequeue(Client);
 
-   /* Remove every cache entry */
-   while ((data = dList_nth_data(CachedURLs, 0))) {
-      dList_remove_fast(CachedURLs, data);
-      Cache_entry_free(data, 1);
-   }
-   /* Remove the cache list */
-   dList_free(CachedURLs);
+    /* Remove every cache entry */
+    while ((data = dList_nth_data(CachedURLs, 0))) {
+        dList_remove_fast(CachedURLs, data);
+        Cache_entry_free(data, 1);
+    }
+    /* Remove the cache list */
+    dList_free(CachedURLs);
 }

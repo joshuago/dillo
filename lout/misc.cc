@@ -39,17 +39,17 @@ const char *prgName = PRGNAME;
 
 StringBuffer::StringBuffer()
 {
-   firstNode = lastNode = NULL;
-   numChars = 0;
-   str = NULL;
-   strValid = false;
+    firstNode = lastNode = NULL;
+    numChars = 0;
+    str = NULL;
+    strValid = false;
 }
 
 StringBuffer::~StringBuffer()
 {
-   clear ();
-   if (str)
-      delete[] str;
+    clear ();
+    if (str)
+        delete[] str;
 }
 
 /**
@@ -61,20 +61,20 @@ StringBuffer::~StringBuffer()
  */
 void StringBuffer::appendNoCopy(char *str)
 {
-   Node *node = new Node();
-   node->data = str;
-   node->next = NULL;
+    Node *node = new Node();
+    node->data = str;
+    node->next = NULL;
 
-   if (firstNode == NULL) {
-      firstNode = node;
-      lastNode = node;
-   } else {
-      lastNode->next = node;
-      lastNode = node;
-   }
+    if (firstNode == NULL) {
+        firstNode = node;
+        lastNode = node;
+    } else {
+        lastNode->next = node;
+        lastNode = node;
+    }
 
-   numChars += strlen(str);
-   strValid = false;
+    numChars += strlen(str);
+    strValid = false;
 }
 
 /**
@@ -85,23 +85,23 @@ void StringBuffer::appendNoCopy(char *str)
  */
 const char *StringBuffer::getChars()
 {
-   if (strValid)
-      return str;
+    if (strValid)
+        return str;
 
-   if (str)
-      delete[] str;
-   str = new char[numChars + 1];
-   char *p = str;
+    if (str)
+        delete[] str;
+    str = new char[numChars + 1];
+    char *p = str;
 
-   for (Node *node = firstNode; node; node = node->next) {
-      int l = strlen(node->data);
-      memcpy(p, node->data, l * sizeof(char));
-      p += l;
-   }
+    for (Node *node = firstNode; node; node = node->next) {
+        int l = strlen(node->data);
+        memcpy(p, node->data, l * sizeof(char));
+        p += l;
+    }
 
-   *p = 0;
-   strValid = true;
-   return str;
+    *p = 0;
+    strValid = true;
+    return str;
 }
 
 /**
@@ -109,15 +109,15 @@ const char *StringBuffer::getChars()
  */
 void StringBuffer::clear ()
 {
-   Node *node, *nextNode;
-   for (node = firstNode; node; node = nextNode) {
-      nextNode = node->next;
-      free(node->data);
-      delete node;
-   }
-   firstNode = lastNode = NULL;
-   numChars = 0;
-   strValid = false;
+    Node *node, *nextNode;
+    for (node = firstNode; node; node = nextNode) {
+        nextNode = node->next;
+        free(node->data);
+        delete node;
+    }
+    firstNode = lastNode = NULL;
+    numChars = 0;
+    strValid = false;
 }
 
 
@@ -127,10 +127,10 @@ void StringBuffer::clear ()
 
 BitSet::BitSet(int initBits)
 {
-   numBits = initBits;
-   numBytes = bytesForBits(initBits);
-   bits = (unsigned char*)malloc(numBytes * sizeof(unsigned char));
-   clear();
+    numBits = initBits;
+    numBytes = bytesForBits(initBits);
+    bits = (unsigned char*)malloc(numBytes * sizeof(unsigned char));
+    clear();
 }
 
 BitSet::~BitSet()
@@ -140,48 +140,48 @@ BitSet::~BitSet()
 
 void BitSet::intoStringBuffer(misc::StringBuffer *sb)
 {
-   sb->append("[");
-   for (int i = 0; i < numBits; i++)
-      sb->append(get(i) ? "1" : "0");
-   sb->append("]");
+    sb->append("[");
+    for (int i = 0; i < numBits; i++)
+        sb->append(get(i) ? "1" : "0");
+    sb->append("]");
 }
 
 bool BitSet::get(int i) const
 {
-   if (8 * i >= numBytes)
-      return false;
-   else
-      return bits[i / 8] & (1 << (i % 8));
+    if (8 * i >= numBytes)
+        return false;
+    else
+        return bits[i / 8] & (1 << (i % 8));
 }
 
 void BitSet::set(int i, bool val)
 {
-   if (i > numBits)
-      numBits = i;
+    if (i > numBits)
+        numBits = i;
 
-   if (8 * i >= numBytes) {
-      int newNumBytes = numBytes;
-      while (8 * i >= newNumBytes)
-         newNumBytes *= 2;
-      void *vp = realloc(bits, newNumBytes * sizeof(unsigned char));
-      if (vp == NULL) {
-         perror("realloc failed");
-         exit(1);
-      }
-      bits = (unsigned char*)vp;
-      memset(bits + numBytes, 0, newNumBytes - numBytes);
-      numBytes = newNumBytes;
-   }
+    if (8 * i >= numBytes) {
+        int newNumBytes = numBytes;
+        while (8 * i >= newNumBytes)
+            newNumBytes *= 2;
+        void *vp = realloc(bits, newNumBytes * sizeof(unsigned char));
+        if (vp == NULL) {
+            perror("realloc failed");
+            exit(1);
+        }
+        bits = (unsigned char*)vp;
+        memset(bits + numBytes, 0, newNumBytes - numBytes);
+        numBytes = newNumBytes;
+    }
 
-   if (val)
-      bits[i / 8] |= (1 << (i % 8));
-   else
-      bits[i / 8] &= ~(1 << (i % 8));
+    if (val)
+        bits[i / 8] |= (1 << (i % 8));
+    else
+        bits[i / 8] &= ~(1 << (i % 8));
 }
 
 void BitSet::clear()
 {
-   memset(bits, 0, numBytes);
+    memset(bits, 0, numBytes);
 }
 
 } // namespace misc

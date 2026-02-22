@@ -19,54 +19,54 @@ namespace core {
 class StackingContextMgr
 {
 private:
-   Widget *widget;
-   lout::container::typed::Vector<Widget> *childSCWidgets;
-   int *zIndices, numZIndices;
+    Widget *widget;
+    lout::container::typed::Vector<Widget> *childSCWidgets;
+    int *zIndices, numZIndices;
 
-   int findZIndex (int zIndex, bool mustExist);
-   void draw (View *view, Rectangle *area, int startZIndex, int endZIndex,
+    int findZIndex (int zIndex, bool mustExist);
+    void draw (View *view, Rectangle *area, int startZIndex, int endZIndex,
               DrawingContext *context);
-   Widget *getWidgetAtPoint (int x, int y,
+    Widget *getWidgetAtPoint (int x, int y,
                              core::GettingWidgetAtPointContext *context,
                              int startZIndex, int endZIndex);
 
 public:
-   StackingContextMgr (Widget *widget);
-   ~StackingContextMgr ();
+    StackingContextMgr (Widget *widget);
+    ~StackingContextMgr ();
 
-   inline static bool isEstablishingStackingContext (Widget *widget) {
-      return IMPL_POS &&
-         widget->getStyle()->position != style::POSITION_STATIC &&
-         widget->getStyle()->zIndex != style::Z_INDEX_AUTO;
-   }
+    inline static bool isEstablishingStackingContext (Widget *widget) {
+        return IMPL_POS &&
+            widget->getStyle()->position != style::POSITION_STATIC &&
+            widget->getStyle()->zIndex != style::Z_INDEX_AUTO;
+    }
 
-   inline static bool handledByStackingContextMgr  (Widget *widget) {
-      // Each widget establishing a stacking context is child of another
-      // stacking context, so drawn by StackingContextMgr::drawTop or
-      // StackingContextMgr::drawBottom etc.
-      return widget->getParent () != NULL
-         && isEstablishingStackingContext (widget);
-   }
+    inline static bool handledByStackingContextMgr  (Widget *widget) {
+        // Each widget establishing a stacking context is child of another
+        // stacking context, so drawn by StackingContextMgr::drawTop or
+        // StackingContextMgr::drawBottom etc.
+        return widget->getParent () != NULL
+            && isEstablishingStackingContext (widget);
+    }
 
-   void addChildSCWidget (Widget *widget);
+    void addChildSCWidget (Widget *widget);
 
-   inline int getNumZIndices () { return numZIndices; }
-   inline int getNumChildSCWidgets () { return childSCWidgets->size (); }
+    inline int getNumZIndices () { return numZIndices; }
+    inline int getNumChildSCWidgets () { return childSCWidgets->size (); }
 
-   inline void drawBottom (View *view, Rectangle *area, DrawingContext *context)
-   { draw (view, area, INT_MIN, -1, context); }
-   void drawTop (View *view, Rectangle *area, DrawingContext *context)
-   { draw (view, area, 0, INT_MAX, context); }
+    inline void drawBottom (View *view, Rectangle *area, DrawingContext *context)
+    { draw (view, area, INT_MIN, -1, context); }
+    void drawTop (View *view, Rectangle *area, DrawingContext *context)
+    { draw (view, area, 0, INT_MAX, context); }
 
-   inline Widget *getTopWidgetAtPoint (int x, int y,
-                                       core::GettingWidgetAtPointContext
-                                       *context)
-   { return getWidgetAtPoint (x, y, context, 0, INT_MAX); }
+    inline Widget *getTopWidgetAtPoint (int x, int y,
+                                                    core::GettingWidgetAtPointContext
+                                                    *context)
+    { return getWidgetAtPoint (x, y, context, 0, INT_MAX); }
 
-   inline Widget *getBottomWidgetAtPoint (int x, int y,
-                                          core::GettingWidgetAtPointContext
-                                          *context)
-   { return getWidgetAtPoint (x, y, context, INT_MIN, -1); }
+    inline Widget *getBottomWidgetAtPoint (int x, int y,
+                                                        core::GettingWidgetAtPointContext
+                                                        *context)
+    { return getWidgetAtPoint (x, y, context, INT_MIN, -1); }
 };
 
 } // namespace core

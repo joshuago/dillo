@@ -36,133 +36,133 @@
 
 static void print_libs()
 {
-   char buf[256];
+    char buf[256];
 
-   printf("Libraries:");
+    printf("Libraries:");
 
-   /* FLTK only offers a single number */
-   {
+    /* FLTK only offers a single number */
+    {
 #if FL_MAJOR_VERSION == 1 && FL_MINOR_VERSION == 3 && FL_PATCH_VERSION <= 3
-      /* The version comes in a double like this 1.0302 (1.3.3), so we
+        /* The version comes in a double like this 1.0302 (1.3.3), so we
        * transform it to a integer as Fl::api_version(): 1.0303 -> 10303 */
-      int fltkver = (int) (Fl::version() * 10000.0);
+        int fltkver = (int) (Fl::version() * 10000.0);
 #else
-      int fltkver = Fl::api_version();
+        int fltkver = Fl::api_version();
 #endif
-      int fltk_maj = fltkver / 10000;
-      int fltk_min = (fltkver / 100) % 100;
-      int fltk_pat = fltkver % 100;
-      printf(" fltk/%d.%d.%d", fltk_maj, fltk_min, fltk_pat);
-   }
+        int fltk_maj = fltkver / 10000;
+        int fltk_min = (fltkver / 100) % 100;
+        int fltk_pat = fltkver % 100;
+        printf(" fltk/%d.%d.%d", fltk_maj, fltk_min, fltk_pat);
+    }
 
 #ifdef ENABLE_JPEG
-   printf(" jpeg/%s", a_Jpeg_version());
+    printf(" jpeg/%s", a_Jpeg_version());
 #endif
 
 #ifdef ENABLE_PNG
-   printf(" png/%s", a_Png_version());
+    printf(" png/%s", a_Png_version());
 #endif
 
 #ifdef ENABLE_WEBP
-   printf(" webp/%s", a_Webp_version(buf, 256));
+    printf(" webp/%s", a_Webp_version(buf, 256));
 #endif
 
-   printf(" zlib/%s", zlibVersion());
+    printf(" zlib/%s", zlibVersion());
 
 #ifdef ENABLE_BROTLI
-   /* From brotli:
+    /* From brotli:
     *
     *   Compose 3 components into a single number. In a hexadecimal
     *   representation B and C components occupy exactly 3 digits:
     *
     *   #define BROTLI_MAKE_HEX_VERSION(A, B, C) ((A << 24) | (B << 12) | C)
     */
-   {
-      /* Decode the version into each component */
-      uint32_t br_ver = BrotliDecoderVersion();
-      int br_maj = (br_ver >> 24) & 0x7ff;
-      int br_min = (br_ver >> 12) & 0x7ff;
-      int br_pat = (br_ver >>  0) & 0x7ff;
+    {
+        /* Decode the version into each component */
+        uint32_t br_ver = BrotliDecoderVersion();
+        int br_maj = (br_ver >> 24) & 0x7ff;
+        int br_min = (br_ver >> 12) & 0x7ff;
+        int br_pat = (br_ver >>  0) & 0x7ff;
 
-      printf(" brotli/%d.%d.%d", br_maj, br_min, br_pat);
-   }
+        printf(" brotli/%d.%d.%d", br_maj, br_min, br_pat);
+    }
 #endif
 
 
 #ifdef ENABLE_TLS
-   /* TLS prints the name/version format, as it determines which SSL
+    /* TLS prints the name/version format, as it determines which SSL
     * library is in use */
-   printf(" %s", a_Tls_version(buf, 256));
+    printf(" %s", a_Tls_version(buf, 256));
 #endif
 
-   printf("\n");
+    printf("\n");
 }
 
 static void print_features()
 {
-   printf("Features:"
+    printf("Features:"
 #ifdef ENABLE_GIF
-         " +GIF"
+            " +GIF"
 #else
-         " -GIF"
+            " -GIF"
 #endif
 #ifdef ENABLE_JPEG
-         " +JPEG"
+            " +JPEG"
 #else
-         " -JPEG"
+            " -JPEG"
 #endif
 #ifdef ENABLE_PNG
-         " +PNG"
+            " +PNG"
 #else
-         " -PNG"
+            " -PNG"
 #endif
 #ifdef ENABLE_SVG
-         " +SVG"
+            " +SVG"
 #else
-         " -SVG"
+            " -SVG"
 #endif
 #ifdef ENABLE_WEBP
-         " +WEBP"
+            " +WEBP"
 #else
-         " -WEBP"
+            " -WEBP"
 #endif
 #ifdef ENABLE_BROTLI
-         " +BROTLI"
+            " +BROTLI"
 #else
-         " -BROTLI"
+            " -BROTLI"
 #endif
 #if !( defined(DISABLE_XEMBED) || defined(WIN32) || defined(__APPLE__) )
-         " +XEMBED"
+            " +XEMBED"
 #else
-         " -XEMBED"
+            " -XEMBED"
 #endif
 #ifdef ENABLE_TLS
-         " +TLS"
+            " +TLS"
 #else
-         " -TLS"
+            " -TLS"
 #endif
 #ifdef ENABLE_IPV6
-         " +IPV6"
+            " +IPV6"
 #else
-         " -IPV6"
+            " -IPV6"
 #endif
 #ifdef ENABLE_CONTROL_SOCKET
-         " +CTL"
+            " +CTL"
 #else
-         " -CTL"
+            " -CTL"
 #endif
-         "\n");
+            "\n");
 }
 
 void a_Version_print_info(void)
 {
-   const char *version = "v" VERSION;
+    const char *version = "v" VERSION;
 
 #ifdef GIT_COMMIT
-   version = GIT_COMMIT;
+    version = GIT_COMMIT;
 #endif
 
-   printf("Dillo %s\n", version);
-   print_libs();
-   print_features();
+    printf("Dillo %s\n", version);
+    print_libs();
+    print_features();
 }

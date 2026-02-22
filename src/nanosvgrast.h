@@ -1,4 +1,7 @@
 /*
+ * External library - formatting exempt from project style guidelines.
+ * Original source: https://github.com/memononen/nanosvg
+ *
  * Copyright (c) 2013-14 Mikko Mononen <memon@inside.org>
  * Copyright (c) 2024 Rodrigo Arias Mallo <rodarima@gmail.com>
  *

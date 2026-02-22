@@ -222,62 +222,62 @@ class Resource;
  */
 class Embed: public Widget
 {
-   friend class Resource;
+    friend class Resource;
 
 private:
-   Resource *resource;
+    Resource *resource;
 
 protected:
-   void sizeRequestSimpl (Requisition *requisition);
-   void getExtremesSimpl (Extremes *extremes);
-   void sizeAllocateImpl (Allocation *allocation);
+    void sizeRequestSimpl (Requisition *requisition);
+    void getExtremesSimpl (Extremes *extremes);
+    void sizeAllocateImpl (Allocation *allocation);
 
-   int getAvailWidthOfChild (Widget *child, bool forceValue);
-   int getAvailHeightOfChild (Widget *child, bool forceValue);
-   void correctRequisitionOfChild (Widget *child,
+    int getAvailWidthOfChild (Widget *child, bool forceValue);
+    int getAvailHeightOfChild (Widget *child, bool forceValue);
+    void correctRequisitionOfChild (Widget *child,
                                    Requisition *requisition,
                                    void (*splitHeightFun) (int, int*, int*),
                                    bool allowDecreaseWidth,
                                    bool allowDecreaseHeight);
-   void correctExtremesOfChild (Widget *child, Extremes *extremes,
+    void correctExtremesOfChild (Widget *child, Extremes *extremes,
                                 bool useAdjustmentWidth);
 
-   void containerSizeChangedForChildren ();
+    void containerSizeChangedForChildren ();
 
-   void enterNotifyImpl (core::EventCrossing *event);
-   void leaveNotifyImpl (core::EventCrossing *event);
-   bool buttonPressImpl (core::EventButton *event);
+    void enterNotifyImpl (core::EventCrossing *event);
+    void leaveNotifyImpl (core::EventCrossing *event);
+    bool buttonPressImpl (core::EventButton *event);
 
 public:
-   static int CLASS_ID;
+    static int CLASS_ID;
 
-   Embed(Resource *resource);
-   ~Embed();
+    Embed(Resource *resource);
+    ~Embed();
 
-   void setDisplayed (bool displayed);
-   void setEnabled (bool enabled);
-   void draw (View *view, Rectangle *area, DrawingContext *context);
-   Iterator *iterator (Content::Type mask, bool atEnd);
-   void setStyle (style::Style *style);
+    void setDisplayed (bool displayed);
+    void setEnabled (bool enabled);
+    void draw (View *view, Rectangle *area, DrawingContext *context);
+    Iterator *iterator (Content::Type mask, bool atEnd);
+    void setStyle (style::Style *style);
 
-   inline Resource *getResource () { return resource; }
+    inline Resource *getResource () { return resource; }
 
-   inline void correctReqWidthOfChildNoRec (Widget *child,
+    inline void correctReqWidthOfChildNoRec (Widget *child,
                                             Requisition *requisition,
                                             bool allowDecreaseWidth)
-   { Widget::correctReqWidthOfChild (child, requisition, allowDecreaseWidth); }
+    { Widget::correctReqWidthOfChild (child, requisition, allowDecreaseWidth); }
 
-   inline void correctReqHeightOfChildNoRec (Widget *child,
-                                             Requisition *requisition,
-                                             void (*splitHeightFun) (int, int*,
-                                                                     int*),
-                                             bool allowDecreaseHeight)
-   { Widget::correctReqHeightOfChild (child, requisition, splitHeightFun,
+    inline void correctReqHeightOfChildNoRec (Widget *child,
+                                                            Requisition *requisition,
+                                                            void (*splitHeightFun) (int, int*,
+                                                                                            int*),
+                                                            bool allowDecreaseHeight)
+    { Widget::correctReqHeightOfChild (child, requisition, splitHeightFun,
                                       allowDecreaseHeight); }
 
-   virtual void correctExtremesOfChildNoRec (Widget *child, Extremes *extremes,
-                                             bool useAdjustmentWidth)
-   { Widget::correctExtremesOfChild (child, extremes, useAdjustmentWidth); }
+    virtual void correctExtremesOfChildNoRec (Widget *child, Extremes *extremes,
+                                                            bool useAdjustmentWidth)
+    { Widget::correctExtremesOfChild (child, extremes, useAdjustmentWidth); }
 };
 
 /**
@@ -287,106 +287,106 @@ public:
  */
 class Resource
 {
-   friend class Embed;
+    friend class Embed;
 
 public:
-   /**
+    /**
     * \brief Receiver interface for the "activate" signal.
     */
-   class ActivateReceiver: public lout::signal::Receiver
-   {
-   public:
-      virtual void activate (Resource *resource) = 0;
-      virtual void enter (Resource *resource) = 0;
-      virtual void leave (Resource *resource) = 0;
-   };
-   /**
+    class ActivateReceiver: public lout::signal::Receiver
+    {
+    public:
+        virtual void activate (Resource *resource) = 0;
+        virtual void enter (Resource *resource) = 0;
+        virtual void leave (Resource *resource) = 0;
+    };
+    /**
     * \brief Receiver interface for the "clicked" signal.
     */
-   class ClickedReceiver: public lout::signal::Receiver
-   {
-   public:
-      virtual void clicked (Resource *resource, EventButton *event) = 0;
-   };
+    class ClickedReceiver: public lout::signal::Receiver
+    {
+    public:
+        virtual void clicked (Resource *resource, EventButton *event) = 0;
+    };
 
 private:
-   class ActivateEmitter: public lout::signal::Emitter
-   {
-   protected:
-      bool emitToReceiver (lout::signal::Receiver *receiver, int signalNo,
-                           int argc, Object **argv);
-   public:
-      inline void connectActivate (ActivateReceiver *receiver) {
-         connect (receiver); }
-      void emitActivate (Resource *resource);
-      void emitEnter (Resource *resource);
-      void emitLeave (Resource *resource);
-   };
+    class ActivateEmitter: public lout::signal::Emitter
+    {
+    protected:
+        bool emitToReceiver (lout::signal::Receiver *receiver, int signalNo,
+                                    int argc, Object **argv);
+    public:
+        inline void connectActivate (ActivateReceiver *receiver) {
+            connect (receiver); }
+        void emitActivate (Resource *resource);
+        void emitEnter (Resource *resource);
+        void emitLeave (Resource *resource);
+    };
 
-   class ClickedEmitter: public lout::signal::Emitter
-   {
-   protected:
-      bool emitToReceiver (lout::signal::Receiver *receiver, int signalNo,
-                           int argc, Object **argv);
-   public:
-      inline void connectClicked (ClickedReceiver *receiver) {
-         connect (receiver); }
-      void emitClicked (Resource *resource, EventButton *event);
-   };
+    class ClickedEmitter: public lout::signal::Emitter
+    {
+    protected:
+        bool emitToReceiver (lout::signal::Receiver *receiver, int signalNo,
+                                    int argc, Object **argv);
+    public:
+        inline void connectClicked (ClickedReceiver *receiver) {
+            connect (receiver); }
+        void emitClicked (Resource *resource, EventButton *event);
+    };
 
-   Embed *embed;
-   ActivateEmitter activateEmitter;
-   ClickedEmitter clickedEmitter;
+    Embed *embed;
+    ActivateEmitter activateEmitter;
+    ClickedEmitter clickedEmitter;
 
-   void emitEnter ();
-   void emitLeave ();
+    void emitEnter ();
+    void emitLeave ();
 protected:
-   inline void queueResize (bool extremesChanged) {
-      if (embed) embed->queueResize (0, extremesChanged);
-   }
+    inline void queueResize (bool extremesChanged) {
+        if (embed) embed->queueResize (0, extremesChanged);
+    }
 
-   virtual Embed *getEmbed () { return embed; }
-   virtual void setEmbed (Embed *embed);
+    virtual Embed *getEmbed () { return embed; }
+    virtual void setEmbed (Embed *embed);
 
-   inline void emitActivate () {
-      return activateEmitter.emitActivate (this); }
-   inline void emitClicked (EventButton *event) {
-      clickedEmitter.emitClicked (this, event); }
+    inline void emitActivate () {
+        return activateEmitter.emitActivate (this); }
+    inline void emitClicked (EventButton *event) {
+        clickedEmitter.emitClicked (this, event); }
 
 public:
-   inline Resource ()
-   { embed = NULL; DBG_OBJ_CREATE ("dw::core::ui::Resource"); }
+    inline Resource ()
+    { embed = NULL; DBG_OBJ_CREATE ("dw::core::ui::Resource"); }
 
-   virtual ~Resource ();
+    virtual ~Resource ();
 
-   virtual void sizeRequest (Requisition *requisition) = 0;
-   virtual void getExtremes (Extremes *extremes);
-   virtual void sizeAllocate (Allocation *allocation);
+    virtual void sizeRequest (Requisition *requisition) = 0;
+    virtual void getExtremes (Extremes *extremes);
+    virtual void sizeAllocate (Allocation *allocation);
 
-   virtual int getAvailWidthOfChild (Widget *child, bool forceValue);
-   virtual int getAvailHeightOfChild (Widget *child, bool forceValue);
-   virtual void correctRequisitionOfChild (Widget *child,
+    virtual int getAvailWidthOfChild (Widget *child, bool forceValue);
+    virtual int getAvailHeightOfChild (Widget *child, bool forceValue);
+    virtual void correctRequisitionOfChild (Widget *child,
                                            Requisition *requisition,
                                            void (*splitHeightFun) (int, int*,
                                                                    int*),
                                            bool allowDecreaseWidth,
                                            bool allowDecreaseHeight);
-   virtual void correctExtremesOfChild (Widget *child, Extremes *extremes,
+    virtual void correctExtremesOfChild (Widget *child, Extremes *extremes,
                                         bool useAdjustmentWidth);
-   virtual void containerSizeChangedForChildren ();
+    virtual void containerSizeChangedForChildren ();
 
-   virtual void setDisplayed (bool displayed);
-   virtual void draw (View *view, Rectangle *area, DrawingContext *context);
-   virtual Iterator *iterator (Content::Type mask, bool atEnd) = 0;
-   virtual void setStyle (style::Style *style);
+    virtual void setDisplayed (bool displayed);
+    virtual void draw (View *view, Rectangle *area, DrawingContext *context);
+    virtual Iterator *iterator (Content::Type mask, bool atEnd) = 0;
+    virtual void setStyle (style::Style *style);
 
-   virtual bool isEnabled () = 0;
-   virtual void setEnabled (bool enabled) = 0;
+    virtual bool isEnabled () = 0;
+    virtual void setEnabled (bool enabled) = 0;
 
-   inline void connectActivate (ActivateReceiver *receiver) {
-      activateEmitter.connectActivate (receiver); }
-   inline void connectClicked (ClickedReceiver *receiver) {
-      clickedEmitter.connectClicked (receiver); }
+    inline void connectActivate (ActivateReceiver *receiver) {
+        activateEmitter.connectActivate (receiver); }
+    inline void connectClicked (ClickedReceiver *receiver) {
+        clickedEmitter.connectClicked (receiver); }
 };
 
 
@@ -399,64 +399,64 @@ class ButtonResource: public Resource
 class LabelButtonResource: public ButtonResource
 {
 public:
-   Iterator *iterator (Content::Type mask, bool atEnd);
+    Iterator *iterator (Content::Type mask, bool atEnd);
 
-   virtual const char *getLabel () = 0;
-   virtual void setLabel (const char *label) = 0;
+    virtual const char *getLabel () = 0;
+    virtual void setLabel (const char *label) = 0;
 };
 
 class ComplexButtonResource: public ButtonResource
 {
 private:
-   class LayoutReceiver: public Layout::Receiver
-   {
-   public:
-      ComplexButtonResource *resource;
+    class LayoutReceiver: public Layout::Receiver
+    {
+    public:
+        ComplexButtonResource *resource;
 
-      void resizeQueued (bool extremesChanged);
-   };
+        void resizeQueued (bool extremesChanged);
+    };
 
-   friend class LayoutReceiver;
-   LayoutReceiver layoutReceiver;
+    friend class LayoutReceiver;
+    LayoutReceiver layoutReceiver;
 
-   Widget *childWidget;
+    Widget *childWidget;
 
 protected:
-   Layout *layout;
-   int click_x, click_y;
+    Layout *layout;
+    int click_x, click_y;
 
-   void setEmbed (Embed *embed);
+    void setEmbed (Embed *embed);
 
-   virtual Platform *createPlatform () = 0;
-   virtual void setLayout (Layout *layout) = 0;
+    virtual Platform *createPlatform () = 0;
+    virtual void setLayout (Layout *layout) = 0;
 
-   virtual int reliefXThickness () = 0;
-   virtual int reliefYThickness () = 0;
+    virtual int reliefXThickness () = 0;
+    virtual int reliefYThickness () = 0;
 
-   void init (Widget *widget);
+    void init (Widget *widget);
 
 public:
-   ComplexButtonResource ();
-   ~ComplexButtonResource ();
+    ComplexButtonResource ();
+    ~ComplexButtonResource ();
 
-   void sizeRequest (Requisition *requisition);
-   void getExtremes (Extremes *extremes);
-   void sizeAllocate (Allocation *allocation);
+    void sizeRequest (Requisition *requisition);
+    void getExtremes (Extremes *extremes);
+    void sizeAllocate (Allocation *allocation);
 
-   int getAvailWidthOfChild (Widget *child, bool forceValue);
-   int getAvailHeightOfChild (Widget *child, bool forceValue);
-   void correctRequisitionOfChild (Widget *child,
+    int getAvailWidthOfChild (Widget *child, bool forceValue);
+    int getAvailHeightOfChild (Widget *child, bool forceValue);
+    void correctRequisitionOfChild (Widget *child,
                                    Requisition *requisition,
                                    void (*splitHeightFun) (int, int*, int*),
                                    bool allowDecreaseWidth,
                                    bool allowDecreaseHeight);
-   void correctExtremesOfChild (Widget *child, Extremes *extremes,
+    void correctExtremesOfChild (Widget *child, Extremes *extremes,
                                 bool useAdjustmentWidth);
-   void containerSizeChangedForChildren ();
+    void containerSizeChangedForChildren ();
 
-   Iterator *iterator (Content::Type mask, bool atEnd);
-   int getClickX () {return click_x;};
-   int getClickY () {return click_y;};
+    Iterator *iterator (Content::Type mask, bool atEnd);
+    int getClickX () {return click_x;};
+    int getClickY () {return click_y;};
 };
 
 /**
@@ -466,47 +466,47 @@ public:
 class SelectionResource: public Resource
 {
 public:
-   virtual void addItem (const char *str, bool enabled, bool selected) = 0;
-   virtual void setItem (int index, bool selected) = 0;
-   virtual void pushGroup (const char *name, bool enabled) = 0;
-   virtual void popGroup () = 0;
+    virtual void addItem (const char *str, bool enabled, bool selected) = 0;
+    virtual void setItem (int index, bool selected) = 0;
+    virtual void pushGroup (const char *name, bool enabled) = 0;
+    virtual void popGroup () = 0;
 
-   virtual int getNumberOfItems () = 0;
-   virtual bool isSelected (int index) = 0;
+    virtual int getNumberOfItems () = 0;
+    virtual bool isSelected (int index) = 0;
 };
 
 class ListResource: public SelectionResource
 {
 public:
-   enum SelectionMode {
-      /**
+    enum SelectionMode {
+        /**
        * \brief Exactly one item is selected.
        *
        * If no item is selected initially, the first one is selected.
        */
-      SELECTION_EXACTLY_ONE,
+        SELECTION_EXACTLY_ONE,
 
-      /**
+        /**
        * \brief Exactly one item is selected, except possibly at the beginning.
        *
        * If no item is selected initially, no one is selected automatically.
        * The user may not unselect the only selected item.
        */
-      SELECTION_EXACTLY_ONE_BY_USER,
+        SELECTION_EXACTLY_ONE_BY_USER,
 
-      /**
+        /**
        * \brief At most one item is selected.
        *
        * If no item is selected initially, no one is selected automatically.
        * The user may unselect the only selected item.
        */
-      SELECTION_AT_MOST_ONE,
+        SELECTION_AT_MOST_ONE,
 
-      /**
+        /**
        * \brief An arbitrary number of items may be selected.
        */
-      SELECTION_MULTIPLE
-   };
+        SELECTION_MULTIPLE
+    };
 };
 
 class OptionMenuResource: public SelectionResource
@@ -516,19 +516,19 @@ class OptionMenuResource: public SelectionResource
 class TextResource: public Resource
 {
 public:
-   Iterator *iterator (Content::Type mask, bool atEnd);
+    Iterator *iterator (Content::Type mask, bool atEnd);
 
-   virtual const char *getText () = 0;
-   virtual void setText (const char *text) = 0;
-   virtual bool isEditable () = 0;
-   virtual void setEditable (bool editable) = 0;
+    virtual const char *getText () = 0;
+    virtual void setText (const char *text) = 0;
+    virtual bool isEditable () = 0;
+    virtual void setEditable (bool editable) = 0;
 };
 
 class EntryResource: public TextResource
 {
 public:
-   enum { UNLIMITED_SIZE = -1 };
-   virtual void setMaxLength (int maxlen) = 0;
+    enum { UNLIMITED_SIZE = -1 };
+    virtual void setMaxLength (int maxlen) = 0;
 };
 
 class MultiLineTextResource: public TextResource
@@ -539,38 +539,38 @@ class MultiLineTextResource: public TextResource
 class ToggleButtonResource: public Resource
 {
 public:
-   virtual bool isActivated () = 0;
-   virtual void setActivated (bool activated) = 0;
+    virtual bool isActivated () = 0;
+    virtual void setActivated (bool activated) = 0;
 };
 
 class CheckButtonResource: public ToggleButtonResource
 {
 public:
-   Iterator *iterator (Content::Type mask, bool atEnd);
+    Iterator *iterator (Content::Type mask, bool atEnd);
 };
 
 class RadioButtonResource: public ToggleButtonResource
 {
 public:
-   class GroupIterator
-   {
-   protected:
-      GroupIterator () { }
-      virtual ~GroupIterator ();
+    class GroupIterator
+    {
+    protected:
+        GroupIterator () { }
+        virtual ~GroupIterator ();
 
-   public:
-      virtual bool hasNext () = 0;
-      virtual RadioButtonResource *getNext () = 0;
-      virtual void unref () = 0;
-   };
+    public:
+        virtual bool hasNext () = 0;
+        virtual RadioButtonResource *getNext () = 0;
+        virtual void unref () = 0;
+    };
 
-   /**
+    /**
     * \brief Return an iterator, to access all radio button resources
     *    within the group.
     */
-   virtual GroupIterator *groupIterator () = 0;
+    virtual GroupIterator *groupIterator () = 0;
 
-   Iterator *iterator (Content::Type mask, bool atEnd);
+    Iterator *iterator (Content::Type mask, bool atEnd);
 };
 
 
@@ -580,22 +580,22 @@ public:
 class ResourceFactory: public lout::object::Object
 {
 public:
-   virtual LabelButtonResource *createLabelButtonResource (const char *label)
-      = 0;
-   virtual ComplexButtonResource *createComplexButtonResource (Widget *widget,
-                                                               bool relief)
-      = 0;
-   virtual ListResource *createListResource (ListResource::SelectionMode
-                                             selectionMode, int rows) = 0;
-   virtual OptionMenuResource *createOptionMenuResource () = 0;
-   virtual EntryResource *createEntryResource (int size, bool password,
+    virtual LabelButtonResource *createLabelButtonResource (const char *label)
+        = 0;
+    virtual ComplexButtonResource *createComplexButtonResource (Widget *widget,
+                                                                                    bool relief)
+        = 0;
+    virtual ListResource *createListResource (ListResource::SelectionMode
+                                                            selectionMode, int rows) = 0;
+    virtual OptionMenuResource *createOptionMenuResource () = 0;
+    virtual EntryResource *createEntryResource (int size, bool password,
                                                const char *label,
                                                const char *placeholder) = 0;
-   virtual MultiLineTextResource *createMultiLineTextResource (int cols,
-                                                               int rows,
+    virtual MultiLineTextResource *createMultiLineTextResource (int cols,
+                                                                                    int rows,
                                                   const char *placeholder) = 0;
-   virtual CheckButtonResource *createCheckButtonResource (bool activated) = 0;
-   virtual RadioButtonResource *createRadioButtonResource (RadioButtonResource
+    virtual CheckButtonResource *createCheckButtonResource (bool activated) = 0;
+    virtual RadioButtonResource *createRadioButtonResource (RadioButtonResource
                                                            *groupedWith,
                                                            bool activated) = 0;
 };

@@ -10,84 +10,84 @@ namespace fltk {
 
 class FltkPreview: public FltkViewBase
 {
-   friend class FltkPreviewWindow;
+    friend class FltkPreviewWindow;
 
 private:
-   int scrollX, scrollY, scrollWidth, scrollHeight;
+    int scrollX, scrollY, scrollWidth, scrollHeight;
 
 protected:
-   int translateViewXToCanvasX (int x);
-   int translateViewYToCanvasY (int y);
-   int translateCanvasXToViewX (int x);
-   int translateCanvasYToViewY (int y);
+    int translateViewXToCanvasX (int x);
+    int translateViewYToCanvasY (int y);
+    int translateCanvasXToViewX (int x);
+    int translateCanvasYToViewY (int y);
 
 public:
-   FltkPreview (int x, int y, int w, int h, dw::core::Layout *layout,
+    FltkPreview (int x, int y, int w, int h, dw::core::Layout *layout,
                 const char *label = 0);
-   ~FltkPreview ();
+    ~FltkPreview ();
 
-   int handle (int event);
+    int handle (int event);
 
-   void setCanvasSize (int width, int ascent, int descent);
+    void setCanvasSize (int width, int ascent, int descent);
 
-   bool usesViewport ();
-   int getHScrollbarThickness ();
-   int getVScrollbarThickness ();
-   int getScrollbarOnLeft ();
-   void scrollTo (int x, int y);
-   void scroll (dw::core::ScrollCommand cmd);
-   void setViewportSize (int width, int height,
+    bool usesViewport ();
+    int getHScrollbarThickness ();
+    int getVScrollbarThickness ();
+    int getScrollbarOnLeft ();
+    void scrollTo (int x, int y);
+    void scroll (dw::core::ScrollCommand cmd);
+    void setViewportSize (int width, int height,
                          int hScrollbarThickness, int vScrollbarThickness);
 
-   void drawText (core::style::Font *font,
-                  core::style::Color *color,
-                  core::style::Color::Shading shading,
-                  int x, int y, const char *text, int len);
-   void drawSimpleWrappedText (core::style::Font *font,
+    void drawText (core::style::Font *font,
+                        core::style::Color *color,
+                        core::style::Color::Shading shading,
+                        int x, int y, const char *text, int len);
+    void drawSimpleWrappedText (core::style::Font *font,
                                core::style::Color *color,
                                core::style::Color::Shading shading,
                                int x, int y, int w, int h,
                                const char *text);
-   void drawImage (core::Imgbuf *imgbuf, int xRoot, int yRoot,
+    void drawImage (core::Imgbuf *imgbuf, int xRoot, int yRoot,
                    int x, int y, int width, int height);
 
-   bool usesFltkWidgets ();
-   void drawFltkWidget (Fl_Widget *widget, core::Rectangle *area);
+    bool usesFltkWidgets ();
+    void drawFltkWidget (Fl_Widget *widget, core::Rectangle *area);
 };
 
 
 class FltkPreviewWindow: public Fl_Menu_Window
 {
 private:
-   enum { BORDER_WIDTH = 2 };
+    enum { BORDER_WIDTH = 2 };
 
-   FltkPreview *preview;
-   int posX, posY;
+    FltkPreview *preview;
+    int posX, posY;
 
 public:
-   FltkPreviewWindow (dw::core::Layout *layout);
-   ~FltkPreviewWindow ();
+    FltkPreviewWindow (dw::core::Layout *layout);
+    ~FltkPreviewWindow ();
 
-   void reallocate ();
+    void reallocate ();
 
-   void showWindow ();
-   void hideWindow ();
+    void showWindow ();
+    void hideWindow ();
 
-   void scrollTo (int mouseX, int mouseY);
+    void scrollTo (int mouseX, int mouseY);
 };
 
 
 class FltkPreviewButton: public Fl_Button
 {
 private:
-   FltkPreviewWindow *window;
+    FltkPreviewWindow *window;
 
 public:
-   FltkPreviewButton (int x, int y, int w, int h,
+    FltkPreviewButton (int x, int y, int w, int h,
                       dw::core::Layout *layout, const char *label = 0);
-   ~FltkPreviewButton ();
+    ~FltkPreviewButton ();
 
-   int handle (int event);
+    int handle (int event);
 };
 
 } // namespace fltk

@@ -45,20 +45,20 @@ public:
 
   /**
     Returns the current value of the button (0 or 1).
-   */
+    */
   char value() const {return value_;}
 
   /**
     Returns the current down box type, which is drawn when value() is non-zero.
     \retval Fl_Boxtype
-   */
+    */
   Fl_Boxtype down_box() const {return (Fl_Boxtype)down_box_;}
 
   /**
     Sets the down box type. The default value of 0 causes FLTK to figure out
     the correct matching down version of box().
     \param[in] b down box type
-   */
+    */
   void down_box(Fl_Boxtype b) {down_box_ = b;}
 };
 

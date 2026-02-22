@@ -41,8 +41,8 @@
  * and related files
  */
 enum file_type {
-   DPI_FILE,                     /*! Any file name containing .dpi */
-   UNKNOWN_FILE
+    DPI_FILE,                     /*! Any file name containing .dpi */
+    UNKNOWN_FILE
 };
 
 

@@ -33,109 +33,109 @@ int SimpleContainer::CLASS_ID = -1;
 
 SimpleContainer::SimpleContainerIterator::SimpleContainerIterator
 (SimpleContainer *simpleContainer, Content::Type mask, bool atEnd) :
-   Iterator (simpleContainer, mask, atEnd)
+    Iterator (simpleContainer, mask, atEnd)
 {
-   content.type = atEnd ? Content::END : Content::START;
+    content.type = atEnd ? Content::END : Content::START;
 }
 
 lout::object::Object *SimpleContainer::SimpleContainerIterator::clone ()
 {
-   SimpleContainerIterator *sci =
-      new SimpleContainerIterator ((SimpleContainer*)getWidget(),
+    SimpleContainerIterator *sci =
+        new SimpleContainerIterator ((SimpleContainer*)getWidget(),
                                    getMask(), false);
-   sci->content = content;
-   return sci;
+    sci->content = content;
+    return sci;
 }
 
 int SimpleContainer::SimpleContainerIterator::index ()
 {
-   switch (content.type) {
-   case Content::START:
-      return 0;
-   case Content::WIDGET_IN_FLOW:
-      return 1;
-   case Content::END:
-      return 2;
-   default:
-      assertNotReached ();
-      return 0;
-   }
+    switch (content.type) {
+    case Content::START:
+        return 0;
+    case Content::WIDGET_IN_FLOW:
+        return 1;
+    case Content::END:
+        return 2;
+    default:
+        assertNotReached ();
+        return 0;
+    }
 }
 
 int SimpleContainer::SimpleContainerIterator::compareTo
 (lout::object::Comparable *other)
 {
-   return index () - ((SimpleContainerIterator*)other)->index ();
+    return index () - ((SimpleContainerIterator*)other)->index ();
 }
 
 bool SimpleContainer::SimpleContainerIterator::next ()
 {
-   SimpleContainer *simpleContainer = (SimpleContainer*)getWidget();
+    SimpleContainer *simpleContainer = (SimpleContainer*)getWidget();
 
-   if (content.type == Content::END)
-      return false;
+    if (content.type == Content::END)
+        return false;
 
-   // simple containers only contain widgets:
-   if ((getMask() & Content::WIDGET_IN_FLOW) == 0) {
-      content.type = Content::END;
-      return false;
-   }
+    // simple containers only contain widgets:
+    if ((getMask() & Content::WIDGET_IN_FLOW) == 0) {
+        content.type = Content::END;
+        return false;
+    }
 
-   if (content.type == Content::START) {
-      if (simpleContainer->child != NULL) {
-         content.type = Content::WIDGET_IN_FLOW;
-         content.widget = simpleContainer->child;
-         return true;
-      } else {
-         content.type = Content::END;
-         return false;
-      }
-   } else /* if (content.type == Content::WIDGET) */ {
-      content.type = Content::END;
-      return false;
-   }
+    if (content.type == Content::START) {
+        if (simpleContainer->child != NULL) {
+            content.type = Content::WIDGET_IN_FLOW;
+            content.widget = simpleContainer->child;
+            return true;
+        } else {
+            content.type = Content::END;
+            return false;
+        }
+    } else /* if (content.type == Content::WIDGET) */ {
+        content.type = Content::END;
+        return false;
+    }
 }
 
 bool SimpleContainer::SimpleContainerIterator::prev ()
 {
-   SimpleContainer *simpleContainer = (SimpleContainer*)getWidget();
+    SimpleContainer *simpleContainer = (SimpleContainer*)getWidget();
 
-   if (content.type == Content::START)
-      return false;
+    if (content.type == Content::START)
+        return false;
 
-   // simple containers only contain widgets:
-   if ((getMask() & Content::WIDGET_IN_FLOW) == 0) {
-      content.type = Content::START;
-      return false;
-   }
+    // simple containers only contain widgets:
+    if ((getMask() & Content::WIDGET_IN_FLOW) == 0) {
+        content.type = Content::START;
+        return false;
+    }
 
-   if (content.type == Content::END) {
-      if (simpleContainer->child != NULL) {
-         content.type = Content::WIDGET_IN_FLOW;
-         content.widget = simpleContainer->child;
-         return true;
-      } else {
-         content.type = Content::START;
-         return false;
-      }
-   } else /* if (content.type == Content::WIDGET) */ {
-      content.type = Content::START;
-      return false;
-   }
+    if (content.type == Content::END) {
+        if (simpleContainer->child != NULL) {
+            content.type = Content::WIDGET_IN_FLOW;
+            content.widget = simpleContainer->child;
+            return true;
+        } else {
+            content.type = Content::START;
+            return false;
+        }
+    } else /* if (content.type == Content::WIDGET) */ {
+        content.type = Content::START;
+        return false;
+    }
 }
 
 void SimpleContainer::SimpleContainerIterator::highlight (int start,
                                                           int end,
                                                           HighlightLayer layer)
 {
-   /** todo Needs this an implementation? */
+    /** todo Needs this an implementation? */
 }
 
 void SimpleContainer::SimpleContainerIterator::unhighlight (int direction,
-                                                            HighlightLayer
-                                                            layer)
+                                                                                HighlightLayer
+                                                                                layer)
 {
-   /** todo Needs this an implementation? */
+    /** todo Needs this an implementation? */
 }
 
 void SimpleContainer::SimpleContainerIterator::getAllocation (int start,
@@ -143,103 +143,103 @@ void SimpleContainer::SimpleContainerIterator::getAllocation (int start,
                                                               Allocation
                                                               *allocation)
 {
-   /** \bug Not implemented. */
+    /** \bug Not implemented. */
 }
 
 // ----------------------------------------------------------------------
 
 SimpleContainer::SimpleContainer ()
 {
-   registerName ("dw::SimpleContainer", &CLASS_ID);
-   child = NULL;
+    registerName ("dw::SimpleContainer", &CLASS_ID);
+    child = NULL;
 }
 
 SimpleContainer::~SimpleContainer ()
 {
-   if (child)
-      delete child;
+    if (child)
+        delete child;
 }
 
 void SimpleContainer::sizeRequestSimpl (Requisition *requisition)
 {
-   Requisition childReq;
-   if (child)
-      child->sizeRequest (&childReq);
-   else
-      childReq.width = childReq.ascent = childReq.descent = 0;
+    Requisition childReq;
+    if (child)
+        child->sizeRequest (&childReq);
+    else
+        childReq.width = childReq.ascent = childReq.descent = 0;
 
-   requisition->width = childReq.width + boxDiffWidth ();
-   requisition->ascent = childReq.ascent + boxOffsetY ();
-   requisition->descent = childReq.descent + boxRestHeight ();
+    requisition->width = childReq.width + boxDiffWidth ();
+    requisition->ascent = childReq.ascent + boxOffsetY ();
+    requisition->descent = childReq.descent + boxRestHeight ();
 
-   correctRequisition (requisition, splitHeightPreserveAscent, true, true);
+    correctRequisition (requisition, splitHeightPreserveAscent, true, true);
 }
 
 
 void SimpleContainer::getExtremesSimpl (Extremes *extremes)
 {
-   Extremes childExtr;
-   if (child)
-      child->getExtremes (&childExtr);
-   else
-      childExtr.minWidth = childExtr.minWidthIntrinsic = childExtr.maxWidth =
-         childExtr.maxWidthIntrinsic = extremes->adjustmentWidth = 0;
-   
-   extremes->minWidth = childExtr.minWidth + boxDiffWidth ();
-   extremes->minWidthIntrinsic = childExtr.minWidthIntrinsic + boxDiffWidth ();
-   extremes->maxWidth = childExtr.maxWidth + boxDiffWidth ();
-   extremes->maxWidthIntrinsic = childExtr.maxWidthIntrinsic + boxDiffWidth ();
-   extremes->adjustmentWidth = childExtr.adjustmentWidth + boxDiffWidth ();
+    Extremes childExtr;
+    if (child)
+        child->getExtremes (&childExtr);
+    else
+        childExtr.minWidth = childExtr.minWidthIntrinsic = childExtr.maxWidth =
+            childExtr.maxWidthIntrinsic = extremes->adjustmentWidth = 0;
+    
+    extremes->minWidth = childExtr.minWidth + boxDiffWidth ();
+    extremes->minWidthIntrinsic = childExtr.minWidthIntrinsic + boxDiffWidth ();
+    extremes->maxWidth = childExtr.maxWidth + boxDiffWidth ();
+    extremes->maxWidthIntrinsic = childExtr.maxWidthIntrinsic + boxDiffWidth ();
+    extremes->adjustmentWidth = childExtr.adjustmentWidth + boxDiffWidth ();
 
-   correctExtremes (extremes, true);
+    correctExtremes (extremes, true);
 }
 
 void SimpleContainer::sizeAllocateImpl (Allocation *allocation)
 {
-   Allocation childAlloc;
+    Allocation childAlloc;
 
-   if (child) {
-      childAlloc.x = allocation->x + boxOffsetX ();
-      childAlloc.y = allocation->y + boxOffsetY ();
-      childAlloc.width = allocation->width - boxDiffWidth ();
-      childAlloc.ascent = allocation->ascent - boxOffsetY ();
-      childAlloc.descent = allocation->descent - boxRestHeight ();
-      child->sizeAllocate (&childAlloc);
-   }
+    if (child) {
+        childAlloc.x = allocation->x + boxOffsetX ();
+        childAlloc.y = allocation->y + boxOffsetY ();
+        childAlloc.width = allocation->width - boxDiffWidth ();
+        childAlloc.ascent = allocation->ascent - boxOffsetY ();
+        childAlloc.descent = allocation->descent - boxRestHeight ();
+        child->sizeAllocate (&childAlloc);
+    }
 }
 
 void SimpleContainer::draw (View *view, Rectangle *area,
                             DrawingContext *context)
 {
-   drawWidgetBox (view, area, false);
-   Rectangle childArea;
-   if (child && child->intersects (this, area, &childArea))
-      child->draw (view, &childArea, context);
+    drawWidgetBox (view, area, false);
+    Rectangle childArea;
+    if (child && child->intersects (this, area, &childArea))
+        child->draw (view, &childArea, context);
 }
 
 Iterator *SimpleContainer::iterator (Content::Type mask, bool atEnd)
 {
-   return new SimpleContainerIterator (this, mask, atEnd);
+    return new SimpleContainerIterator (this, mask, atEnd);
 }
 
 void SimpleContainer::removeChild (Widget *child)
 {
-   assert (child == this->child);
-   this->child = NULL;
+    assert (child == this->child);
+    this->child = NULL;
 
-   queueResize (0, true);
+    queueResize (0, true);
 }
 
 void SimpleContainer::setChild (Widget *child)
 {
-   if (this->child)
-      delete this->child;
+    if (this->child)
+        delete this->child;
 
-   this->child = child;
-   if (this->child)
-      this->child->setParent (this);
+    this->child = child;
+    if (this->child)
+        this->child->setParent (this);
 
-   queueResize (0, true);
+    queueResize (0, true);
 }
 
 } // namespace dw

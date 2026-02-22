@@ -1,3 +1,13 @@
+/*
+ * File: decode.h
+ *
+ * Copyright (C) 2024-2025 Rodrigo Arias Mallo <rodarima@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
 #ifndef __DECODE_H__
 #define __DECODE_H__
 
@@ -8,20 +18,20 @@ extern "C" {
 #endif /* __cplusplus */
 
 typedef struct Decode {
-   char *buffer;
-   Dstr *leftover;
-   void *state;
-   Dstr *(*decode) (struct Decode *dc, const char *instr, int inlen);
-   void (*free) (struct Decode *dc);
+    char *buffer;
+    Dstr *leftover;
+    void *state;
+    Dstr *(*decode) (struct Decode *dc, const char *instr, int inlen);
+    void (*free) (struct Decode *dc);
 } Decode;
 
 /* I'm not going to shoehorn the decoders into the same form anymore. They
  * can evolve independently.
  */
 typedef struct DecodeTransfer {
-   Dstr *leftover;
-   void *state;
-   bool_t finished;    /**< has the terminating chunk been seen? */
+    Dstr *leftover;
+    void *state;
+    bool_t finished;    /**< has the terminating chunk been seen? */
 } DecodeTransfer;
 
 DecodeTransfer *a_Decode_transfer_init(const char *format);

@@ -35,26 +35,26 @@
  */
 char *Escape_uri_str(const char *str, const char *p_esc_set)
 {
-   static const char *esc_set, *hex = "0123456789ABCDEF";
-   char *p;
-   Dstr *dstr;
-   int i;
+    static const char *esc_set, *hex = "0123456789ABCDEF";
+    char *p;
+    Dstr *dstr;
+    int i;
 
-   esc_set = (p_esc_set) ? p_esc_set : "%#:' ";
-   dstr = dStr_sized_new(64);
-   for (i = 0; str[i]; ++i) {
-      if (str[i] <= 0x1F || str[i] == 0x7F || strchr(esc_set, str[i])) {
-         dStr_append_c(dstr, '%');
-         dStr_append_c(dstr, hex[(str[i] >> 4) & 15]);
-         dStr_append_c(dstr, hex[str[i] & 15]);
-      } else {
-         dStr_append_c(dstr, str[i]);
-      }
-   }
-   p = dstr->str;
-   dStr_free(dstr, FALSE);
+    esc_set = (p_esc_set) ? p_esc_set : "%#:' ";
+    dstr = dStr_sized_new(64);
+    for (i = 0; str[i]; ++i) {
+        if (str[i] <= 0x1F || str[i] == 0x7F || strchr(esc_set, str[i])) {
+            dStr_append_c(dstr, '%');
+            dStr_append_c(dstr, hex[(str[i] >> 4) & 15]);
+            dStr_append_c(dstr, hex[str[i] & 15]);
+        } else {
+            dStr_append_c(dstr, str[i]);
+        }
+    }
+    p = dstr->str;
+    dStr_free(dstr, FALSE);
 
-   return p;
+    return p;
 }
 
 /*
@@ -63,21 +63,21 @@ char *Escape_uri_str(const char *str, const char *p_esc_set)
  */
 char *Unescape_uri_str(const char *s)
 {
-   char *p, *buf = dStrdup(s);
+    char *p, *buf = dStrdup(s);
 
-   if (strchr(s, '%')) {
-      for (p = buf; (*p = *s); ++s, ++p) {
-         if (*p == '%' && dIsxdigit(s[1]) && dIsxdigit(s[2])) {
-            *p = (dIsdigit(s[1]) ? (s[1] - '0')
+    if (strchr(s, '%')) {
+        for (p = buf; (*p = *s); ++s, ++p) {
+            if (*p == '%' && dIsxdigit(s[1]) && dIsxdigit(s[2])) {
+                *p = (dIsdigit(s[1]) ? (s[1] - '0')
                                 : D_ASCII_TOUPPER(s[1]) - 'A' + 10) * 16;
-            *p += dIsdigit(s[2]) ? (s[2] - '0')
+                *p += dIsdigit(s[2]) ? (s[2] - '0')
                                 : D_ASCII_TOUPPER(s[2]) - 'A' + 10;
-            s += 2;
-         }
-      }
-   }
+                s += 2;
+            }
+        }
+    }
 
-   return buf;
+    return buf;
 }
 
 
@@ -92,20 +92,20 @@ static const int unsafe_rep_len[] =  { 5, 4, 4, 6, 5 };
  */
 char *Escape_html_str(const char *str)
 {
-   int i;
-   char *p;
-   Dstr *dstr = dStr_sized_new(64);
+    int i;
+    char *p;
+    Dstr *dstr = dStr_sized_new(64);
 
-   for (i = 0; str[i]; ++i) {
-      if ((p = strchr(unsafe_chars, str[i])))
-         dStr_append(dstr, unsafe_rep[p - unsafe_chars]);
-      else
-         dStr_append_c(dstr, str[i]);
-   }
-   p = dstr->str;
-   dStr_free(dstr, FALSE);
+    for (i = 0; str[i]; ++i) {
+        if ((p = strchr(unsafe_chars, str[i])))
+            dStr_append(dstr, unsafe_rep[p - unsafe_chars]);
+        else
+            dStr_append_c(dstr, str[i]);
+    }
+    p = dstr->str;
+    dStr_free(dstr, FALSE);
 
-   return p;
+    return p;
 }
 
 /*
@@ -114,28 +114,28 @@ char *Escape_html_str(const char *str)
  */
 char *Unescape_html_str(const char *str)
 {
-   int i, j, k;
-   char *u_str = dStrdup(str);
+    int i, j, k;
+    char *u_str = dStrdup(str);
 
-   if (!strchr(str, '&'))
-      return u_str;
+    if (!strchr(str, '&'))
+        return u_str;
 
-   for (i = 0, j = 0; str[i]; ++i) {
-      if (str[i] == '&') {
-         for (k = 0; k < 5; ++k) {
-            if (!dStrnAsciiCasecmp(str + i, unsafe_rep[k], unsafe_rep_len[k])) {
-               i += unsafe_rep_len[k] - 1;
-               break;
+    for (i = 0, j = 0; str[i]; ++i) {
+        if (str[i] == '&') {
+            for (k = 0; k < 5; ++k) {
+                if (!dStrnAsciiCasecmp(str + i, unsafe_rep[k], unsafe_rep_len[k])) {
+                    i += unsafe_rep_len[k] - 1;
+                    break;
+                }
             }
-         }
-         u_str[j++] = (k < 5) ? unsafe_chars[k] : str[i];
-      } else {
-         u_str[j++] = str[i];
-      }
-   }
-   u_str[j] = 0;
+            u_str[j++] = (k < 5) ? unsafe_chars[k] : str[i];
+        } else {
+            u_str[j++] = str[i];
+        }
+    }
+    u_str[j] = 0;
 
-   return u_str;
+    return u_str;
 }
 
 /*
@@ -147,22 +147,22 @@ char *Unescape_html_str(const char *str)
  */
 char *Filter_smtp_hack(char *url)
 {
-   int i;
-   char c;
+    int i;
+    char c;
 
-   if (strlen(url) > 6) { /* ftp:// */
-      for (i = 6; (c = url[i]) && c != '/'; ++i) {
-         if (c == '\n' || c == '\r') {
-            memmove(url + i, url + i + 1, strlen(url + i));
-            --i;
-         } else if (c == '%' && url[i+1] == '0' &&
+    if (strlen(url) > 6) { /* ftp:// */
+        for (i = 6; (c = url[i]) && c != '/'; ++i) {
+            if (c == '\n' || c == '\r') {
+                memmove(url + i, url + i + 1, strlen(url + i));
+                --i;
+            } else if (c == '%' && url[i+1] == '0' &&
                     (D_ASCII_TOLOWER(url[i+2]) == 'a' ||
-                     D_ASCII_TOLOWER(url[i+2]) == 'd')) {
-            memmove(url + i, url + i + 3, strlen(url + i + 2));
-            --i;
-         }
-      }
-   }
-   return url;
+                            D_ASCII_TOLOWER(url[i+2]) == 'd')) {
+                memmove(url + i, url + i + 3, strlen(url + i + 2));
+                --i;
+            }
+        }
+    }
+    return url;
 }
 

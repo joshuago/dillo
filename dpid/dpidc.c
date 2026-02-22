@@ -31,14 +31,14 @@ static char SharedKey[32];
 
 static void print_usage(const char *prgname)
 {
-   fprintf(stderr,"Control program for the Dillo plugin daemon\n"
-                  "Usage: %s {stop|register|chat}\n\n", prgname);
+    fprintf(stderr,"Control program for the Dillo plugin daemon\n"
+                        "Usage: %s {stop|register|chat}\n\n", prgname);
 }
 
 static void error(char *msg)
 {
-   perror(msg);
-   exit(1);
+    perror(msg);
+    exit(1);
 }
 
 /**
@@ -47,26 +47,26 @@ static void error(char *msg)
  */
 static int Dpi_read_comm_keys(int *port)
 {
-   FILE *In;
-   char *fname, *rcline = NULL, *tail;
-   int i, ret = -1;
+    FILE *In;
+    char *fname, *rcline = NULL, *tail;
+    int i, ret = -1;
 
-   fname = dStrconcat(dGethomedir(), "/.dillo/dpid_comm_keys", NULL);
-   if ((In = fopen(fname, "r")) == NULL) {
-      MSG_ERR("[Dpi_read_comm_keys] %s\n", dStrerror(errno));
-   } else if ((rcline = dGetline(In)) == NULL) {
-      MSG_ERR("[Dpi_read_comm_keys] empty file: %s\n", fname);
-   } else {
-      *port = strtol(rcline, &tail, 10);
-      for (i = 0; *tail && dIsxdigit(tail[i+1]); ++i)
-         SharedKey[i] = tail[i+1];
-      SharedKey[i] = 0;
-      ret = 1;
-   }
-   dFree(rcline);
-   dFree(fname);
+    fname = dStrconcat(dGethomedir(), "/.dillo/dpid_comm_keys", NULL);
+    if ((In = fopen(fname, "r")) == NULL) {
+        MSG_ERR("[Dpi_read_comm_keys] %s\n", dStrerror(errno));
+    } else if ((rcline = dGetline(In)) == NULL) {
+        MSG_ERR("[Dpi_read_comm_keys] empty file: %s\n", fname);
+    } else {
+        *port = strtol(rcline, &tail, 10);
+        for (i = 0; *tail && dIsxdigit(tail[i+1]); ++i)
+            SharedKey[i] = tail[i+1];
+        SharedKey[i] = 0;
+        ret = 1;
+    }
+    dFree(rcline);
+    dFree(fname);
 
-   return ret;
+    return ret;
 }
 
 int main(int argc, char *argv[])
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     snprintf(buffer, sizeof(buffer), "<cmd='auth' msg='%s' '>", SharedKey);
     n = write(sockfd, buffer, strlen(buffer));
     if (n < 0)
-         error("ERROR writing to socket");
+            error("ERROR writing to socket");
 
     if (strcmp(argv[1], "stop") == 0) {
        strcpy(buffer, CMD_STOP);
@@ -119,12 +119,12 @@ int main(int argc, char *argv[])
 
     n = write(sockfd,buffer,strlen(buffer));
     if (n < 0)
-         error("ERROR writing to socket");
+            error("ERROR writing to socket");
 /*
     memset(buffer,0,256);
     n = read(sockfd,buffer,255);
     if (n < 0)
-         error("ERROR reading from socket");
+            error("ERROR reading from socket");
     printf("%s\n",buffer);
 */
     dClose(sockfd);

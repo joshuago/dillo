@@ -34,14 +34,14 @@ namespace fltk {
 
 FltkPreview::FltkPreview (int x, int y, int w, int h,
                           dw::core::Layout *layout, const char *label):
-   FltkViewBase (x, y, w, h, label)
+    FltkViewBase (x, y, w, h, label)
 {
-   layout->attachView (this);
+    layout->attachView (this);
 
-   scrollX = 0;
-   scrollY = 0;
-   scrollWidth = 1;
-   scrollHeight = 1;
+    scrollX = 0;
+    scrollY = 0;
+    scrollWidth = 1;
+    scrollHeight = 1;
 }
 
 FltkPreview::~FltkPreview ()
@@ -50,73 +50,73 @@ FltkPreview::~FltkPreview ()
 
 int FltkPreview::handle (int event)
 {
-   return FltkViewBase::handle (event);
+    return FltkViewBase::handle (event);
 }
 
 int FltkPreview::translateViewXToCanvasX (int x)
 {
-   return x * canvasWidth / w ();
+    return x * canvasWidth / w ();
 }
 
 int FltkPreview::translateViewYToCanvasY (int y)
 {
-   return y * canvasHeight / h ();
+    return y * canvasHeight / h ();
 }
 
 int FltkPreview::translateCanvasXToViewX (int x)
 {
-   return x * w () / canvasWidth;
+    return x * w () / canvasWidth;
 }
 
 int FltkPreview::translateCanvasYToViewY (int y)
 {
-   return y * h () / canvasHeight;
+    return y * h () / canvasHeight;
 }
 
 void FltkPreview::setCanvasSize (int width, int ascent, int descent)
 {
-   FltkViewBase::setCanvasSize (width, ascent, descent);
-   if (parent() && parent()->visible ())
-      ((FltkPreviewWindow*)parent())->reallocate ();
+    FltkViewBase::setCanvasSize (width, ascent, descent);
+    if (parent() && parent()->visible ())
+        ((FltkPreviewWindow*)parent())->reallocate ();
 }
 
 bool FltkPreview::usesViewport ()
 {
-   return true;
+    return true;
 }
 
 int FltkPreview::getHScrollbarThickness ()
 {
-   return 0;
+    return 0;
 }
 
 int FltkPreview::getVScrollbarThickness ()
 {
-   return 0;
+    return 0;
 }
 
 int FltkPreview::getScrollbarOnLeft ()
 {
-   return 0;
+    return 0;
 }
 
 void FltkPreview::scrollTo (int x, int y)
 {
-   scrollX = x;
-   scrollY = y;
+    scrollX = x;
+    scrollY = y;
 }
 
 void FltkPreview::scroll (dw::core::ScrollCommand cmd)
 {
-   MSG_ERR("FltkPreview::scroll not implemented\n");
+    MSG_ERR("FltkPreview::scroll not implemented\n");
 }
 
 void FltkPreview::setViewportSize (int width, int height,
                                    int hScrollbarThickness,
                                    int vScrollbarThickness)
 {
-   scrollWidth = width - vScrollbarThickness;
-   scrollHeight = height - hScrollbarThickness;
+    scrollWidth = width - vScrollbarThickness;
+    scrollHeight = height - hScrollbarThickness;
 }
 
 void FltkPreview::drawText (core::style::Font *font,
@@ -124,31 +124,31 @@ void FltkPreview::drawText (core::style::Font *font,
                             core::style::Color::Shading shading,
                             int x, int y, const char *text, int len)
 {
-   /*
+    /*
     * We must call setfont() before calling getwidth() (or anything
     * else that measures text).
     */
-   FltkFont *ff = (FltkFont*)font;
-   Fl::set_font(ff->font, translateCanvasXToViewX (ff->size));
+    FltkFont *ff = (FltkFont*)font;
+    Fl::set_font(ff->font, translateCanvasXToViewX (ff->size));
 #if 0
-   /**
+    /**
     * \todo Normally, this should already be known, maybe it
     * should be passed?
     */
-   int width = (int)getwidth (text, len);
-   int height = font->ascent; // No descent, this would look to "bold".
+    int width = (int)getwidth (text, len);
+    int height = font->ascent; // No descent, this would look to "bold".
 
-   int x1 = translateCanvasXToViewX (x);
-   int y1 = translateCanvasYToViewY (y);
-   int x2 = translateCanvasXToViewX (x + width);
-   int y2 = translateCanvasYToViewY (y + height);
-   Rectangle rect (x1, y1, x2 - x1, y2 - y1);
+    int x1 = translateCanvasXToViewX (x);
+    int y1 = translateCanvasYToViewY (y);
+    int x2 = translateCanvasXToViewX (x + width);
+    int y2 = translateCanvasYToViewY (y + height);
+    Rectangle rect (x1, y1, x2 - x1, y2 - y1);
 
-   setcolor(((FltkColor*)color)->colors[shading]);
-   fillrect (rect);
+    setcolor(((FltkColor*)color)->colors[shading]);
+    fillrect (rect);
 #endif
-   fl_color(((FltkColor*)color)->colors[shading]);
-   fl_draw(text, len, translateCanvasXToViewX (x), translateCanvasYToViewY(y));
+    fl_color(((FltkColor*)color)->colors[shading]);
+    fl_draw(text, len, translateCanvasXToViewX (x), translateCanvasYToViewY(y));
 }
 
 void FltkPreview::drawSimpleWrappedText (core::style::Font *font,
@@ -166,7 +166,7 @@ void FltkPreview::drawImage (core::Imgbuf *imgbuf, int xRoot, int yRoot,
 
 bool FltkPreview::usesFltkWidgets ()
 {
-   return false;
+    return false;
 }
 
 void FltkPreview::drawFltkWidget (Fl_Widget *widget,
@@ -177,15 +177,15 @@ void FltkPreview::drawFltkWidget (Fl_Widget *widget,
 // ----------------------------------------------------------------------
 
 FltkPreviewWindow::FltkPreviewWindow (dw::core::Layout *layout):
-   Fl_Menu_Window (1, 1)
+    Fl_Menu_Window (1, 1)
 {
-   box (FL_EMBOSSED_BOX);
+    box (FL_EMBOSSED_BOX);
 
-   begin ();
-   preview = new FltkPreview (BORDER_WIDTH, BORDER_WIDTH, 1, 1, layout);
-   end ();
+    begin ();
+    preview = new FltkPreview (BORDER_WIDTH, BORDER_WIDTH, 1, 1, layout);
+    end ();
 
-   hide ();
+    hide ();
 }
 
 FltkPreviewWindow::~FltkPreviewWindow ()
@@ -194,76 +194,76 @@ FltkPreviewWindow::~FltkPreviewWindow ()
 
 void FltkPreviewWindow::showWindow ()
 {
-   reallocate ();
-   show ();
+    reallocate ();
+    show ();
 }
 
 void FltkPreviewWindow::reallocate ()
 {
-   int maxWidth = misc::screenWidth () / 2;
-   int maxHeight = misc::screenHeight () * 4 / 5;
-   int mx, my, width, height;
-   bool warp = false;
+    int maxWidth = misc::screenWidth () / 2;
+    int maxHeight = misc::screenHeight () * 4 / 5;
+    int mx, my, width, height;
+    bool warp = false;
 
-   if (preview->canvasHeight * maxWidth > maxHeight * preview->canvasWidth) {
-      // Expand to maximal height (most likely case).
-      width = preview->canvasWidth * maxHeight / preview->canvasHeight;
-      height = maxHeight;
-   } else {
-      // Expand to maximal width.
-      width = maxWidth;
-      height = preview->canvasHeight * maxWidth / preview->canvasWidth;
-   }
+    if (preview->canvasHeight * maxWidth > maxHeight * preview->canvasWidth) {
+        // Expand to maximal height (most likely case).
+        width = preview->canvasWidth * maxHeight / preview->canvasHeight;
+        height = maxHeight;
+    } else {
+        // Expand to maximal width.
+        width = maxWidth;
+        height = preview->canvasHeight * maxWidth / preview->canvasWidth;
+    }
 
-   Fl::get_mouse(mx, my);
+    Fl::get_mouse(mx, my);
 
-   posX = mx - preview->translateCanvasXToViewX (preview->scrollX
+    posX = mx - preview->translateCanvasXToViewX (preview->scrollX
                                                  + preview->scrollWidth / 2);
-   posY = my - preview->translateCanvasYToViewY (preview->scrollY
+    posY = my - preview->translateCanvasYToViewY (preview->scrollY
                                                  + preview->scrollHeight / 2);
 
-   if (posX < 0) {
-      mx -= posX;
-      posX = 0;
-      warp = true;
-   } else if (posX + width > misc::screenWidth ()) {
-      mx -= (posX - (misc::screenWidth () - width));
-      posX = misc::screenWidth () - width;
-      warp = true;
-   }
+    if (posX < 0) {
+        mx -= posX;
+        posX = 0;
+        warp = true;
+    } else if (posX + width > misc::screenWidth ()) {
+        mx -= (posX - (misc::screenWidth () - width));
+        posX = misc::screenWidth () - width;
+        warp = true;
+    }
 
-   if (posY < 0) {
-      my -= posY;
-      posY = 0;
-      warp = true;
-   } else if (posY + height > misc::screenHeight ()) {
-      my -= (posY - (misc::screenHeight () - height));
-      posY = misc::screenHeight () - height;
-      warp = true;
-   }
+    if (posY < 0) {
+        my -= posY;
+        posY = 0;
+        warp = true;
+    } else if (posY + height > misc::screenHeight ()) {
+        my -= (posY - (misc::screenHeight () - height));
+        posY = misc::screenHeight () - height;
+        warp = true;
+    }
 
-   if (warp)
-      misc::warpPointer (mx, my);
+    if (warp)
+        misc::warpPointer (mx, my);
 
-   resize (posX, posY, width, height);
+    resize (posX, posY, width, height);
 
-   preview->size(w () - 2 * BORDER_WIDTH, h () - 2 * BORDER_WIDTH);
+    preview->size(w () - 2 * BORDER_WIDTH, h () - 2 * BORDER_WIDTH);
 }
 
 void FltkPreviewWindow::hideWindow ()
 {
-   Fl_Window::hide ();
+    Fl_Window::hide ();
 }
 
 void FltkPreviewWindow::scrollTo (int mouseX, int mouseY)
 {
-   preview->scrollX =
-      preview->translateViewXToCanvasX (mouseX - posX - BORDER_WIDTH)
-      - preview->scrollWidth / 2;
-   preview->scrollY =
-      preview->translateViewYToCanvasY (mouseY - posY - BORDER_WIDTH)
-      - preview->scrollHeight / 2;
-   preview->theLayout->scrollPosChanged (preview,
+    preview->scrollX =
+        preview->translateViewXToCanvasX (mouseX - posX - BORDER_WIDTH)
+        - preview->scrollWidth / 2;
+    preview->scrollY =
+        preview->translateViewYToCanvasY (mouseY - posY - BORDER_WIDTH)
+        - preview->scrollHeight / 2;
+    preview->theLayout->scrollPosChanged (preview,
                                          preview->scrollX, preview->scrollY);
 }
 
@@ -272,10 +272,10 @@ void FltkPreviewWindow::scrollTo (int mouseX, int mouseY)
 FltkPreviewButton::FltkPreviewButton (int x, int y, int w, int h,
                                       dw::core::Layout *layout,
                                       const char *label):
-   Fl_Button (x, y, w, h, label)
+    Fl_Button (x, y, w, h, label)
 {
-   image (new Fl_Bitmap (preview_bits, preview_width, preview_height));
-   window = new FltkPreviewWindow (layout);
+    image (new Fl_Bitmap (preview_bits, preview_width, preview_height));
+    window = new FltkPreviewWindow (layout);
 }
 
 FltkPreviewButton::~FltkPreviewButton ()
@@ -284,27 +284,27 @@ FltkPreviewButton::~FltkPreviewButton ()
 
 int FltkPreviewButton::handle (int event)
 {
-   /** \bug Some parts are missing. */
+    /** \bug Some parts are missing. */
 
-   switch (event) {
-   case FL_PUSH:
-      window->showWindow ();
-      return Fl_Button::handle (event);
+    switch (event) {
+    case FL_PUSH:
+        window->showWindow ();
+        return Fl_Button::handle (event);
 
-   case FL_DRAG:
-      if (window->visible ()) {
-         window->scrollTo (Fl::event_x_root (), Fl::event_y_root ());
-         return 1;
-      }
-      return Fl_Button::handle (event);
+    case FL_DRAG:
+        if (window->visible ()) {
+            window->scrollTo (Fl::event_x_root (), Fl::event_y_root ());
+            return 1;
+        }
+        return Fl_Button::handle (event);
 
-   case FL_RELEASE:
-      window->hideWindow ();
-      return Fl_Button::handle (event);
+    case FL_RELEASE:
+        window->hideWindow ();
+        return Fl_Button::handle (event);
 
-   default:
-      return Fl_Button::handle (event);
-   }
+    default:
+        return Fl_Button::handle (event);
+    }
 }
 
 } // namespace fltk

@@ -35,9 +35,9 @@ static int num_bws, num_bws_max;
  */
 void a_Bw_init(void)
 {
-   num_bws = 0;
-   num_bws_max = 16;
-   bws = NULL;
+    num_bws = 0;
+    num_bws_max = 16;
+    bws = NULL;
 }
 
 /**
@@ -46,41 +46,41 @@ void a_Bw_init(void)
  */
 BrowserWindow *a_Bw_new(void)
 {
-   BrowserWindow *bw;
+    BrowserWindow *bw;
 
-   /* We use dNew0() to zero the memory */
-   bw = dNew0(BrowserWindow, 1);
-   a_List_add(bws, num_bws, num_bws_max);
-   bws[num_bws++] = bw;
+    /* We use dNew0() to zero the memory */
+    bw = dNew0(BrowserWindow, 1);
+    a_List_add(bws, num_bws, num_bws_max);
+    bws[num_bws++] = bw;
 
-   /* Initialize nav_stack */
-   bw->nav_stack = dList_new(8);
-   bw->nav_stack_ptr = -1;
+    /* Initialize nav_stack */
+    bw->nav_stack = dList_new(8);
+    bw->nav_stack_ptr = -1;
 
-   /* Init expect */
-   bw->nav_expect_url = NULL;
+    /* Init expect */
+    bw->nav_expect_url = NULL;
 
-   bw->redirect_level = 0;
-   bw->meta_refresh_status = 0;
-   bw->meta_refresh_url = NULL;
+    bw->redirect_level = 0;
+    bw->meta_refresh_status = 0;
+    bw->meta_refresh_url = NULL;
 
-   bw->RootClients = dList_new(8);
-   bw->ImageClients = dList_new(8);
-   bw->NumImages = 0;
-   bw->NumImagesGot = 0;
-   bw->NumPendingStyleSheets = 0;
-   bw->PageUrls = dList_new(8);
-   bw->Docs = dList_new(8);
+    bw->RootClients = dList_new(8);
+    bw->ImageClients = dList_new(8);
+    bw->NumImages = 0;
+    bw->NumImagesGot = 0;
+    bw->NumPendingStyleSheets = 0;
+    bw->PageUrls = dList_new(8);
+    bw->Docs = dList_new(8);
 
-   bw->num_page_bugs = 0;
-   bw->page_bugs = dStr_new("");
+    bw->num_page_bugs = 0;
+    bw->page_bugs = dStr_new("");
 
-   bw->zoom = 1.0;
+    bw->zoom = 1.0;
 
-   /* now that the bw is made, let's customize it.. */
-   //Interface_browser_window_customize(bw);
+    /* now that the bw is made, let's customize it.. */
+    /* Interface_browser_window_customize(bw); */
 
-   return bw;
+    return bw;
 }
 
 /**
@@ -88,32 +88,32 @@ BrowserWindow *a_Bw_new(void)
  */
 void a_Bw_free(BrowserWindow *bw)
 {
-   int i, j;
+    int i, j;
 
-   for (i = 0; i < num_bws; i++) {
-      if (bws[i] == bw) {
-         a_List_remove(bws, i, num_bws);
+    for (i = 0; i < num_bws; i++) {
+        if (bws[i] == bw) {
+            a_List_remove(bws, i, num_bws);
 
-         dList_free(bw->RootClients);
-         dList_free(bw->ImageClients);
-         dList_free(bw->Docs);
+            dList_free(bw->RootClients);
+            dList_free(bw->ImageClients);
+            dList_free(bw->Docs);
 
-         a_Url_free(bw->nav_expect_url);
-         for (j = 0; j < dList_length(bw->PageUrls); ++j)
-            a_Url_free(dList_nth_data(bw->PageUrls, j));
-         dList_free(bw->PageUrls);
+            a_Url_free(bw->nav_expect_url);
+            for (j = 0; j < dList_length(bw->PageUrls); ++j)
+                a_Url_free(dList_nth_data(bw->PageUrls, j));
+            dList_free(bw->PageUrls);
 
-         for (j = 0; j < dList_length(bw->nav_stack); ++j)
-            dFree(dList_nth_data(bw->nav_stack, j));
-         dList_free(bw->nav_stack);
+            for (j = 0; j < dList_length(bw->nav_stack); ++j)
+                dFree(dList_nth_data(bw->nav_stack, j));
+            dList_free(bw->nav_stack);
 
-         a_Url_free(bw->meta_refresh_url);
+            a_Url_free(bw->meta_refresh_url);
 
-         dStr_free(bw->page_bugs, 1);
-         dFree(bw);
-         break;
-      }
-   }
+            dStr_free(bw->page_bugs, 1);
+            dFree(bw);
+            break;
+        }
+    }
 }
 
 /*- Clients ----------------------------------------------------------------*/
@@ -127,18 +127,18 @@ void a_Bw_free(BrowserWindow *bw)
  */
 void a_Bw_add_client(BrowserWindow *bw, int Key, int Root)
 {
-   dReturn_if_fail ( bw != NULL );
+    dReturn_if_fail ( bw != NULL );
 
-   if (Root) {
-      dList_append(bw->RootClients, INT2VOIDP(Key));
-   } else {
-      dList_append(bw->ImageClients, INT2VOIDP(Key));
-      bw->NumImages++;
-      /* --Images progress-bar stuff-- */
-      a_UIcmd_set_img_prog(bw, bw->NumImagesGot, bw->NumImages, 1);
-   }
-   if (dList_length(bw->RootClients) + dList_length(bw->ImageClients) == 1)
-      a_UIcmd_set_buttons_sens(bw);
+    if (Root) {
+        dList_append(bw->RootClients, INT2VOIDP(Key));
+    } else {
+        dList_append(bw->ImageClients, INT2VOIDP(Key));
+        bw->NumImages++;
+        /* --Images progress-bar stuff-- */
+        a_UIcmd_set_img_prog(bw, bw->NumImagesGot, bw->NumImages, 1);
+    }
+    if (dList_length(bw->RootClients) + dList_length(bw->ImageClients) == 1)
+        a_UIcmd_set_buttons_sens(bw);
 }
 
 /**
@@ -148,15 +148,15 @@ void a_Bw_add_client(BrowserWindow *bw, int Key, int Root)
  */
 int a_Bw_remove_client(BrowserWindow *bw, int ClientKey)
 {
-   void *data;
+    void *data;
 
-   if ((data = dList_find(bw->RootClients, INT2VOIDP(ClientKey)))) {
-      dList_remove_fast(bw->RootClients, data);
-   } else if ((data = dList_find(bw->ImageClients, INT2VOIDP(ClientKey)))) {
-      dList_remove_fast(bw->ImageClients, data);
-      ++bw->NumImagesGot;
-   }
-   return data ? 0 : 1;
+    if ((data = dList_find(bw->RootClients, INT2VOIDP(ClientKey)))) {
+        dList_remove_fast(bw->RootClients, data);
+    } else if ((data = dList_find(bw->ImageClients, INT2VOIDP(ClientKey)))) {
+        dList_remove_fast(bw->ImageClients, data);
+        ++bw->NumImagesGot;
+    }
+    return data ? 0 : 1;
 }
 
 /**
@@ -166,15 +166,15 @@ int a_Bw_remove_client(BrowserWindow *bw, int ClientKey)
  */
 void a_Bw_close_client(BrowserWindow *bw, int ClientKey)
 {
-   if (a_Bw_remove_client(bw, ClientKey) == 0) {
-      a_UIcmd_set_img_prog(bw, bw->NumImagesGot, bw->NumImages, 1);
-      if (bw->NumImagesGot == bw->NumImages)
-         a_UIcmd_set_img_prog(bw, 0, 0, 0);
-      if (dList_length(bw->RootClients) == 0) {
-         a_UIcmd_set_buttons_sens(bw);
-         a_UIcmd_finish_loading(bw);
-      }
-   }
+    if (a_Bw_remove_client(bw, ClientKey) == 0) {
+        a_UIcmd_set_img_prog(bw, bw->NumImagesGot, bw->NumImages, 1);
+        if (bw->NumImagesGot == bw->NumImages)
+            a_UIcmd_set_img_prog(bw, 0, 0, 0);
+        if (dList_length(bw->RootClients) == 0) {
+            a_UIcmd_set_buttons_sens(bw);
+            a_UIcmd_finish_loading(bw);
+        }
+    }
 }
 
 /**
@@ -183,23 +183,23 @@ void a_Bw_close_client(BrowserWindow *bw, int ClientKey)
  */
 void a_Bw_stop_clients(BrowserWindow *bw, int flags)
 {
-   void *data;
+    void *data;
 
-   if (flags & BW_Root) {
-      /* Remove root clients */
-      while ((data = dList_nth_data(bw->RootClients, 0))) {
-         a_Capi_stop_client(VOIDP2INT(data), (flags & BW_Force));
-         dList_remove_fast(bw->RootClients, data);
-      }
-   }
+    if (flags & BW_Root) {
+        /* Remove root clients */
+        while ((data = dList_nth_data(bw->RootClients, 0))) {
+            a_Capi_stop_client(VOIDP2INT(data), (flags & BW_Force));
+            dList_remove_fast(bw->RootClients, data);
+        }
+    }
 
-   if (flags & BW_Img) {
-      /* Remove image clients */
-      while ((data = dList_nth_data(bw->ImageClients, 0))) {
-         a_Capi_stop_client(VOIDP2INT(data), (flags & BW_Force));
-         dList_remove_fast(bw->ImageClients, data);
-      }
-   }
+    if (flags & BW_Img) {
+        /* Remove image clients */
+        while ((data = dList_nth_data(bw->ImageClients, 0))) {
+            a_Capi_stop_client(VOIDP2INT(data), (flags & BW_Force));
+            dList_remove_fast(bw->ImageClients, data);
+        }
+    }
 }
 
 /*- Page -------------------------------------------------------------------*/
@@ -210,11 +210,11 @@ void a_Bw_stop_clients(BrowserWindow *bw, int flags)
  */
 void a_Bw_add_url(BrowserWindow *bw, const DilloUrl *Url)
 {
-   dReturn_if_fail ( bw != NULL && Url != NULL );
+    dReturn_if_fail ( bw != NULL && Url != NULL );
 
-   if (!dList_find_custom(bw->PageUrls, Url, (dCompareFunc)a_Url_cmp)) {
-      dList_append(bw->PageUrls, a_Url_dup(Url));
-   }
+    if (!dList_find_custom(bw->PageUrls, Url, (dCompareFunc)a_Url_cmp)) {
+        dList_append(bw->PageUrls, a_Url_dup(Url));
+    }
 }
 
 /**
@@ -222,9 +222,9 @@ void a_Bw_add_url(BrowserWindow *bw, const DilloUrl *Url)
  */
 void a_Bw_add_doc(BrowserWindow *bw, void *vdoc)
 {
-   dReturn_if_fail ( bw != NULL && vdoc != NULL);
+    dReturn_if_fail ( bw != NULL && vdoc != NULL);
 
-   dList_append(bw->Docs, vdoc);
+    dList_append(bw->Docs, vdoc);
 }
 
 /**
@@ -232,15 +232,15 @@ void a_Bw_add_doc(BrowserWindow *bw, void *vdoc)
  */
 void *a_Bw_get_current_doc(BrowserWindow *bw)
 {
-   void *doc = NULL;
-   int len = dList_length(bw->Docs);
+    void *doc = NULL;
+    int len = dList_length(bw->Docs);
 
-   if (len == 1)
-      doc = dList_nth_data(bw->Docs, 0);
-   else if (len > 1)
-      MSG("a_Bw_get_current_doc() multiple docs not implemented\n");
+    if (len == 1)
+        doc = dList_nth_data(bw->Docs, 0);
+    else if (len > 1)
+        MSG("a_Bw_get_current_doc() multiple docs not implemented\n");
 
-   return doc;
+    return doc;
 }
 
 /**
@@ -251,12 +251,12 @@ void *a_Bw_get_current_doc(BrowserWindow *bw)
  */
 void *a_Bw_get_url_doc(BrowserWindow *bw, const DilloUrl *url)
 {
-   void *doc = NULL;
+    void *doc = NULL;
 
-   if (url && dList_find_custom(bw->PageUrls, url, (dCompareFunc)a_Url_cmp)) {
-      doc = a_Bw_get_current_doc(bw);
-   }
-   return doc;
+    if (url && dList_find_custom(bw->PageUrls, url, (dCompareFunc)a_Url_cmp)) {
+        doc = a_Bw_get_current_doc(bw);
+    }
+    return doc;
 }
 
 /**
@@ -264,11 +264,11 @@ void *a_Bw_get_url_doc(BrowserWindow *bw, const DilloUrl *url)
  */
 void a_Bw_remove_doc(BrowserWindow *bw, void *vdoc)
 {
-   void *data;
+    void *data;
 
-   if ((data = dList_find(bw->Docs, vdoc))) {
-      dList_remove_fast(bw->Docs, data);
-   }
+    if ((data = dList_find(bw->Docs, vdoc))) {
+        dList_remove_fast(bw->Docs, data);
+    }
 }
 
 /*- Cleanup ----------------------------------------------------------------*/
@@ -278,35 +278,35 @@ void a_Bw_remove_doc(BrowserWindow *bw, void *vdoc)
  */
 void a_Bw_cleanup(BrowserWindow *bw)
 {
-   void *data;
+    void *data;
 
-   /* Remove root clients */
-   while ((data = dList_nth_data(bw->RootClients, 0))) {
-      dList_remove_fast(bw->RootClients, data);
-   }
-   /* Remove image clients */
-   while ((data = dList_nth_data(bw->ImageClients, 0))) {
-      dList_remove_fast(bw->ImageClients, data);
-   }
-   /* Remove PageUrls */
-   while ((data = dList_nth_data(bw->PageUrls, 0))) {
-      a_Url_free(data);
-      dList_remove_fast(bw->PageUrls, data);
-   }
+    /* Remove root clients */
+    while ((data = dList_nth_data(bw->RootClients, 0))) {
+        dList_remove_fast(bw->RootClients, data);
+    }
+    /* Remove image clients */
+    while ((data = dList_nth_data(bw->ImageClients, 0))) {
+        dList_remove_fast(bw->ImageClients, data);
+    }
+    /* Remove PageUrls */
+    while ((data = dList_nth_data(bw->PageUrls, 0))) {
+        a_Url_free(data);
+        dList_remove_fast(bw->PageUrls, data);
+    }
 
-   /* Zero image-progress data */
-   bw->NumImages = 0;
-   bw->NumImagesGot = 0;
+    /* Zero image-progress data */
+    bw->NumImages = 0;
+    bw->NumImagesGot = 0;
 
-   /* Zero stylesheet counter */
-   bw->NumPendingStyleSheets = 0;
+    /* Zero stylesheet counter */
+    bw->NumPendingStyleSheets = 0;
 }
 
 /*--------------------------------------------------------------------------*/
 
 int a_Bw_num(void)
 {
-   return num_bws;
+    return num_bws;
 }
 
 /**
@@ -314,32 +314,32 @@ int a_Bw_num(void)
  */
 BrowserWindow *a_Bw_get(int i)
 {
-   if (i >= 0 && i < num_bws)
-      return bws[i];
-   return NULL;
+    if (i >= 0 && i < num_bws)
+        return bws[i];
+    return NULL;
 }
 
 /* expect API ------------------------------------------------------------- */
 
 void a_Bw_expect(BrowserWindow *bw, const DilloUrl *url)
 {
-   a_Url_free(bw->nav_expect_url);
-   bw->nav_expect_url = a_Url_dup(url);
+    a_Url_free(bw->nav_expect_url);
+    bw->nav_expect_url = a_Url_dup(url);
 }
 
 void a_Bw_cancel_expect(BrowserWindow *bw)
 {
-   a_Url_free(bw->nav_expect_url);
-   bw->nav_expect_url = NULL;
+    a_Url_free(bw->nav_expect_url);
+    bw->nav_expect_url = NULL;
 }
 
 bool_t a_Bw_expecting(BrowserWindow *bw)
 {
-   return (bw->nav_expect_url != NULL);
+    return (bw->nav_expect_url != NULL);
 }
 
 const DilloUrl *a_Bw_expected_url(BrowserWindow *bw)
 {
-   return bw->nav_expect_url;
+    return bw->nav_expect_url;
 }
 

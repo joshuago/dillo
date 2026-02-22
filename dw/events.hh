@@ -13,13 +13,13 @@ namespace core {
  */
 enum ButtonState
 {
-   /* We won't use more than these ones. */
-   SHIFT_MASK    = 1 << 0,
-   CONTROL_MASK  = 1 << 1,
-   META_MASK     = 1 << 2,
-   BUTTON1_MASK  = 1 << 3,
-   BUTTON2_MASK  = 1 << 4,
-   BUTTON3_MASK  = 1 << 5
+    /* We won't use more than these ones. */
+    SHIFT_MASK    = 1 << 0,
+    CONTROL_MASK  = 1 << 1,
+    META_MASK     = 1 << 2,
+    BUTTON1_MASK  = 1 << 3,
+    BUTTON2_MASK  = 1 << 4,
+    BUTTON3_MASK  = 1 << 5
 };
 
 /**
@@ -39,7 +39,7 @@ public:
 class MouseEvent: public Event
 {
 public:
-   ButtonState state;
+    ButtonState state;
 };
 
 /**
@@ -48,7 +48,7 @@ public:
 class MousePositionEvent: public MouseEvent
 {
 public:
-   int xCanvas, yCanvas, xWidget, yWidget;
+    int xCanvas, yCanvas, xWidget, yWidget;
 };
 
 /**
@@ -57,8 +57,8 @@ public:
 class EventButton: public MousePositionEvent
 {
 public:
-   int numPressed; /* 1 for simple click, 2 for double click, etc. */
-   int button;
+    int numPressed; /* 1 for simple click, 2 for double click, etc. */
+    int button;
 };
 
 /**
@@ -74,7 +74,7 @@ class EventMotion: public MousePositionEvent
 class EventCrossing: public MouseEvent
 {
 public:
-   Widget *lastWidget, *currentWidget;
+    Widget *lastWidget, *currentWidget;
 };
 
 } // namespace core

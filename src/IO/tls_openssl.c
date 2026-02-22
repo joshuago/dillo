@@ -61,26 +61,26 @@
 #define CERT_STATUS_USER_ACCEPTED 4
 
 typedef struct {
-   char *hostname;
-   int port;
-   int cert_status;
+    char *hostname;
+    int port;
+    int cert_status;
 } Server_t;
 
 typedef struct {
-   int fd;
-   int connkey;
+    int fd;
+    int connkey;
 } FdMapEntry_t;
 
 /*
  * Data type for TLS connection information
  */
 typedef struct {
-   int fd;
-   DilloUrl *url;
-   SSL *ssl;
-   bool_t connecting;
-   bool_t in_connect;
-   bool_t do_shutdown;
+    int fd;
+    DilloUrl *url;
+    SSL *ssl;
+    bool_t connecting;
+    bool_t in_connect;
+    bool_t do_shutdown;
 } Conn_t;
 
 /* List of active TLS connections */
@@ -100,24 +100,24 @@ static void Tls_connect_cb(int fd, void *vconnkey);
  */
 static int Tls_fd_map_cmp(const void *v1, const void *v2)
 {
-   int fd = VOIDP2INT(v2);
-   const FdMapEntry_t *e = v1;
+    int fd = VOIDP2INT(v2);
+    const FdMapEntry_t *e = v1;
 
-   return (fd != e->fd);
+    return (fd != e->fd);
 }
 
 static void Tls_fd_map_add_entry(int fd, int connkey)
 {
-   FdMapEntry_t *e = dNew0(FdMapEntry_t, 1);
-   e->fd = fd;
-   e->connkey = connkey;
+    FdMapEntry_t *e = dNew0(FdMapEntry_t, 1);
+    e->fd = fd;
+    e->connkey = connkey;
 
-   if (dList_find_custom(fd_map, INT2VOIDP(e->fd), Tls_fd_map_cmp)) {
-      MSG_ERR("TLS FD ENTRY ALREADY FOUND FOR %d\n", e->fd);
-      assert(0);
-   }
+    if (dList_find_custom(fd_map, INT2VOIDP(e->fd), Tls_fd_map_cmp)) {
+        MSG_ERR("TLS FD ENTRY ALREADY FOUND FOR %d\n", e->fd);
+        assert(0);
+    }
 
-   dList_append(fd_map, e);
+    dList_append(fd_map, e);
 //MSG("ADD ENTRY %d %s\n", e->fd, URL_STR(sd->url));
 }
 
@@ -126,15 +126,15 @@ static void Tls_fd_map_add_entry(int fd, int connkey)
  */
 static void Tls_fd_map_remove_entry(int fd)
 {
-   void *data = dList_find_custom(fd_map, INT2VOIDP(fd), Tls_fd_map_cmp);
+    void *data = dList_find_custom(fd_map, INT2VOIDP(fd), Tls_fd_map_cmp);
 
 //MSG("REMOVE ENTRY %d\n", fd);
-   if (data) {
-      dList_remove_fast(fd_map, data);
-      dFree(data);
-   } else {
-      MSG("TLS FD ENTRY NOT FOUND FOR %d\n", fd);
-   }
+    if (data) {
+        dList_remove_fast(fd_map, data);
+        dFree(data);
+    } else {
+        MSG("TLS FD ENTRY NOT FOUND FOR %d\n", fd);
+    }
 }
 
 /*
@@ -143,16 +143,16 @@ static void Tls_fd_map_remove_entry(int fd)
  */
 void *a_Tls_openssl_connection(int fd)
 {
-   Conn_t *conn;
+    Conn_t *conn;
 
-   if (fd_map) {
-      FdMapEntry_t *fme = dList_find_custom(fd_map, INT2VOIDP(fd),
+    if (fd_map) {
+        FdMapEntry_t *fme = dList_find_custom(fd_map, INT2VOIDP(fd),
                                             Tls_fd_map_cmp);
 
-      if (fme && (conn = a_Klist_get_data(conn_list, fme->connkey)))
-         return conn;
-   }
-   return NULL;
+        if (fme && (conn = a_Klist_get_data(conn_list, fme->connkey)))
+            return conn;
+    }
+    return NULL;
 }
 
 /*
@@ -160,21 +160,21 @@ void *a_Tls_openssl_connection(int fd)
  */
 static int Tls_conn_new(int fd, const DilloUrl *url, SSL *ssl)
 {
-   int key;
+    int key;
 
-   Conn_t *conn = dNew0(Conn_t, 1);
-   conn->fd = fd;
-   conn->url = a_Url_dup(url);
-   conn->ssl = ssl;
-   conn->connecting = TRUE;
-   conn->in_connect = FALSE;
-   conn->do_shutdown = TRUE;
+    Conn_t *conn = dNew0(Conn_t, 1);
+    conn->fd = fd;
+    conn->url = a_Url_dup(url);
+    conn->ssl = ssl;
+    conn->connecting = TRUE;
+    conn->in_connect = FALSE;
+    conn->do_shutdown = TRUE;
 
-   key = a_Klist_insert(&conn_list, conn);
+    key = a_Klist_insert(&conn_list, conn);
 
-   Tls_fd_map_add_entry(fd, key);
+    Tls_fd_map_add_entry(fd, key);
 
-   return key;
+    return key;
 }
 
 /*
@@ -182,13 +182,13 @@ static int Tls_conn_new(int fd, const DilloUrl *url, SSL *ssl)
  */
 static void Tls_info_cb(const SSL *ssl, int where, int ret)
 {
-   if (where & SSL_CB_ALERT) {
-      const char *str = SSL_alert_desc_string_long(ret);
+    if (where & SSL_CB_ALERT) {
+        const char *str = SSL_alert_desc_string_long(ret);
 
-      if (strcmp(str, "close notify"))
-         MSG("TLS ALERT on %s: %s\n", (where & SSL_CB_READ) ? "read" : "write",
+        if (strcmp(str, "close notify"))
+            MSG("TLS ALERT on %s: %s\n", (where & SSL_CB_READ) ? "read" : "write",
              str);
-   }
+    }
 }
 
 /*
@@ -200,71 +200,71 @@ static void Tls_info_cb(const SSL *ssl, int where, int ret)
  */
 static void Tls_load_certificates(void)
 {
-   /* curl-7.37.1 says that the following bundle locations are used on "Debian
+    /* curl-7.37.1 says that the following bundle locations are used on "Debian
     * systems", "Redhat and Mandriva", "old(er) Redhat", "FreeBSD", and
     * "OpenBSD", respectively -- and that the /etc/ssl/certs/ path is needed on
     * "SUSE". No doubt it's all changed some over time, but this gives us
     * something to work with.
     */
-   uint_t u;
-   char *userpath;
-   static const char *const ca_files[] = {
-      "/etc/ssl/certs/ca-certificates.crt",
-      "/etc/pki/tls/certs/ca-bundle.crt",
-      "/usr/share/ssl/certs/ca-bundle.crt",
-      "/usr/local/share/certs/ca-root.crt",
-      "/etc/ssl/cert.pem",
-      "/etc/openssl/certs/ca-certificates.crt",
-      CA_CERTS_FILE
-   };
+    uint_t u;
+    char *userpath;
+    static const char *const ca_files[] = {
+        "/etc/ssl/certs/ca-certificates.crt",
+        "/etc/pki/tls/certs/ca-bundle.crt",
+        "/usr/share/ssl/certs/ca-bundle.crt",
+        "/usr/local/share/certs/ca-root.crt",
+        "/etc/ssl/cert.pem",
+        "/etc/openssl/certs/ca-certificates.crt",
+        CA_CERTS_FILE
+    };
 
-   static const char *const ca_paths[] = {
-      "/etc/ssl/certs/",
-      CA_CERTS_DIR
-   };
+    static const char *const ca_paths[] = {
+        "/etc/ssl/certs/",
+        CA_CERTS_DIR
+    };
 
-   X509_STORE *store = SSL_CTX_get_cert_store(ssl_context);
-   X509_LOOKUP *lookup = X509_STORE_add_lookup(store, X509_LOOKUP_file());
+    X509_STORE *store = SSL_CTX_get_cert_store(ssl_context);
+    X509_LOOKUP *lookup = X509_STORE_add_lookup(store, X509_LOOKUP_file());
 
-   for (u = 0; u < sizeof(ca_files) / sizeof(ca_files[0]); u++) {
-      if (*ca_files[u])
-         X509_LOOKUP_load_file(lookup, ca_files[u], X509_FILETYPE_PEM);
-   }
+    for (u = 0; u < sizeof(ca_files) / sizeof(ca_files[0]); u++) {
+        if (*ca_files[u])
+            X509_LOOKUP_load_file(lookup, ca_files[u], X509_FILETYPE_PEM);
+    }
 
-   lookup = X509_STORE_add_lookup(store, X509_LOOKUP_hash_dir());
-   for (u = 0; u < sizeof(ca_paths)/sizeof(ca_paths[0]); u++) {
-      if (*ca_paths[u])
-         X509_LOOKUP_add_dir(lookup, ca_paths[u], X509_FILETYPE_PEM);
-   }
+    lookup = X509_STORE_add_lookup(store, X509_LOOKUP_hash_dir());
+    for (u = 0; u < sizeof(ca_paths)/sizeof(ca_paths[0]); u++) {
+        if (*ca_paths[u])
+            X509_LOOKUP_add_dir(lookup, ca_paths[u], X509_FILETYPE_PEM);
+    }
 
-   userpath = dStrconcat(dGethomedir(), "/.dillo/certs/", NULL);
-   X509_LOOKUP_add_dir(lookup, userpath, X509_FILETYPE_PEM);
-   dFree(userpath);
+    userpath = dStrconcat(dGethomedir(), "/.dillo/certs/", NULL);
+    X509_LOOKUP_add_dir(lookup, userpath, X509_FILETYPE_PEM);
+    dFree(userpath);
 
-   /* Clear out errors in the queue (file not found, etc.) */
-   while(ERR_get_error())
-      ;
+    /* Clear out errors in the queue (file not found, etc.) */
+    while(ERR_get_error())
+        ;
 }
 
 const char *a_Tls_openssl_version(char *buf, int n)
 {
-   /* Ugly hack to replace "OpenSSL 3.4.0 22 Oct 2024" with
+    /* Ugly hack to replace "OpenSSL 3.4.0 22 Oct 2024" with
     * "OpenSSL/3.4.0". It also works for LibreSSL. */
-   const char *ver = OpenSSL_version(OPENSSL_VERSION);
-   if (snprintf(buf, n, "%s", ver) >= n)
-      return "OpenSSL/?";
+    const char *ver = OpenSSL_version(OPENSSL_VERSION);
+    if (snprintf(buf, n, "%s", ver) >= n)
+        return "OpenSSL/?";
 
-   char *ossl = buf;
-   char *sp1 = strchr(ossl, ' ');
-   if (sp1) {
-      *sp1 = '/';
-      char *sp2 = strchr(ossl, ' ');
-      if (sp2) {
-         *sp2 = '\0';
-      }
-   }
+    char *ossl = buf;
+    char *sp1 = strchr(ossl, ' ');
+    if (sp1) {
+        *sp1 = '/';
+        char *sp2 = strchr(ossl, ' ');
+        if (sp2) {
+            *sp2 = '\0';
+        }
+    }
 
-   return buf;
+    return buf;
 }
 
 /*
@@ -272,47 +272,47 @@ const char *a_Tls_openssl_version(char *buf, int n)
  */
 void a_Tls_openssl_init(void)
 {
-   MSG("TLS library: %s\n", OpenSSL_version(OPENSSL_VERSION));
-   SSL_library_init();
-   SSL_load_error_strings();
-   if (RAND_status() != 1) {
-      /* The standard solution is to provide it with more entropy, but this
+    MSG("TLS library: %s\n", OpenSSL_version(OPENSSL_VERSION));
+    SSL_library_init();
+    SSL_load_error_strings();
+    if (RAND_status() != 1) {
+        /* The standard solution is to provide it with more entropy, but this
        * involves knowing very well that you are doing exactly the right thing.
        */
-      MSG_ERR("Disabling HTTPS: Insufficient entropy for openssl.\n");
-      return;
-   }
+        MSG_ERR("Disabling HTTPS: Insufficient entropy for openssl.\n");
+        return;
+    }
 
-   /* Create SSL context */
-   ssl_context = SSL_CTX_new(TLS_client_method());
-   if (ssl_context == NULL) {
-      MSG_ERR("Disabling HTTPS: Error creating SSL context.\n");
-      return;
-   }
+    /* Create SSL context */
+    ssl_context = SSL_CTX_new(TLS_client_method());
+    if (ssl_context == NULL) {
+        MSG_ERR("Disabling HTTPS: Error creating SSL context.\n");
+        return;
+    }
 
-   SSL_CTX_set_info_callback(ssl_context, Tls_info_cb);
+    SSL_CTX_set_info_callback(ssl_context, Tls_info_cb);
 
-   /* Don't want: eNULL, which has no encryption; aNULL, which has no
+    /* Don't want: eNULL, which has no encryption; aNULL, which has no
     * authentication; LOW, which as of 2014 use 64 or 56-bit encryption;
     * EXPORT40, which uses 40-bit encryption; RC4, for which methods were
     * found in 2013 to defeat it somewhat too easily.
     */
-   SSL_CTX_set_cipher_list(ssl_context,
-                           "ALL:!aNULL:!eNULL:!LOW:!EXPORT40:!RC4");
+    SSL_CTX_set_cipher_list(ssl_context,
+                                    "ALL:!aNULL:!eNULL:!LOW:!EXPORT40:!RC4");
 
-   /* SSL2 has been known to be insecure forever, disabling SSL3 is in response
+    /* SSL2 has been known to be insecure forever, disabling SSL3 is in response
     * to POODLE, and disabling compression is in response to CRIME.
     */
-   SSL_CTX_set_options(ssl_context,
+    SSL_CTX_set_options(ssl_context,
                        SSL_OP_NO_SSLv2|SSL_OP_NO_SSLv3|SSL_OP_NO_COMPRESSION);
 
-   /* This lets us deal with self-signed certificates */
-   SSL_CTX_set_verify(ssl_context, SSL_VERIFY_NONE, NULL);
+    /* This lets us deal with self-signed certificates */
+    SSL_CTX_set_verify(ssl_context, SSL_VERIFY_NONE, NULL);
 
-   Tls_load_certificates();
+    Tls_load_certificates();
 
-   fd_map = dList_new(20);
-   servers = dList_new(8);
+    fd_map = dList_new(20);
+    servers = dList_new(8);
 }
 
 /*
@@ -321,44 +321,44 @@ void a_Tls_openssl_init(void)
  */
 static int Tls_save_certificate_home(X509 * cert)
 {
-   char buf[4096];
+    char buf[4096];
 
-   FILE * fp = NULL;
-   uint_t i = 0;
-   int ret = 1;
+    FILE * fp = NULL;
+    uint_t i = 0;
+    int ret = 1;
 
-   /* Attempt to create .dillo/certs blindly - check later */
-   snprintf(buf, 4096, "%s/.dillo/", dGethomedir());
-   mkdir(buf, 01777);
-   snprintf(buf, 4096, "%s/.dillo/certs/", dGethomedir());
-   mkdir(buf, 01777);
+    /* Attempt to create .dillo/certs blindly - check later */
+    snprintf(buf, 4096, "%s/.dillo/", dGethomedir());
+    mkdir(buf, 01777);
+    snprintf(buf, 4096, "%s/.dillo/certs/", dGethomedir());
+    mkdir(buf, 01777);
 
-   do {
-      snprintf(buf, 4096, "%s/.dillo/certs/%lx.%u",
-               dGethomedir(), X509_subject_name_hash(cert), i);
+    do {
+        snprintf(buf, 4096, "%s/.dillo/certs/%lx.%u",
+                    dGethomedir(), X509_subject_name_hash(cert), i);
 
-      fp=fopen(buf, "r");
-      if (fp == NULL){
-         /* File name doesn't exist so we can use it safely */
-         fp=fopen(buf, "w");
-         if (fp == NULL){
-            MSG("Unable to open cert save file in home dir\n");
-            break;
-         } else {
-            PEM_write_X509(fp, cert);
+        fp=fopen(buf, "r");
+        if (fp == NULL){
+            /* File name doesn't exist so we can use it safely */
+            fp=fopen(buf, "w");
+            if (fp == NULL){
+                MSG("Unable to open cert save file in home dir\n");
+                break;
+            } else {
+                PEM_write_X509(fp, cert);
+                fclose(fp);
+                MSG("Wrote certificate\n");
+                ret = 0;
+                break;
+            }
+        } else {
             fclose(fp);
-            MSG("Wrote certificate\n");
-            ret = 0;
-            break;
-         }
-      } else {
-         fclose(fp);
-      }
-      i++;
-      /* Don't loop too many times - just give up */
-   } while (i < 1024);
+        }
+        i++;
+        /* Don't loop too many times - just give up */
+    } while (i < 1024);
 
-   return ret;
+    return ret;
 }
 
 /*
@@ -366,26 +366,26 @@ static int Tls_save_certificate_home(X509 * cert)
  */
 static int Tls_servers_cmp(const void *v1, const void *v2)
 {
-   const Server_t *s1 = (const Server_t *)v1, *s2 = (const Server_t *)v2;
-   int cmp = dStrAsciiCasecmp(s1->hostname, s2->hostname);
+    const Server_t *s1 = (const Server_t *)v1, *s2 = (const Server_t *)v2;
+    int cmp = dStrAsciiCasecmp(s1->hostname, s2->hostname);
 
-   if (!cmp)
-      cmp = s1->port - s2->port;
-   return cmp;
+    if (!cmp)
+        cmp = s1->port - s2->port;
+    return cmp;
 }
 /*
  * Ordered comparison of server with URL.
  */
 static int Tls_servers_by_url_cmp(const void *v1, const void *v2)
 {
-   const Server_t *s = (const Server_t *)v1;
-   const DilloUrl *url = (const DilloUrl *)v2;
+    const Server_t *s = (const Server_t *)v1;
+    const DilloUrl *url = (const DilloUrl *)v2;
 
-   int cmp = dStrAsciiCasecmp(s->hostname, URL_HOST(url));
+    int cmp = dStrAsciiCasecmp(s->hostname, URL_HOST(url));
 
-   if (!cmp)
-      cmp = s->port - URL_PORT(url);
-   return cmp;
+    if (!cmp)
+        cmp = s->port - URL_PORT(url);
+    return cmp;
 }
 
 /*
@@ -397,36 +397,36 @@ static int Tls_servers_by_url_cmp(const void *v1, const void *v2)
  */
 int a_Tls_openssl_connect_ready(const DilloUrl *url)
 {
-   Server_t *s;
-   int ret = TLS_CONNECT_READY;
+    Server_t *s;
+    int ret = TLS_CONNECT_READY;
 
-   if (ssl_context == NULL)
-      return TLS_CONNECT_NEVER;
+    if (ssl_context == NULL)
+        return TLS_CONNECT_NEVER;
 
-   if ((s = dList_find_sorted(servers, url, Tls_servers_by_url_cmp))) {
-      if (s->cert_status == CERT_STATUS_RECEIVING)
-         ret = TLS_CONNECT_NOT_YET;
-      else if (s->cert_status == CERT_STATUS_BAD)
-         ret = TLS_CONNECT_NEVER;
+    if ((s = dList_find_sorted(servers, url, Tls_servers_by_url_cmp))) {
+        if (s->cert_status == CERT_STATUS_RECEIVING)
+            ret = TLS_CONNECT_NOT_YET;
+        else if (s->cert_status == CERT_STATUS_BAD)
+            ret = TLS_CONNECT_NEVER;
 
-      if (s->cert_status == CERT_STATUS_NONE)
-         s->cert_status = CERT_STATUS_RECEIVING;
-   } else {
-      s = dNew(Server_t, 1);
+        if (s->cert_status == CERT_STATUS_NONE)
+            s->cert_status = CERT_STATUS_RECEIVING;
+    } else {
+        s = dNew(Server_t, 1);
 
-      s->hostname = dStrdup(URL_HOST(url));
-      s->port = URL_PORT(url);
-      s->cert_status = CERT_STATUS_RECEIVING;
-      dList_insert_sorted(servers, s, Tls_servers_cmp);
-   }
-   return ret;
+        s->hostname = dStrdup(URL_HOST(url));
+        s->port = URL_PORT(url);
+        s->cert_status = CERT_STATUS_RECEIVING;
+        dList_insert_sorted(servers, s, Tls_servers_cmp);
+    }
+    return ret;
 }
 
 static int Tls_cert_status(const DilloUrl *url)
 {
-   Server_t *s = dList_find_sorted(servers, url, Tls_servers_by_url_cmp);
+    Server_t *s = dList_find_sorted(servers, url, Tls_servers_by_url_cmp);
 
-   return s ? s->cert_status : CERT_STATUS_NONE;
+    return s ? s->cert_status : CERT_STATUS_NONE;
 }
 
 /*
@@ -435,7 +435,7 @@ static int Tls_cert_status(const DilloUrl *url)
  */
 static int Tls_user_said_no(const DilloUrl *url)
 {
-   return Tls_cert_status(url) == CERT_STATUS_BAD;
+    return Tls_cert_status(url) == CERT_STATUS_BAD;
 }
 
 /*
@@ -444,7 +444,7 @@ static int Tls_user_said_no(const DilloUrl *url)
  */
 int a_Tls_openssl_certificate_is_clean(const DilloUrl *url)
 {
-   return Tls_cert_status(url) == CERT_STATUS_CLEAN;
+    return Tls_cert_status(url) == CERT_STATUS_CLEAN;
 }
 
 /*
@@ -459,121 +459,121 @@ int a_Tls_openssl_certificate_is_clean(const DilloUrl *url)
  */
 static bool_t Tls_check_cert_strength(SSL *ssl, Server_t *srv, int *choice)
 {
-   /* print for first connection to server */
-   const bool_t print_chain = srv->cert_status == CERT_STATUS_RECEIVING;
-   bool_t success = TRUE;
+    /* print for first connection to server */
+    const bool_t print_chain = srv->cert_status == CERT_STATUS_RECEIVING;
+    bool_t success = TRUE;
 
-   STACK_OF(X509) *sk = SSL_get_peer_cert_chain(ssl);
+    STACK_OF(X509) *sk = SSL_get_peer_cert_chain(ssl);
 
-   if (sk) {
-      const uint_t buflen = 4096;
-      char buf[buflen];
-      int rc, i, n = sk_X509_num(sk);
-      X509 *cert = NULL;
-      int key_type, key_bits;
-      const char *type_str;
-      BIO *b;
+    if (sk) {
+        const uint_t buflen = 4096;
+        char buf[buflen];
+        int rc, i, n = sk_X509_num(sk);
+        X509 *cert = NULL;
+        int key_type, key_bits;
+        const char *type_str;
+        BIO *b;
 
-      for (i = 0; i < n; i++) {
-         cert = sk_X509_value(sk, i);
+        for (i = 0; i < n; i++) {
+            cert = sk_X509_value(sk, i);
 
-         /* We are trying to find a way to get the hash function used
+            /* We are trying to find a way to get the hash function used
           * with a certificate. This way, which is not very pleasant, puts
           * a string such as "sha256WithRSAEncryption" in our buffer and we
           * then trim off the "With..." part.
           */
-         b = BIO_new(BIO_s_mem());
-         const ASN1_OBJECT *algorithm;
-         X509_ALGOR_get0(&algorithm, NULL, NULL, X509_get0_tbs_sigalg(cert));
-         rc = i2a_ASN1_OBJECT(b, algorithm);
+            b = BIO_new(BIO_s_mem());
+            const ASN1_OBJECT *algorithm;
+            X509_ALGOR_get0(&algorithm, NULL, NULL, X509_get0_tbs_sigalg(cert));
+            rc = i2a_ASN1_OBJECT(b, algorithm);
 
-         if (rc > 0) {
-            rc = BIO_gets(b, buf, buflen);
-         }
-         if (rc <= 0) {
-            strcpy(buf, "(unknown)");
-            buf[buflen-1] = '\0';
-         } else {
-            char *s = strstr(buf, "With");
+            if (rc > 0) {
+                rc = BIO_gets(b, buf, buflen);
+            }
+            if (rc <= 0) {
+                strcpy(buf, "(unknown)");
+                buf[buflen-1] = '\0';
+            } else {
+                char *s = strstr(buf, "With");
 
-            if (s) {
-               *s = '\0';
-               if (!strcmp(buf, "sha1")) {
-                  if (print_chain)
-                     MSG_WARN("In 2015, browsers have begun to deprecate SHA1 "
-                              "certificates.\n");
-               } else if (!strncmp(buf, "md", 2) && success == TRUE) {
-                  const char *msg = "A certificate in the chain uses the MD5 "
-                                    "signature algorithm, which is too weak "
-                                    "to trust.";
-                  *choice = a_Dialog_choice("Dillo TLS security warning", msg,
+                if (s) {
+                    *s = '\0';
+                    if (!strcmp(buf, "sha1")) {
+                        if (print_chain)
+                            MSG_WARN("In 2015, browsers have begun to deprecate SHA1 "
+                                        "certificates.\n");
+                    } else if (!strncmp(buf, "md", 2) && success == TRUE) {
+                        const char *msg = "A certificate in the chain uses the MD5 "
+                                                "signature algorithm, which is too weak "
+                                                "to trust.";
+                        *choice = a_Dialog_choice("Dillo TLS security warning", msg,
                                             "Continue", "Cancel", NULL);
-                  if (*choice != 1)
-                     success = FALSE;
-               }
+                        if (*choice != 1)
+                            success = FALSE;
+                    }
+                }
             }
-         }
-         BIO_free(b);
+            BIO_free(b);
 
-         if (print_chain)
-            MSG(" %d: %s ", i, buf);
-
-         EVP_PKEY *public_key = X509_get_pubkey(cert);
-
-         /* LibreSSL returns a NULL public_key for CurveBall attacks */
-         if (public_key == NULL) {
             if (print_chain)
-               MSG("(error)\n");
+                MSG(" %d: %s ", i, buf);
 
-            const char *err = ERR_error_string(ERR_get_error(), NULL);
-            MSG("Cannot parse public key: %s\n", err);
+            EVP_PKEY *public_key = X509_get_pubkey(cert);
 
-            /* Ask the user what to do if not already failed */
-            if (success) {
-               const char *msg =
-                  "The public key of a certificate in the chain cannot be decoded. "
-                  "Cannot trust remote server, continue?";
+            /* LibreSSL returns a NULL public_key for CurveBall attacks */
+            if (public_key == NULL) {
+                if (print_chain)
+                    MSG("(error)\n");
 
-               *choice = a_Dialog_choice("Dillo TLS security warning", msg,
-                     "Continue", "Cancel", NULL);
+                const char *err = ERR_error_string(ERR_get_error(), NULL);
+                MSG("Cannot parse public key: %s\n", err);
 
-               if (*choice != 1)
-                  success = FALSE;
+                /* Ask the user what to do if not already failed */
+                if (success) {
+                    const char *msg =
+                        "The public key of a certificate in the chain cannot be decoded. "
+                        "Cannot trust remote server, continue?";
+
+                    *choice = a_Dialog_choice("Dillo TLS security warning", msg,
+                            "Continue", "Cancel", NULL);
+
+                    if (*choice != 1)
+                        success = FALSE;
+                }
+                continue;
             }
-            continue;
-         }
 
 #if OPENSSL_VERSION_NUMBER < 0x30000000L
-         key_type = EVP_PKEY_type(EVP_PKEY_id(public_key));
+            key_type = EVP_PKEY_type(EVP_PKEY_id(public_key));
 #else
-         key_type = EVP_PKEY_type(EVP_PKEY_get_id(public_key));
+            key_type = EVP_PKEY_type(EVP_PKEY_get_id(public_key));
 #endif
-         type_str = key_type == EVP_PKEY_RSA ? "RSA" :
+            type_str = key_type == EVP_PKEY_RSA ? "RSA" :
                     key_type == EVP_PKEY_DSA ? "DSA" :
                     key_type == EVP_PKEY_DH ? "DH" :
                     key_type == EVP_PKEY_EC ? "EC" : "???";
-         key_bits = EVP_PKEY_bits(public_key);
-         X509_NAME_oneline(X509_get_subject_name(cert), buf, buflen);
-         buf[buflen-1] = '\0';
-         if (print_chain)
-            MSG("%d-bit %s: %s\n", key_bits, type_str, buf);
-         EVP_PKEY_free(public_key);
-
-         if (key_type == EVP_PKEY_RSA && key_bits <= 1024) {
+            key_bits = EVP_PKEY_bits(public_key);
+            X509_NAME_oneline(X509_get_subject_name(cert), buf, buflen);
+            buf[buflen-1] = '\0';
             if (print_chain)
-               MSG_WARN("In 2014/5, browsers have been deprecating 1024-bit "
-                        "RSA keys.\n");
-         }
-      }
+                MSG("%d-bit %s: %s\n", key_bits, type_str, buf);
+            EVP_PKEY_free(public_key);
 
-      if (cert) {
-         X509_NAME_oneline(X509_get_issuer_name(cert), buf, buflen);
-         buf[buflen-1] = '\0';
-         if (print_chain)
-            MSG(" root: %s\n", buf);
-      }
-   }
-   return success;
+            if (key_type == EVP_PKEY_RSA && key_bits <= 1024) {
+                if (print_chain)
+                    MSG_WARN("In 2014/5, browsers have been deprecating 1024-bit "
+                                "RSA keys.\n");
+            }
+        }
+
+        if (cert) {
+            X509_NAME_oneline(X509_get_issuer_name(cert), buf, buflen);
+            buf[buflen-1] = '\0';
+            if (print_chain)
+                MSG(" root: %s\n", buf);
+        }
+    }
+    return success;
 }
 
 /******************** BEGINNING OF STUFF DERIVED FROM wget-1.16.3 */
@@ -581,18 +581,18 @@ static bool_t Tls_check_cert_strength(SSL *ssl, Server_t *srv, int *choice)
 #define ASTERISK_EXCLUDES_DOT   /* mandated by rfc2818 */
 
 /* Return true is STRING (case-insensitively) matches PATTERN, false
-   otherwise.  The recognized wildcard character is "*", which matches
-   any character in STRING except ".".  Any number of the "*" wildcard
-   may be present in the pattern.
+    otherwise.  The recognized wildcard character is "*", which matches
+    any character in STRING except ".".  Any number of the "*" wildcard
+    may be present in the pattern.
 
-   This is used to match of hosts as indicated in rfc2818: "Names may
-   contain the wildcard character * which is considered to match any
-   single domain name component or component fragment. E.g., *.a.com
-   matches foo.a.com but not bar.foo.a.com. f*.com matches foo.com but
-   not bar.com [or foo.bar.com]."
+    This is used to match of hosts as indicated in rfc2818: "Names may
+    contain the wildcard character * which is considered to match any
+    single domain name component or component fragment. E.g., *.a.com
+    matches foo.a.com but not bar.foo.a.com. f*.com matches foo.com but
+    not bar.com [or foo.bar.com]."
 
-   If the pattern contain no wildcards, pattern_match(a, b) is
-   equivalent to !strcasecmp(a, b).  */
+    If the pattern contain no wildcards, pattern_match(a, b) is
+    equivalent to !strcasecmp(a, b).  */
 
 static bool_t pattern_match (const char *pattern, const char *string)
 {
@@ -601,23 +601,23 @@ static bool_t pattern_match (const char *pattern, const char *string)
   char c;
   for (; (c = dTolower (*p++)) != '\0'; n++)
     if (c == '*')
-      {
+        {
         for (c = dTolower (*p); c == '*'; c = dTolower (*++p))
           ;
         for (; *n != '\0'; n++)
           if (dTolower (*n) == c && pattern_match (p, n))
-            return TRUE;
+                return TRUE;
 #ifdef ASTERISK_EXCLUDES_DOT
           else if (*n == '.')
-            return FALSE;
+                return FALSE;
 #endif
         return c == '\0';
-      }
+        }
     else
-      {
+        {
         if (c != dTolower (*n))
           return FALSE;
-      }
+        }
   return *n == '\0';
 }
 
@@ -630,13 +630,13 @@ static bool_t pattern_match (const char *pattern, const char *string)
 static bool_t Tls_check_cert_hostname(X509 *cert, const char *host,
                                       int *choice)
 {
-   if (cert == NULL || host == NULL)
-      return FALSE;
+    if (cert == NULL || host == NULL)
+        return FALSE;
 
-   char *msg;
-   GENERAL_NAMES *subjectAltNames;
-   bool_t success = TRUE, alt_name_checked = FALSE;;
-   char common_name[256];
+    char *msg;
+    GENERAL_NAMES *subjectAltNames;
+    bool_t success = TRUE, alt_name_checked = FALSE;;
+    char common_name[256];
 
   /* Check that HOST matches the common name in the certificate.
      #### The following remains to be done:
@@ -652,27 +652,27 @@ static bool_t Tls_check_cert_hostname(X509 *cert, const char *host,
 
   if (subjectAltNames)
     {
-      /* Test subject alternative names */
+        /* Test subject alternative names */
 
-      Dstr *err = dStr_new("");
-      dStr_sprintf(err, "Hostname %s does not match any of certificate's "
-                        "Subject Alternative Names: ", host);
+        Dstr *err = dStr_new("");
+        dStr_sprintf(err, "Hostname %s does not match any of certificate's "
+                                "Subject Alternative Names: ", host);
 
-      /* Do we want to check for dNSNAmes or ipAddresses (see RFC 2818)?
+        /* Do we want to check for dNSNAmes or ipAddresses (see RFC 2818)?
        * Signal it by host_in_octet_string. */
-      ASN1_OCTET_STRING *host_in_octet_string = a2i_IPADDRESS (host);
+        ASN1_OCTET_STRING *host_in_octet_string = a2i_IPADDRESS (host);
 
-      int numaltnames = sk_GENERAL_NAME_num (subjectAltNames);
-      int i;
-      for (i=0; i < numaltnames; i++)
+        int numaltnames = sk_GENERAL_NAME_num (subjectAltNames);
+        int i;
+        for (i=0; i < numaltnames; i++)
         {
           const GENERAL_NAME *name =
-            sk_GENERAL_NAME_value (subjectAltNames, i);
+                sk_GENERAL_NAME_value (subjectAltNames, i);
           if (name)
-            {
+                {
               if (host_in_octet_string)
                 {
-                  if (name->type == GEN_IPADD)
+                        if (name->type == GEN_IPADD)
                     {
                       /* Check for ipAddress */
                       /* TODO: Should we convert between IPv4-mapped IPv6
@@ -680,86 +680,86 @@ static bool_t Tls_check_cert_hostname(X509 *cert, const char *host,
                       alt_name_checked = TRUE;
                       if (!ASN1_STRING_cmp (host_in_octet_string,
                             name->d.iPAddress))
-                        break;
+                                break;
                       dStr_sprintfa(err, "%s ", name->d.iPAddress);
                     }
                 }
               else if (name->type == GEN_DNS)
                 {
-                  /* dNSName should be IA5String (i.e. ASCII), however who
+                        /* dNSName should be IA5String (i.e. ASCII), however who
                    * does trust CA? Convert it into UTF-8 for sure. */
-                  unsigned char *name_in_utf8 = NULL;
+                        unsigned char *name_in_utf8 = NULL;
 
-                  /* Check for dNSName */
-                  alt_name_checked = TRUE;
+                        /* Check for dNSName */
+                        alt_name_checked = TRUE;
 
-                  if (0 <= ASN1_STRING_to_UTF8 (&name_in_utf8, name->d.dNSName))
+                        if (0 <= ASN1_STRING_to_UTF8 (&name_in_utf8, name->d.dNSName))
                     {
                       /* Compare and check for NULL attack in ASN1_STRING */
                       if (pattern_match ((char *)name_in_utf8, host) &&
                             (strlen ((char *)name_in_utf8) ==
                                 (size_t)ASN1_STRING_length (name->d.dNSName)))
-                        {
+                                {
                           OPENSSL_free (name_in_utf8);
                           break;
-                        }
+                                }
                       dStr_sprintfa(err, "%s ", name_in_utf8);
                       OPENSSL_free (name_in_utf8);
                     }
                 }
-            }
+                }
         }
-      sk_GENERAL_NAME_pop_free(subjectAltNames, GENERAL_NAME_free);
-      if (host_in_octet_string)
+        sk_GENERAL_NAME_pop_free(subjectAltNames, GENERAL_NAME_free);
+        if (host_in_octet_string)
         ASN1_OCTET_STRING_free(host_in_octet_string);
 
-      if (alt_name_checked == TRUE && i >= numaltnames)
+        if (alt_name_checked == TRUE && i >= numaltnames)
         {
-         success = FALSE;
-         *choice = a_Dialog_choice("Dillo TLS security warning",
-            err->str, "Continue", "Cancel", NULL);
+            success = FALSE;
+            *choice = a_Dialog_choice("Dillo TLS security warning",
+                err->str, "Continue", "Cancel", NULL);
 
-         switch (*choice){
-            case 1:
-               success = TRUE;
-               break;
-            case 2:
-               break;
-            default:
-               break;
-         }
+            switch (*choice){
+                case 1:
+                    success = TRUE;
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
+            }
         }
-      dStr_free(err, 1);
+        dStr_free(err, 1);
     }
 
   if (alt_name_checked == FALSE)
     {
-      /* Test commomName */
-      X509_NAME *xname = X509_get_subject_name(cert);
-      common_name[0] = '\0';
-      X509_NAME_get_text_by_NID (xname, NID_commonName, common_name,
-                                 sizeof (common_name));
+        /* Test commomName */
+        X509_NAME *xname = X509_get_subject_name(cert);
+        common_name[0] = '\0';
+        X509_NAME_get_text_by_NID (xname, NID_commonName, common_name,
+                                            sizeof (common_name));
 
-      if (!pattern_match (common_name, host))
+        if (!pattern_match (common_name, host))
         {
           success = FALSE;
-         msg = dStrconcat("Certificate common name ", common_name,
+            msg = dStrconcat("Certificate common name ", common_name,
                           " doesn't match requested host name ", host, NULL);
-         *choice = a_Dialog_choice("Dillo TLS security warning",
-            msg, "Continue", "Cancel", NULL);
-         dFree(msg);
+            *choice = a_Dialog_choice("Dillo TLS security warning",
+                msg, "Continue", "Cancel", NULL);
+            dFree(msg);
 
-         switch (*choice){
-            case 1:
-               success = TRUE;
-               break;
-            case 2:
-               break;
-            default:
-               break;
-         }
+            switch (*choice){
+                case 1:
+                    success = TRUE;
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
+            }
         }
-      else
+        else
         {
           /* We now determine the length of the ASN1 string. If it
            * differs from common_name's length, then there is a \0
@@ -774,7 +774,7 @@ static bool_t Tls_check_cert_hostname(X509 *cert, const char *host,
           ASN1_STRING *sdata;
 
           if (xname) {
-            for (;;)
+                for (;;)
               {
                 j = X509_NAME_get_index_by_NID (xname, NID_commonName, i);
                 if (j == -1) break;
@@ -785,26 +785,26 @@ static bool_t Tls_check_cert_hostname(X509 *cert, const char *host,
           xentry = X509_NAME_get_entry(xname,i);
           sdata = X509_NAME_ENTRY_get_data(xentry);
           if (strlen (common_name) != (size_t)ASN1_STRING_length (sdata))
-            {
+                {
               success = FALSE;
-         msg = dStrconcat("Certificate common name is invalid (contains a NUL "
+            msg = dStrconcat("Certificate common name is invalid (contains a NUL "
                           "character). This may be an indication that the "
                           "host is not who it claims to be -- that is, not "
                           "the real ", host, NULL);
-         *choice = a_Dialog_choice("Dillo TLS security warning",
-            msg, "Continue", "Cancel", NULL);
-         dFree(msg);
+            *choice = a_Dialog_choice("Dillo TLS security warning",
+                msg, "Continue", "Cancel", NULL);
+            dFree(msg);
 
-         switch (*choice){
-            case 1:
-               success = TRUE;
-               break;
-            case 2:
-               break;
-            default:
-               break;
-         }
+            switch (*choice){
+                case 1:
+                    success = TRUE;
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
             }
+                }
         }
     }
     return success;
@@ -821,35 +821,35 @@ static bool_t Tls_check_cert_hostname(X509 *cert, const char *host,
  */
 static X509 *Tls_get_end_of_chain(SSL *ssl)
 {
-   STACK_OF(X509) *sk = SSL_get_peer_cert_chain(ssl);
+    STACK_OF(X509) *sk = SSL_get_peer_cert_chain(ssl);
 
-   return sk ? sk_X509_value(sk, sk_X509_num(sk) - 1) : NULL;
+    return sk ? sk_X509_value(sk, sk_X509_num(sk) - 1) : NULL;
 }
 
 static void Tls_get_issuer_name(X509 *cert, char *buf, uint_t buflen)
 {
-   if (cert) {
-      X509_NAME_oneline(X509_get_issuer_name(cert), buf, buflen);
-   } else {
-      strcpy(buf, "(unknown)");
-      buf[buflen-1] = '\0';
-   }
+    if (cert) {
+        X509_NAME_oneline(X509_get_issuer_name(cert), buf, buflen);
+    } else {
+        strcpy(buf, "(unknown)");
+        buf[buflen-1] = '\0';
+    }
 }
 
 static void Tls_get_expiration_str(X509 *cert, char *buf, uint_t buflen)
 {
-   ASN1_TIME *exp_date = X509_get_notAfter(cert);
-   BIO *b = BIO_new(BIO_s_mem());
-   int rc = ASN1_TIME_print(b, exp_date);
+    ASN1_TIME *exp_date = X509_get_notAfter(cert);
+    BIO *b = BIO_new(BIO_s_mem());
+    int rc = ASN1_TIME_print(b, exp_date);
 
-   if (rc > 0) {
-      rc = BIO_gets(b, buf, buflen);
-   }
-   if (rc <= 0) {
-      strcpy(buf, "(unknown)");
-      buf[buflen-1] = '\0';
-   }
-   BIO_free(b);
+    if (rc > 0) {
+        rc = BIO_gets(b, buf, buflen);
+    }
+    if (rc <= 0) {
+        strcpy(buf, "(unknown)");
+        buf[buflen-1] = '\0';
+    }
+    BIO_free(b);
 }
 
 /*
@@ -859,218 +859,218 @@ static void Tls_get_expiration_str(X509 *cert, char *buf, uint_t buflen)
  */
 static int Tls_examine_certificate(SSL *ssl, Server_t *srv)
 {
-   X509 *remote_cert;
-   long st;
-   const uint_t buflen = 4096;
-   char buf[buflen], *cn, *msg;
-   int choice = -1, ret = -1;
-   char *title = dStrconcat("Dillo TLS security warning: ",srv->hostname,NULL);
+    X509 *remote_cert;
+    long st;
+    const uint_t buflen = 4096;
+    char buf[buflen], *cn, *msg;
+    int choice = -1, ret = -1;
+    char *title = dStrconcat("Dillo TLS security warning: ",srv->hostname,NULL);
 
 #if OPENSSL_VERSION_NUMBER < 0x30000000L
-   remote_cert = SSL_get_peer_certificate(ssl);
+    remote_cert = SSL_get_peer_certificate(ssl);
 #else
-   /* SSL_get_peer_certificate() was deprecated in 3.0.0. */
-   remote_cert = SSL_get1_peer_certificate(ssl);
+    /* SSL_get_peer_certificate() was deprecated in 3.0.0. */
+    remote_cert = SSL_get1_peer_certificate(ssl);
 #endif
-   if (remote_cert == NULL){
-      /* Inform user that remote system cannot be trusted */
-      choice = a_Dialog_choice(title,
-         "The remote system is not presenting a certificate. "
-         "This site cannot be trusted. Sending data is not safe.",
-         "Continue", "Cancel", NULL);
+    if (remote_cert == NULL){
+        /* Inform user that remote system cannot be trusted */
+        choice = a_Dialog_choice(title,
+            "The remote system is not presenting a certificate. "
+            "This site cannot be trusted. Sending data is not safe.",
+            "Continue", "Cancel", NULL);
 
-      /* Abort on anything but "Continue" */
-      if (choice == 1){
-         ret = 0;
-      }
-   } else if (Tls_check_cert_strength(ssl, srv, &choice) &&
+        /* Abort on anything but "Continue" */
+        if (choice == 1){
+            ret = 0;
+        }
+    } else if (Tls_check_cert_strength(ssl, srv, &choice) &&
               Tls_check_cert_hostname(remote_cert, srv->hostname, &choice)) {
-      /* Figure out if (and why) the remote system can't be trusted */
-      st = SSL_get_verify_result(ssl);
-      switch (st) {
-      case X509_V_OK:
-         ret = 0;
-         break;
-      case X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT:
-         ; /* Case follows declaration */
-         /* Either self signed and untrusted */
-         /* Extract CN from certificate name information */
-         X509_NAME *subject_name = X509_get_subject_name(remote_cert);
-         char *subj = X509_NAME_oneline(subject_name, NULL, 0);
-         if ((cn = strstr(subj, "/CN=")) == NULL) {
-            strcpy(buf, "(no CN given)");
-         } else {
-            char *cn_end;
+        /* Figure out if (and why) the remote system can't be trusted */
+        st = SSL_get_verify_result(ssl);
+        switch (st) {
+        case X509_V_OK:
+            ret = 0;
+            break;
+        case X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT:
+            ; /* Case follows declaration */
+            /* Either self signed and untrusted */
+            /* Extract CN from certificate name information */
+            X509_NAME *subject_name = X509_get_subject_name(remote_cert);
+            char *subj = X509_NAME_oneline(subject_name, NULL, 0);
+            if ((cn = strstr(subj, "/CN=")) == NULL) {
+                strcpy(buf, "(no CN given)");
+            } else {
+                char *cn_end;
 
-            cn += 4;
+                cn += 4;
 
-            if ((cn_end = strstr(cn, "/")) == NULL )
-               cn_end = cn + strlen(cn);
+                if ((cn_end = strstr(cn, "/")) == NULL )
+                    cn_end = cn + strlen(cn);
 
-            strncpy(buf, cn, (size_t) (cn_end - cn));
-            buf[cn_end - cn] = '\0';
-         }
-         OPENSSL_free(subj);
-         msg = dStrconcat("The remote certificate is self-signed and "
+                strncpy(buf, cn, (size_t) (cn_end - cn));
+                buf[cn_end - cn] = '\0';
+            }
+            OPENSSL_free(subj);
+            msg = dStrconcat("The remote certificate is self-signed and "
                           "untrusted. For address: ", buf, NULL);
-         choice = a_Dialog_choice(title,
-            msg, "Continue", "Cancel", "Save Certificate", NULL);
-         dFree(msg);
+            choice = a_Dialog_choice(title,
+                msg, "Continue", "Cancel", "Save Certificate", NULL);
+            dFree(msg);
 
-         switch (choice){
-            case 1:
-               ret = 0;
-               break;
-            case 2:
-               break;
-            case 3:
-               /* Save certificate to a file */
-               Tls_save_certificate_home(remote_cert);
-               ret = 0;
-               break;
-            default:
-               break;
-         }
-         break;
-      case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
-      case X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY:
-         choice = a_Dialog_choice(title,
-            "The issuer for the remote certificate cannot be found. "
-            "The authenticity of the remote certificate cannot be trusted.",
-            "Continue", "Cancel", NULL);
+            switch (choice){
+                case 1:
+                    ret = 0;
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    /* Save certificate to a file */
+                    Tls_save_certificate_home(remote_cert);
+                    ret = 0;
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+        case X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY:
+            choice = a_Dialog_choice(title,
+                "The issuer for the remote certificate cannot be found. "
+                "The authenticity of the remote certificate cannot be trusted.",
+                "Continue", "Cancel", NULL);
 
-         if (choice == 1) {
-            ret = 0;
-         }
-         break;
+            if (choice == 1) {
+                ret = 0;
+            }
+            break;
 
-      case X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE:
-      case X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE:
-      case X509_V_ERR_CERT_SIGNATURE_FAILURE:
-      case X509_V_ERR_CRL_SIGNATURE_FAILURE:
-         choice = a_Dialog_choice(title,
-            "The remote certificate signature could not be read "
-            "or is invalid and should not be trusted",
-            "Continue", "Cancel", NULL);
+        case X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE:
+        case X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE:
+        case X509_V_ERR_CERT_SIGNATURE_FAILURE:
+        case X509_V_ERR_CRL_SIGNATURE_FAILURE:
+            choice = a_Dialog_choice(title,
+                "The remote certificate signature could not be read "
+                "or is invalid and should not be trusted",
+                "Continue", "Cancel", NULL);
 
-         if (choice == 1) {
-            ret = 0;
-         }
-         break;
-      case X509_V_ERR_CERT_NOT_YET_VALID:
-      case X509_V_ERR_CRL_NOT_YET_VALID:
-         choice = a_Dialog_choice(title,
-            "Part of the remote certificate is not yet valid. "
-            "Certificates usually have a range of dates over which "
-            "they are to be considered valid, and the certificate "
-            "presented has a starting validity after today's date "
-            "You should be cautious about using this site",
-            "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            break;
+        case X509_V_ERR_CERT_NOT_YET_VALID:
+        case X509_V_ERR_CRL_NOT_YET_VALID:
+            choice = a_Dialog_choice(title,
+                "Part of the remote certificate is not yet valid. "
+                "Certificates usually have a range of dates over which "
+                "they are to be considered valid, and the certificate "
+                "presented has a starting validity after today's date "
+                "You should be cautious about using this site",
+                "Continue", "Cancel", NULL);
 
-         if (choice == 1) {
-            ret = 0;
-         }
-         break;
-      case X509_V_ERR_CERT_HAS_EXPIRED:
-      case X509_V_ERR_CRL_HAS_EXPIRED:
-         Tls_get_expiration_str(remote_cert, buf, buflen);
-         msg = dStrconcat("The remote certificate expired on: ", buf,
+            if (choice == 1) {
+                ret = 0;
+            }
+            break;
+        case X509_V_ERR_CERT_HAS_EXPIRED:
+        case X509_V_ERR_CRL_HAS_EXPIRED:
+            Tls_get_expiration_str(remote_cert, buf, buflen);
+            msg = dStrconcat("The remote certificate expired on: ", buf,
                           ". This site can no longer be trusted.", NULL);
 
-         choice = a_Dialog_choice(title, msg, "Continue", "Cancel", NULL);
-         if (choice == 1) {
-            ret = 0;
-         }
-         dFree(msg);
-         break;
-      case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
-      case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
-      case X509_V_ERR_ERROR_IN_CRL_LAST_UPDATE_FIELD:
-      case X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD:
-         choice = a_Dialog_choice(title,
-            "There was an error in the certificate presented. "
-            "Some of the certificate data was improperly formatted "
-            "making it impossible to determine if the certificate "
-            "is valid.  You should not trust this certificate.",
-            "Continue", "Cancel", NULL);
-         if (choice == 1) {
-            ret = 0;
-         }
-         break;
-      case X509_V_ERR_INVALID_CA:
-      case X509_V_ERR_INVALID_PURPOSE:
-      case X509_V_ERR_CERT_UNTRUSTED:
-      case X509_V_ERR_CERT_REJECTED:
-      case X509_V_ERR_KEYUSAGE_NO_CERTSIGN:
-         choice = a_Dialog_choice(title,
-            "One of the certificates in the chain is being used "
-            "incorrectly (possibly due to configuration problems "
-            "with the remote system.  The connection should not "
-            "be trusted",
-            "Continue", "Cancel", NULL);
-         if (choice == 1) {
-            ret = 0;
-         }
-         break;
-      case X509_V_ERR_SUBJECT_ISSUER_MISMATCH:
-      case X509_V_ERR_AKID_SKID_MISMATCH:
-      case X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH:
-         choice = a_Dialog_choice(title,
-            "Some of the information presented by the remote system "
-            "does not match other information presented. "
-            "This may be an attempt to eavesdrop on communications",
-            "Continue", "Cancel", NULL);
-         if (choice == 1) {
-            ret = 0;
-         }
-         break;
-      case X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN:
-         Tls_get_issuer_name(Tls_get_end_of_chain(ssl), buf, buflen);
-         msg = dStrconcat("Certificate chain led to a self-signed certificate "
+            choice = a_Dialog_choice(title, msg, "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            dFree(msg);
+            break;
+        case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
+        case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
+        case X509_V_ERR_ERROR_IN_CRL_LAST_UPDATE_FIELD:
+        case X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD:
+            choice = a_Dialog_choice(title,
+                "There was an error in the certificate presented. "
+                "Some of the certificate data was improperly formatted "
+                "making it impossible to determine if the certificate "
+                "is valid.  You should not trust this certificate.",
+                "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            break;
+        case X509_V_ERR_INVALID_CA:
+        case X509_V_ERR_INVALID_PURPOSE:
+        case X509_V_ERR_CERT_UNTRUSTED:
+        case X509_V_ERR_CERT_REJECTED:
+        case X509_V_ERR_KEYUSAGE_NO_CERTSIGN:
+            choice = a_Dialog_choice(title,
+                "One of the certificates in the chain is being used "
+                "incorrectly (possibly due to configuration problems "
+                "with the remote system.  The connection should not "
+                "be trusted",
+                "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            break;
+        case X509_V_ERR_SUBJECT_ISSUER_MISMATCH:
+        case X509_V_ERR_AKID_SKID_MISMATCH:
+        case X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH:
+            choice = a_Dialog_choice(title,
+                "Some of the information presented by the remote system "
+                "does not match other information presented. "
+                "This may be an attempt to eavesdrop on communications",
+                "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            break;
+        case X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN:
+            Tls_get_issuer_name(Tls_get_end_of_chain(ssl), buf, buflen);
+            msg = dStrconcat("Certificate chain led to a self-signed certificate "
                           "instead of a trusted root. Name: ",  buf , NULL);
-         choice = a_Dialog_choice(title, msg, "Continue", "Cancel", NULL);
-         if (choice == 1) {
-            ret = 0;
-         }
-         dFree(msg);
-         break;
-      case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
-         Tls_get_issuer_name(Tls_get_end_of_chain(ssl), buf, buflen);
-         msg = dStrconcat("The issuer certificate of an untrusted certificate "
+            choice = a_Dialog_choice(title, msg, "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            dFree(msg);
+            break;
+        case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
+            Tls_get_issuer_name(Tls_get_end_of_chain(ssl), buf, buflen);
+            msg = dStrconcat("The issuer certificate of an untrusted certificate "
                           "cannot be found. Issuer: ", buf, NULL);
-         choice = a_Dialog_choice(title, msg, "Continue", "Cancel", NULL);
-         if (choice == 1) {
-            ret = 0;
-         }
-         dFree(msg);
-         break;
-      default:             /* Need to add more options later */
-         snprintf(buf, 80,
-                  "The remote certificate cannot be verified (code %ld)", st);
-         choice = a_Dialog_choice(title,
-            buf, "Continue", "Cancel", NULL);
-         /* abort on anything but "Continue" */
-         if (choice == 1){
-            ret = 0;
-         }
-      }
-      X509_free(remote_cert);
-      remote_cert = 0;
-   }
-   dFree(title);
+            choice = a_Dialog_choice(title, msg, "Continue", "Cancel", NULL);
+            if (choice == 1) {
+                ret = 0;
+            }
+            dFree(msg);
+            break;
+        default:             /* Need to add more options later */
+            snprintf(buf, 80,
+                        "The remote certificate cannot be verified (code %ld)", st);
+            choice = a_Dialog_choice(title,
+                buf, "Continue", "Cancel", NULL);
+            /* abort on anything but "Continue" */
+            if (choice == 1){
+                ret = 0;
+            }
+        }
+        X509_free(remote_cert);
+        remote_cert = 0;
+    }
+    dFree(title);
 
-   if (choice == -1) {
-      srv->cert_status = CERT_STATUS_CLEAN;          /* no warning popups */
-   } else if (choice == 1) {
-      srv->cert_status = CERT_STATUS_USER_ACCEPTED;  /* clicked Continue */
-   } else {
-      /* 2 for Cancel, or 0 when window closed. Treating 0 as meaning 'No' is
+    if (choice == -1) {
+        srv->cert_status = CERT_STATUS_CLEAN;          /* no warning popups */
+    } else if (choice == 1) {
+        srv->cert_status = CERT_STATUS_USER_ACCEPTED;  /* clicked Continue */
+    } else {
+        /* 2 for Cancel, or 0 when window closed. Treating 0 as meaning 'No' is
        * probably not exactly correct, but adding complexity to handle this
        * obscure case does not seem justifiable.
        */
-      srv->cert_status = CERT_STATUS_BAD;
-   }
-   return ret;
+        srv->cert_status = CERT_STATUS_BAD;
+    }
+    return ret;
 }
 
 /*
@@ -1079,12 +1079,12 @@ static int Tls_examine_certificate(SSL *ssl, Server_t *srv)
  */
 void a_Tls_openssl_reset_server_state(const DilloUrl *url)
 {
-   if (servers) {
-      Server_t *s = dList_find_sorted(servers, url, Tls_servers_by_url_cmp);
+    if (servers) {
+        Server_t *s = dList_find_sorted(servers, url, Tls_servers_by_url_cmp);
 
-      if (s && s->cert_status == CERT_STATUS_RECEIVING)
-         s->cert_status = CERT_STATUS_NONE;
-   }
+        if (s && s->cert_status == CERT_STATUS_RECEIVING)
+            s->cert_status = CERT_STATUS_NONE;
+    }
 }
 
 /*
@@ -1092,37 +1092,37 @@ void a_Tls_openssl_reset_server_state(const DilloUrl *url)
  */
 static void Tls_close_by_key(int connkey)
 {
-   _MSG("Tls_close_by_key: connkey=%d\n", connkey);
+    _MSG("Tls_close_by_key: connkey=%d\n", connkey);
 
-   Conn_t *c;
+    Conn_t *c;
 
-   if ((c = a_Klist_get_data(conn_list, connkey))) {
-      a_Tls_openssl_reset_server_state(c->url);
-      if (c->connecting) {
-         a_IOwatch_remove_fd(c->fd, -1);
-         dClose(c->fd);
-      }
-      if (c->do_shutdown && !SSL_in_init(c->ssl)) {
-         /* openssl 1.0.2f does not like shutdown being called during
+    if ((c = a_Klist_get_data(conn_list, connkey))) {
+        a_Tls_openssl_reset_server_state(c->url);
+        if (c->connecting) {
+            a_IOwatch_remove_fd(c->fd, -1);
+            dClose(c->fd);
+        }
+        if (c->do_shutdown && !SSL_in_init(c->ssl)) {
+            /* openssl 1.0.2f does not like shutdown being called during
           * handshake, resulting in ssl_undefined_function in the error queue.
           */
-         if (SSL_shutdown(c->ssl) < 0) {
-            /* Drain error queue before making more calls */
-            for (int e = ERR_get_error(); e; e = ERR_get_error()) {
-               MSG("SSL_shutdown() failed with %s for url: %s\n",
-                     ERR_error_string(e, NULL), URL_STR(c->url));
+            if (SSL_shutdown(c->ssl) < 0) {
+                /* Drain error queue before making more calls */
+                for (int e = ERR_get_error(); e; e = ERR_get_error()) {
+                    MSG("SSL_shutdown() failed with %s for url: %s\n",
+                            ERR_error_string(e, NULL), URL_STR(c->url));
+                }
             }
-         }
-      } else {
-         MSG("Tls_close_by_key: Avoiding SSL shutdown for: %s\n", URL_STR(c->url));
-      }
-      SSL_free(c->ssl);
+        } else {
+            MSG("Tls_close_by_key: Avoiding SSL shutdown for: %s\n", URL_STR(c->url));
+        }
+        SSL_free(c->ssl);
 
-      a_Url_free(c->url);
-      Tls_fd_map_remove_entry(c->fd);
-      a_Klist_remove(conn_list, connkey);
-      dFree(c);
-   }
+        a_Url_free(c->url);
+        Tls_fd_map_remove_entry(c->fd);
+        a_Klist_remove(conn_list, connkey);
+        dFree(c);
+    }
 }
 
 /*
@@ -1131,136 +1131,136 @@ static void Tls_close_by_key(int connkey)
  */
 static void Tls_connect(int fd, int connkey)
 {
-   int ret;
-   bool_t ongoing = FALSE, failed = TRUE;
-   Conn_t *conn;
+    int ret;
+    bool_t ongoing = FALSE, failed = TRUE;
+    Conn_t *conn;
 
-   _MSG("Tls_connect: fd=%d connkey=%d\n", fd, connkey);
+    _MSG("Tls_connect: fd=%d connkey=%d\n", fd, connkey);
 
-   if (!(conn = a_Klist_get_data(conn_list, connkey))) {
-      MSG("Tls_connect: conn for fd %d not valid\n", fd);
-      return;
-   }
+    if (!(conn = a_Klist_get_data(conn_list, connkey))) {
+        MSG("Tls_connect: conn for fd %d not valid\n", fd);
+        return;
+    }
 
-   if (conn->in_connect) {
-      MSG("Tls_connect: nested call to Tls_connect(), aborting\n");
-      abort();
-   } else {
-      conn->in_connect = TRUE;
-   }
+    if (conn->in_connect) {
+        MSG("Tls_connect: nested call to Tls_connect(), aborting\n");
+        abort();
+    } else {
+        conn->in_connect = TRUE;
+    }
 
-   if (ERR_peek_error()) {
-      unsigned long err;
-      while ((err = ERR_get_error())) {
-         MSG("Tls_connect: queued error: %s\n",
-               ERR_error_string(err, NULL));
-      }
-      abort();
-   }
+    if (ERR_peek_error()) {
+        unsigned long err;
+        while ((err = ERR_get_error())) {
+            MSG("Tls_connect: queued error: %s\n",
+                    ERR_error_string(err, NULL));
+        }
+        abort();
+    }
 
-   ret = SSL_connect(conn->ssl);
+    ret = SSL_connect(conn->ssl);
 
-   a_IOwatch_remove_fd(fd, -1);
+    a_IOwatch_remove_fd(fd, -1);
 
-   if (ret <= 0) {
-      int err1_ret = SSL_get_error(conn->ssl, ret);
-      if (err1_ret == SSL_ERROR_WANT_READ ||
+    if (ret <= 0) {
+        int err1_ret = SSL_get_error(conn->ssl, ret);
+        if (err1_ret == SSL_ERROR_WANT_READ ||
           err1_ret == SSL_ERROR_WANT_WRITE) {
-         int want = err1_ret == SSL_ERROR_WANT_READ ? DIO_READ : DIO_WRITE;
+            int want = err1_ret == SSL_ERROR_WANT_READ ? DIO_READ : DIO_WRITE;
 
-         _MSG("iowatching fd %d for tls -- want %s\n", fd,
+            _MSG("iowatching fd %d for tls -- want %s\n", fd,
              err1_ret == SSL_ERROR_WANT_READ ? "read" : "write");
-         a_IOwatch_add_fd(fd, want, Tls_connect_cb, INT2VOIDP(connkey));
-         ongoing = TRUE;
-         failed = FALSE;
-      } else if (err1_ret == SSL_ERROR_SYSCALL || err1_ret == SSL_ERROR_SSL) {
-         /* From the OpenSSL documentation: "Note that SSL_shutdown() must not
+            a_IOwatch_add_fd(fd, want, Tls_connect_cb, INT2VOIDP(connkey));
+            ongoing = TRUE;
+            failed = FALSE;
+        } else if (err1_ret == SSL_ERROR_SYSCALL || err1_ret == SSL_ERROR_SSL) {
+            /* From the OpenSSL documentation: "Note that SSL_shutdown() must not
           * be called if a previous fatal error has occurred on a connection
           * i.e. if SSL_get_error() has returned SSL_ERROR_SYSCALL or
           * SSL_ERROR_SSL." */
-         conn->do_shutdown = FALSE;
+            conn->do_shutdown = FALSE;
 
-         unsigned long err2_ret = ERR_get_error();
+            unsigned long err2_ret = ERR_get_error();
 
-         if (err2_ret) {
-            do {
-               MSG("SSL_connect() failed: %s\n",
+            if (err2_ret) {
+                do {
+                    MSG("SSL_connect() failed: %s\n",
                    ERR_error_string(err2_ret, NULL));
-            } while ((err2_ret = ERR_get_error()));
-         } else {
-            /* nothing in the error queue */
-            if (ret == 0) {
-               MSG("TLS connect error: \"an EOF was observed that violates "
+                } while ((err2_ret = ERR_get_error()));
+            } else {
+                /* nothing in the error queue */
+                if (ret == 0) {
+                    MSG("TLS connect error: \"an EOF was observed that violates "
                    "the protocol\"\n");
-               /*
+                    /*
                 * I presume we took too long on our side and the server grew
                 * impatient.
                 */
-            } else if (ret == -1) {
-               MSG("TLS connect error: %s\n", dStrerror(errno));
+                } else if (ret == -1) {
+                    MSG("TLS connect error: %s\n", dStrerror(errno));
 
-               /* If the following can happen, I'll add code to handle it, but
+                    /* If the following can happen, I'll add code to handle it, but
                 * I don't want to add code blindly if it isn't getting used
                 */
-               assert(errno != EAGAIN && errno != EINTR);
-            } else {
-               MSG_ERR("According to the man page for SSL_get_error(), this "
+                    assert(errno != EAGAIN && errno != EINTR);
+                } else {
+                    MSG_ERR("According to the man page for SSL_get_error(), this "
                        "was not a possibility (ret %d).\n", ret);
+                }
             }
-         }
-      } else {
-         MSG("SSL_get_error() returned %d on a connect.\n", err1_ret);
-      }
-   } else {
-      Server_t *srv = dList_find_sorted(servers, conn->url,
+        } else {
+            MSG("SSL_get_error() returned %d on a connect.\n", err1_ret);
+        }
+    } else {
+        Server_t *srv = dList_find_sorted(servers, conn->url,
                                         Tls_servers_by_url_cmp);
 
-      if (srv->cert_status == CERT_STATUS_RECEIVING) {
-         /* Making first connection with the server. Show cipher used. */
-         SSL *ssl = conn->ssl;
-         const char *version = SSL_get_version(ssl);
-         const SSL_CIPHER *cipher = SSL_get_current_cipher(ssl);
+        if (srv->cert_status == CERT_STATUS_RECEIVING) {
+            /* Making first connection with the server. Show cipher used. */
+            SSL *ssl = conn->ssl;
+            const char *version = SSL_get_version(ssl);
+            const SSL_CIPHER *cipher = SSL_get_current_cipher(ssl);
 
-         MSG("%s: %s, cipher %s\n", URL_AUTHORITY(conn->url), version,
+            MSG("%s: %s, cipher %s\n", URL_AUTHORITY(conn->url), version,
              SSL_CIPHER_get_name(cipher));
-      }
+        }
 
-      if (srv->cert_status == CERT_STATUS_USER_ACCEPTED ||
+        if (srv->cert_status == CERT_STATUS_USER_ACCEPTED ||
           (Tls_examine_certificate(conn->ssl, srv) != -1)) {
-         failed = FALSE;
-      }
-   }
+            failed = FALSE;
+        }
+    }
 
-   /*
+    /*
     * If there were problems with the certificate, the connection may have
     * been closed by the server if the user responded too slowly to a popup.
     */
 
-   conn = a_Klist_get_data(conn_list, connkey);
+    conn = a_Klist_get_data(conn_list, connkey);
 
-   if (!ongoing) {
-      if (conn) {
-         conn->connecting = FALSE;
-         if (failed) {
-            conn->in_connect = FALSE;
-            Tls_close_by_key(connkey);
-            /* conn is freed now */
-            conn = NULL;
-         }
-         a_IOwatch_remove_fd(fd, DIO_READ|DIO_WRITE);
-         a_Http_connect_done(fd, failed ? FALSE : TRUE);
-      } else {
-         MSG("Connection disappeared. Too long with a popup popped up?\n");
-      }
-   }
+    if (!ongoing) {
+        if (conn) {
+            conn->connecting = FALSE;
+            if (failed) {
+                conn->in_connect = FALSE;
+                Tls_close_by_key(connkey);
+                /* conn is freed now */
+                conn = NULL;
+            }
+            a_IOwatch_remove_fd(fd, DIO_READ|DIO_WRITE);
+            a_Http_connect_done(fd, failed ? FALSE : TRUE);
+        } else {
+            MSG("Connection disappeared. Too long with a popup popped up?\n");
+        }
+    }
 
-   if (conn)
-      conn->in_connect = FALSE;
+    if (conn)
+        conn->in_connect = FALSE;
 }
 
 static void Tls_connect_cb(int fd, void *vconnkey)
 {
-   Tls_connect(fd, VOIDP2INT(vconnkey));
+    Tls_connect(fd, VOIDP2INT(vconnkey));
 }
 
 /*
@@ -1268,62 +1268,62 @@ static void Tls_connect_cb(int fd, void *vconnkey)
  */
 void a_Tls_openssl_connect(int fd, const DilloUrl *url)
 {
-   _MSG("a_Tls_openssl_connect: fd=%d url=%s\n", fd, URL_STR(url));
+    _MSG("a_Tls_openssl_connect: fd=%d url=%s\n", fd, URL_STR(url));
 
-   SSL *ssl;
-   bool_t success = TRUE;
-   int connkey = -1;
+    SSL *ssl;
+    bool_t success = TRUE;
+    int connkey = -1;
 
-   if (!ssl_context)
-      success = FALSE;
+    if (!ssl_context)
+        success = FALSE;
 
-   if (success && Tls_user_said_no(url)) {
-      success = FALSE;
-   }
+    if (success && Tls_user_said_no(url)) {
+        success = FALSE;
+    }
 
-   if (ERR_peek_error()) {
-      unsigned long err;
-      while ((err = ERR_get_error())) {
-         MSG("a_Tls_openssl_connect: queued error: %s\n",
-               ERR_error_string(err, NULL));
-      }
-      abort();
-   }
+    if (ERR_peek_error()) {
+        unsigned long err;
+        while ((err = ERR_get_error())) {
+            MSG("a_Tls_openssl_connect: queued error: %s\n",
+                    ERR_error_string(err, NULL));
+        }
+        abort();
+    }
 
-   if (success && !(ssl = SSL_new(ssl_context))) {
-      unsigned long err_ret = ERR_get_error();
-      do {
-         MSG("SSL_new() failed: %s\n", ERR_error_string(err_ret, NULL));
-      } while ((err_ret = ERR_get_error()));
-      success = FALSE;
-   }
+    if (success && !(ssl = SSL_new(ssl_context))) {
+        unsigned long err_ret = ERR_get_error();
+        do {
+            MSG("SSL_new() failed: %s\n", ERR_error_string(err_ret, NULL));
+        } while ((err_ret = ERR_get_error()));
+        success = FALSE;
+    }
 
-   /* assign TLS connection to this file descriptor */
-   if (success && !SSL_set_fd(ssl, fd)) {
-      unsigned long err_ret = ERR_get_error();
-      do {
-         MSG("SSL_set_fd() failed: %s\n", ERR_error_string(err_ret, NULL));
-      } while ((err_ret = ERR_get_error()));
-      success = FALSE;
-   }
+    /* assign TLS connection to this file descriptor */
+    if (success && !SSL_set_fd(ssl, fd)) {
+        unsigned long err_ret = ERR_get_error();
+        do {
+            MSG("SSL_set_fd() failed: %s\n", ERR_error_string(err_ret, NULL));
+        } while ((err_ret = ERR_get_error()));
+        success = FALSE;
+    }
 
-   if (success)
-      connkey = Tls_conn_new(fd, url, ssl);
+    if (success)
+        connkey = Tls_conn_new(fd, url, ssl);
 
 #ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
-   /* Server Name Indication. From the openssl changelog, it looks like this
+    /* Server Name Indication. From the openssl changelog, it looks like this
     * came along in 2010.
     */
-   if (success && a_Url_host_type(URL_HOST(url)) == URL_HOST_NAME)
-      SSL_set_tlsext_host_name(ssl, URL_HOST(url));
+    if (success && a_Url_host_type(URL_HOST(url)) == URL_HOST_NAME)
+        SSL_set_tlsext_host_name(ssl, URL_HOST(url));
 #endif
 
-   if (!success) {
-      a_Tls_openssl_reset_server_state(url);
-      a_Http_connect_done(fd, success);
-   } else {
-      Tls_connect(fd, connkey);
-   }
+    if (!success) {
+        a_Tls_openssl_reset_server_state(url);
+        a_Http_connect_done(fd, success);
+    } else {
+        Tls_connect(fd, connkey);
+    }
 }
 
 /*
@@ -1334,42 +1334,42 @@ void a_Tls_openssl_connect(int fd, const DilloUrl *url)
  */
 static int Tls_handle_error(Conn_t *conn, int ret, const char *where)
 {
-   /* Success */
-   if (ret > 0) {
-      errno = 0;
-      return ret;
-   }
+    /* Success */
+    if (ret > 0) {
+        errno = 0;
+        return ret;
+    }
 
-   SSL *ssl = conn->ssl;
-   int err1_ret = SSL_get_error(ssl, ret);
-   if (err1_ret == SSL_ERROR_NONE) {
-      errno = 0;
-      return ret;
-   } else if (err1_ret == SSL_ERROR_ZERO_RETURN) {
-      errno = 0;
-      return 0;
-   } else if (err1_ret == SSL_ERROR_WANT_READ || err1_ret == SSL_ERROR_WANT_WRITE) {
-      errno = EAGAIN;
-      return -1;
-   } else if (err1_ret == SSL_ERROR_SYSCALL || err1_ret == SSL_ERROR_SSL) {
-      conn->do_shutdown = FALSE;
-      unsigned long err2_ret = ERR_get_error();
-      if (err2_ret) {
-         do {
-            MSG("%s failed: %s\n", where, ERR_error_string(err2_ret, NULL));
-         } while ((err2_ret = ERR_get_error()));
-      } else {
-         /* Provide a generic message, as there is none in the queue */
-         const char *which = err1_ret == SSL_ERROR_SYSCALL ? "SYSCALL" : "SSL";
-         MSG("%s failed: SSL_ERROR_%s\n", where, which);
-      }
-      errno = EPROTO;
-      return -1;
-   }
+    SSL *ssl = conn->ssl;
+    int err1_ret = SSL_get_error(ssl, ret);
+    if (err1_ret == SSL_ERROR_NONE) {
+        errno = 0;
+        return ret;
+    } else if (err1_ret == SSL_ERROR_ZERO_RETURN) {
+        errno = 0;
+        return 0;
+    } else if (err1_ret == SSL_ERROR_WANT_READ || err1_ret == SSL_ERROR_WANT_WRITE) {
+        errno = EAGAIN;
+        return -1;
+    } else if (err1_ret == SSL_ERROR_SYSCALL || err1_ret == SSL_ERROR_SSL) {
+        conn->do_shutdown = FALSE;
+        unsigned long err2_ret = ERR_get_error();
+        if (err2_ret) {
+            do {
+                MSG("%s failed: %s\n", where, ERR_error_string(err2_ret, NULL));
+            } while ((err2_ret = ERR_get_error()));
+        } else {
+            /* Provide a generic message, as there is none in the queue */
+            const char *which = err1_ret == SSL_ERROR_SYSCALL ? "SYSCALL" : "SSL";
+            MSG("%s failed: SSL_ERROR_%s\n", where, which);
+        }
+        errno = EPROTO;
+        return -1;
+    }
 
-   MSG("%s failed: SSL_get_error() returned %d\n", where, err1_ret);
-   errno = EPROTO;
-   return -1;
+    MSG("%s failed: SSL_get_error() returned %d\n", where, err1_ret);
+    errno = EPROTO;
+    return -1;
 }
 
 /*
@@ -1377,8 +1377,8 @@ static int Tls_handle_error(Conn_t *conn, int ret, const char *where)
  */
 int a_Tls_openssl_read(void *conn, void *buf, size_t len)
 {
-   Conn_t *c = (Conn_t*)conn;
-   return Tls_handle_error(c, SSL_read(c->ssl, buf, len), "SSL_read()");
+    Conn_t *c = (Conn_t*)conn;
+    return Tls_handle_error(c, SSL_read(c->ssl, buf, len), "SSL_read()");
 }
 
 /*
@@ -1386,47 +1386,47 @@ int a_Tls_openssl_read(void *conn, void *buf, size_t len)
  */
 int a_Tls_openssl_write(void *conn, void *buf, size_t len)
 {
-   Conn_t *c = (Conn_t*)conn;
-   return Tls_handle_error(c, SSL_write(c->ssl, buf, len), "SSL_write()");
+    Conn_t *c = (Conn_t*)conn;
+    return Tls_handle_error(c, SSL_write(c->ssl, buf, len), "SSL_write()");
 }
 
 void a_Tls_openssl_close_by_fd(int fd)
 {
-   FdMapEntry_t *fme = dList_find_custom(fd_map, INT2VOIDP(fd),
+    FdMapEntry_t *fme = dList_find_custom(fd_map, INT2VOIDP(fd),
                                          Tls_fd_map_cmp);
 
-   if (fme) {
-      Tls_close_by_key(fme->connkey);
-   }
+    if (fme) {
+        Tls_close_by_key(fme->connkey);
+    }
 }
 
 static void Tls_servers_freeall(void)
 {
-   if (servers) {
-      Server_t *s;
-      int i, n = dList_length(servers);
+    if (servers) {
+        Server_t *s;
+        int i, n = dList_length(servers);
 
-      for (i = 0; i < n; i++) {
-         s = (Server_t *) dList_nth_data(servers, i);
-         dFree(s->hostname);
-         dFree(s);
-      }
-      dList_free(servers);
-   }
+        for (i = 0; i < n; i++) {
+            s = (Server_t *) dList_nth_data(servers, i);
+            dFree(s->hostname);
+            dFree(s);
+        }
+        dList_free(servers);
+    }
 }
 
 static void Tls_fd_map_remove_all(void)
 {
-   if (fd_map) {
-      FdMapEntry_t *fme;
-      int i, n = dList_length(fd_map);
+    if (fd_map) {
+        FdMapEntry_t *fme;
+        int i, n = dList_length(fd_map);
 
-      for (i = 0; i < n; i++) {
-         fme = (FdMapEntry_t *) dList_nth_data(fd_map, i);
-         dFree(fme);
-      }
-      dList_free(fd_map);
-   }
+        for (i = 0; i < n; i++) {
+            fme = (FdMapEntry_t *) dList_nth_data(fd_map, i);
+            dFree(fme);
+        }
+        dList_free(fd_map);
+    }
 }
 
 /*
@@ -1434,8 +1434,8 @@ static void Tls_fd_map_remove_all(void)
  */
 void a_Tls_openssl_freeall(void)
 {
-   if (ssl_context)
-      SSL_CTX_free(ssl_context);
-   Tls_fd_map_remove_all();
-   Tls_servers_freeall();
+    if (ssl_context)
+        SSL_CTX_free(ssl_context);
+    Tls_fd_map_remove_all();
+    Tls_servers_freeall();
 }

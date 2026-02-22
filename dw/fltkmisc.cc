@@ -30,17 +30,17 @@ namespace misc {
 
 int screenWidth ()
 {
-   return Fl::w ();
+    return Fl::w ();
 }
 
 int screenHeight ()
 {
-   return Fl::h ();
+    return Fl::h ();
 }
 
 void warpPointer (int x, int y)
 {
-   MSG_ERR("no warpPointer mechanism available.\n");
+    MSG_ERR("no warpPointer mechanism available.\n");
 }
 
 } // namespace misc

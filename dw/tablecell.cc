@@ -36,44 +36,44 @@ namespace tablecell {
 
 bool getAdjustMinWidth ()
 {
-   return Table::getAdjustTableMinWidth ();
+    return Table::getAdjustTableMinWidth ();
 }
 
 bool isBlockLevel ()
 {
-   return false;
+    return false;
 }
 
 int correctAvailWidthOfChild (core::Widget *widget, core::Widget *child,
-                              int width, bool forceValue)
+                                        int width, bool forceValue)
 {
-   DBG_OBJ_ENTER_O ("resize", 0, widget, "tablecell::correctAvailWidthOfChild",
+    DBG_OBJ_ENTER_O ("resize", 0, widget, "tablecell::correctAvailWidthOfChild",
                     "%p, %d, %s", child, width, forceValue ? "true" : "false");
 
-   // Make sure that this width does not exceed the width of the table
-   // cell (minus margin/border/padding).
+    // Make sure that this width does not exceed the width of the table
+    // cell (minus margin/border/padding).
 
-   if (width != -1) {
-      int thisWidth = widget->getAvailWidth (forceValue);
-      DBG_OBJ_MSGF_O ("resize", 1, widget, "thisWidth = %d", thisWidth);
-      if (thisWidth != -1)
-         width =
-            lout::misc::max (lout::misc::min (width,
+    if (width != -1) {
+        int thisWidth = widget->getAvailWidth (forceValue);
+        DBG_OBJ_MSGF_O ("resize", 1, widget, "thisWidth = %d", thisWidth);
+        if (thisWidth != -1)
+            width =
+                lout::misc::max (lout::misc::min (width,
                                               thisWidth
                                               - widget->boxDiffWidth ()),
                              0);
-   }
+    }
 
-   DBG_OBJ_MSGF_O ("resize", 1, widget, "=> %d", width);
-   DBG_OBJ_LEAVE_O (widget);
-   return width;
+    DBG_OBJ_MSGF_O ("resize", 1, widget, "=> %d", width);
+    DBG_OBJ_LEAVE_O (widget);
+    return width;
 }
 
 int correctAvailHeightOfChild (core::Widget *widget, core::Widget *child,
                                int height, bool forceValue)
 {
-   // Something to do?
-   return height;
+    // Something to do?
+    return height;
 }
 
 void correctCorrectedRequisitionOfChild (core::Widget *widget,
@@ -84,44 +84,44 @@ void correctCorrectedRequisitionOfChild (core::Widget *widget,
                                          bool allowDecreaseWidth,
                                          bool allowDecreaseHeight)
 {
-   DBG_OBJ_ENTER_O ("resize", 0, widget, "tablecell::correctRequisitionOfChild",
+    DBG_OBJ_ENTER_O ("resize", 0, widget, "tablecell::correctRequisitionOfChild",
                     "%p, %d * (%d + %d), ..., %s, %s",
                     child, requisition->width, requisition->ascent,
                     requisition->descent, misc::boolToStr (allowDecreaseWidth),
                     misc::boolToStr (allowDecreaseHeight));
 
-   // Make sure that this width does not exceed the width of the table
-   // cell (minus margin/border/padding).
+    // Make sure that this width does not exceed the width of the table
+    // cell (minus margin/border/padding).
 
-   int thisWidth = widget->getAvailWidth (true);
-   DBG_OBJ_MSGF_O ("resize", 1, widget, "thisWidth = %d", thisWidth);
-   int newWidth =
-      lout::misc::max (lout::misc::min (requisition->width,
+    int thisWidth = widget->getAvailWidth (true);
+    DBG_OBJ_MSGF_O ("resize", 1, widget, "thisWidth = %d", thisWidth);
+    int newWidth =
+        lout::misc::max (lout::misc::min (requisition->width,
                                         thisWidth - widget->boxDiffWidth ()),
                        0);
-   requisition->width = allowDecreaseWidth ?
-      newWidth : misc::max (requisition->width, newWidth);
+    requisition->width = allowDecreaseWidth ?
+        newWidth : misc::max (requisition->width, newWidth);
 
-   DBG_OBJ_LEAVE_O (widget);
+    DBG_OBJ_LEAVE_O (widget);
 }
 
 void correctCorrectedExtremesOfChild (core::Widget *widget, core::Widget *child,
                                       core::Extremes *extremes,
                                       bool useAdjustmentWidth)
 {
-   // Something to do?
+    // Something to do?
 }
 
 int applyPerWidth (core::Widget *widget, int containerWidth,
                    core::style::Length perWidth)
 {
-   return core::style::multiplyWithPerLength (containerWidth, perWidth);
+    return core::style::multiplyWithPerLength (containerWidth, perWidth);
 }
 
 int applyPerHeight (core::Widget *widget, int containerHeight,
                     core::style::Length perHeight)
 {
-   return core::style::multiplyWithPerLength (containerHeight, perHeight);
+    return core::style::multiplyWithPerLength (containerHeight, perHeight);
 }
 
 } // namespace dw

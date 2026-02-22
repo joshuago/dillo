@@ -1,4 +1,7 @@
 /*
+ * External library - formatting exempt from project style guidelines.
+ * Original source: http://sourceforge.net/projects/libmd5-rfc/
+ *
  * md5.c was taken from "RFC1321-based (RSA-free) MD5 library" by L. Peter
  * Deutsch at http://sourceforge.net/projects/libmd5-rfc/ in October 2011.
  *
