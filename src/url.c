@@ -477,17 +477,26 @@ DilloUrl* a_Url_dup(const DilloUrl *ori)
 {
     DilloUrl *url;
 
-    url = Url_object_new(URL_STR_(ori));
-    dReturn_val_if_fail (url != NULL, NULL);
+    dReturn_val_if_fail (ori != NULL, NULL);
 
-    url->url_string           = dStr_new(URL_STR(ori));
-    url->port                 = ori->port;
-    url->flags                = ori->flags;
-    url->ismap_url_len        = ori->ismap_url_len;
-    url->illegal_chars        = ori->illegal_chars;
-    url->illegal_chars_spc    = ori->illegal_chars_spc;
-    url->data                 = dStr_sized_new(URL_DATA(ori)->len);
-    dStr_append_l(url->data, URL_DATA(ori)->str, URL_DATA(ori)->len);
+    url = dNew0(DilloUrl, 1);
+
+    url->url_string           = dStr_dup(ori->url_string);
+    url->buffer              = dStrdup(ori->buffer);
+    url->scheme              = ori->scheme;
+    url->authority           = ori->authority;
+    url->path                = ori->path;
+    url->query               = ori->query;
+    url->fragment            = ori->fragment;
+    url->hostname            = (ori->hostname != ori->authority) ?
+                               dStrdup(ori->hostname) : ori->hostname;
+    url->port                = ori->port;
+    url->flags               = ori->flags;
+    url->ismap_url_len       = ori->ismap_url_len;
+    url->illegal_chars       = ori->illegal_chars;
+    url->illegal_chars_spc   = ori->illegal_chars_spc;
+    url->data                = dStr_dup(ori->data);
+
     return url;
 }
 
