@@ -434,8 +434,7 @@ void ComplexButtonResource::correctRequisitionOfChild (Widget *child,
     // the relief has to be considered.
 
     if (style::isPerLength (child->getStyle()->width)) {
-        /* FIXME: Typo for getAvailWidth()? */
-        int availWidth = getEmbed()->getAvailHeight (false);
+        int availWidth = getEmbed()->getAvailWidth (false);
         if (availWidth != -1) {
             int baseWidth = misc::max (availWidth
                                                 - getEmbed()->boxDiffWidth ()
@@ -450,9 +449,26 @@ void ComplexButtonResource::correctRequisitionOfChild (Widget *child,
         getEmbed()->correctReqWidthOfChildNoRec (child, requisition,
                                                allowDecreaseWidth);
 
-    // TODO Percentage heights are ignored again.
-    getEmbed()->correctReqHeightOfChildNoRec(child, requisition,
-                                            splitHeightFun, allowDecreaseWidth);
+    if (style::isPerLength (child->getStyle()->height)) {
+        int availHeight = getEmbed()->getAvailHeight (false);
+        if (availHeight != -1) {
+            int baseHeight = misc::max (availHeight
+                                                - getEmbed()->boxDiffHeight ()
+                                                - 2 * reliefYThickness (),
+                                                0);
+            int newHeight =
+                child->applyPerHeight (baseHeight, child->getStyle()->height);
+            int reqHeight = requisition->ascent + requisition->descent;
+            int targetHeight = allowDecreaseHeight ?
+                newHeight : misc::max (reqHeight, newHeight);
+            splitHeightFun (targetHeight, &requisition->ascent,
+                           &requisition->descent);
+        }
+    } else {
+        getEmbed()->correctReqHeightOfChildNoRec (child, requisition,
+                                                 splitHeightFun,
+                                                 allowDecreaseHeight);
+    }
 
 }
 
@@ -464,7 +480,7 @@ void ComplexButtonResource::correctExtremesOfChild (Widget *child,
     // the relief has to be considered.
 
     if (style::isPerLength (child->getStyle()->width)) {
-        int availWidth = getEmbed()->getAvailHeight (false);
+        int availWidth = getEmbed()->getAvailWidth (false);
         if (availWidth != -1) {
             int baseWidth = misc::max (availWidth
                                                 - getEmbed()->boxDiffWidth ()
@@ -528,4 +544,3 @@ Iterator *RadioButtonResource::iterator (Content::Type mask, bool atEnd)
 } // namespace ui
 } // namespace core
 } // namespace dw
-
