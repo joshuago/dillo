@@ -131,13 +131,11 @@ int dStrnAsciiCasecmp(const char *s1, const char *s2, size_t n);
 typedef struct {
     int sz;          /* allocated size (private) */
     int len;
-    int refcount;    /* reference count for sharing */
     Dstr_char_t *str;
 } Dstr;
 
 Dstr *dStr_new (const char *s);
 Dstr *dStr_sized_new (int sz);
-Dstr *dStr_dup (Dstr *ds);
 void dStr_fit (Dstr *ds);
 void dStr_free (Dstr *ds, int all);
 void dStr_append_c (Dstr *ds, int c);

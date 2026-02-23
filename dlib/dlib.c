@@ -258,7 +258,6 @@ Dstr *dStr_sized_new (int sz)
 
     ds = dNew(Dstr, 1);
     ds->str = NULL;
-    ds->refcount = 1;
     dStr_resize(ds, sz + 1, 0); /* (sz + 1) for the extra '\0' */
     return ds;
 }
@@ -333,29 +332,14 @@ Dstr *dStr_new (const char *s)
 /**
  * Free a dillo string.
  * if 'all' free everything, else free the structure only.
- * Decrements refcount and only frees when it reaches 0.
  */
 void dStr_free (Dstr *ds, int all)
 {
     if (ds) {
-        if (all) {
+        if (all)
             dFree(ds->str);
-            dFree(ds);
-        } else if (--ds->refcount == 0) {
-            dFree(ds);
-        }
+        dFree(ds);
     }
-}
-
-/**
- * Duplicate a Dstr by incrementing its reference count.
- * Returns the same pointer - caller can use it interchangeably.
- */
-Dstr *dStr_dup (Dstr *ds)
-{
-    if (ds)
-        ds->refcount++;
-    return ds;
 }
 
 /**
