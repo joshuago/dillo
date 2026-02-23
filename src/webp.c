@@ -33,8 +33,10 @@ typedef struct {
     int bgcolor;                 /* Parent widget background color */
     int state;
     int y;
+    int width;
     WebPIDecoder* idec;
     WebPDecBuffer output_buffer; /* for RGBA */
+    uchar_t *linebuf;            /* Reusable line buffer for RGBA->RGB */
 } DilloWebp;
 
 
@@ -48,6 +50,7 @@ static void Webp_free(DilloWebp *webp)
     WebPFreeDecBuffer(&webp->output_buffer);
     if (webp->idec)
         WebPIDelete(webp->idec);
+    dFree(webp->linebuf);
     dFree(webp);
 }
 
@@ -111,6 +114,11 @@ void a_Webp_callback(int Op, void *data)
                              features.width, features.height,
                              DILLO_IMG_TYPE_RGB, 1 / 2.2);
 
+            webp->width = features.width;
+            if (features.has_alpha) {
+                webp->linebuf = dNew(uchar_t, features.width * 3);
+            }
+
             webp->idec = WebPINewDecoder(&webp->output_buffer);
             webp->state = IS_nextdata;
         }
@@ -132,26 +140,41 @@ void a_Webp_callback(int Op, void *data)
                 int row = webp->y;
 
                 if (webp->output_buffer.colorspace == MODE_RGBA)
-                    line = dNew(unsigned char, width * 3);
+                    line = webp->linebuf;
                 else
                     line = output + row * stride;
 
                 for (; row < last_y; row++) {
 
                     if (webp->output_buffer.colorspace == MODE_RGBA) {
-                        int j;
-
+                        int j = 0;
+                        const uint8_t *src = output + row * stride;
+                        uint8_t *dst = line;
                         uint_t bg_blue  = (webp->bgcolor) & 0xFF;
                         uint_t bg_green = (webp->bgcolor>>8) & 0xFF;
                         uint_t bg_red   = (webp->bgcolor>>16) & 0xFF;
-                        for (j = 0; j < width; j++) {
-                            uchar_t alpha = output[row * stride + 4 * j + 3];
-                            uchar_t r = output[row * stride + 4 * j];
-                            uchar_t g = output[row * stride + 4 * j + 1];
-                            uchar_t b = output[row * stride + 4 * j + 2];
-                            line[3 * j] = (r * alpha + (bg_red * (0xFF - alpha))) / 0xFF;
-                            line[3 * j + 1] = (g * alpha + (bg_green * (0xFF - alpha))) / 0xFF;
-                            line[3 * j + 2] = (b * alpha + (bg_blue * (0xFF - alpha))) / 0xFF;
+
+                        while (j < width) {
+                            uint_t alpha = src[3];
+                            if (alpha == 255) {
+                                memcpy(dst, src, 3);
+                                src += 4;
+                                dst += 3;
+                            } else if (alpha == 0) {
+                                dst[0] = bg_red;
+                                dst[1] = bg_green;
+                                dst[2] = bg_blue;
+                                src += 4;
+                                dst += 3;
+                            } else {
+                                uint_t inv_alpha = 255 - alpha;
+                                dst[0] = (src[0] * alpha + bg_red * inv_alpha) / 255;
+                                dst[1] = (src[1] * alpha + bg_green * inv_alpha) / 255;
+                                dst[2] = (src[2] * alpha + bg_blue * inv_alpha) / 255;
+                                src += 4;
+                                dst += 3;
+                            }
+                            j++;
                         }
                     } else {
                         line = output + row * stride;
@@ -159,9 +182,6 @@ void a_Webp_callback(int Op, void *data)
                     a_Dicache_write(webp->url, webp->version, line, row);
                 }
                 webp->y = last_y;
-
-                if (webp->output_buffer.colorspace == MODE_RGBA)
-                    dFree(line);
             }
         } else {
             MSG("webp WebPIUpdate failed with %d\n", ret);
@@ -205,7 +225,9 @@ void *a_Webp_new(DilloImage *Image, DilloUrl *url, int version)
     webp->bgcolor = Image->bg_color;
     webp->state = IS_init;
     webp->y = 0;
+    webp->width = 0;
     webp->idec = NULL;
+    webp->linebuf = NULL;
     WebPInitDecBuffer(&webp->output_buffer);
 
     return webp;

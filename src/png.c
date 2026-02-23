@@ -262,24 +262,33 @@ static void
         bg_green = (png->bgcolor>>8) & 0xFF;
         bg_red   = (png->bgcolor>>16) & 0xFF;
 
-        for (i = 0; i < png->width; i++) {
+        for (i = 0; i < png->width; ) {
            a = *(data+3);
 
            if (a == 255) {
-              *(pl++) = *(data++);
-              *(pl++) = *(data++);
-              *(pl++) = *(data++);
-              data++;
+              int run_length = 0;
+              const uint8_t *run_start = data;
+              while (i + run_length < png->width &&
+                     run_start[4 * run_length + 3] == 255) {
+                 run_length++;
+              }
+              memcpy(pl, run_start, run_length * 3);
+              pl += run_length * 3;
+              data += run_length * 4;
+              i += run_length;
            } else if (a == 0) {
               *(pl++) = bg_red;
               *(pl++) = bg_green;
               *(pl++) = bg_blue;
               data += 4;
+              i++;
            } else {
-              png_composite(*(pl++), *(data++), a, bg_red);
-              png_composite(*(pl++), *(data++), a, bg_green);
-              png_composite(*(pl++), *(data++), a, bg_blue);
+              int inv_alpha = 255 - a;
+              *(pl++) = ( *(data++) * a + bg_red * inv_alpha ) / 255;
+              *(pl++) = ( *(data++) * a + bg_green * inv_alpha ) / 255;
+              *(pl++) = ( *(data++) * a + bg_blue * inv_alpha ) / 255;
               data++;
+              i++;
            }
         }
         a_Dicache_write(png->url, png->version, png->linebuf, (uint_t)row_num);

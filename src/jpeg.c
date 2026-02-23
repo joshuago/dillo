@@ -75,6 +75,7 @@ struct DilloJpeg {
     char *Data;
 
     uint_t y;
+    uchar_t *linebuf;
 
     struct jpeg_decompress_struct cinfo;
     struct my_error_mgr jerr;
@@ -107,6 +108,7 @@ static void Jpeg_free(DilloJpeg *jpeg)
 {
     _MSG("Jpeg_free: jpeg=%p\n", jpeg);
     jpeg_destroy_decompress(&(jpeg->cinfo));
+    dFree(jpeg->linebuf);
     dFree(jpeg);
 }
 
@@ -196,6 +198,7 @@ void *a_Jpeg_new(DilloImage *Image, DilloUrl *url, int version)
     jpeg->state = DILLO_JPEG_INIT;
     jpeg->Start_Ofs = 0;
     jpeg->Skip = 0;
+    jpeg->linebuf = NULL;
 
     /* decompression step 1 (see libjpeg.doc) */
     jpeg->cinfo.err = jpeg_std_error(&(jpeg->jerr.pub));
@@ -356,8 +359,11 @@ static void Jpeg_write(DilloJpeg *jpeg, void *Buf, uint_t BufSize)
     }
 
     if (jpeg->state == DILLO_JPEG_READ_IN_SCAN) {
-        linebuf = dMalloc(jpeg->cinfo.image_width *
-                         jpeg->cinfo.num_components);
+        if (!jpeg->linebuf) {
+            jpeg->linebuf = dMalloc(jpeg->cinfo.image_width *
+                             jpeg->cinfo.num_components);
+        }
+        linebuf = jpeg->linebuf;
         array[0] = linebuf;
 
         while (1) {
@@ -413,7 +419,6 @@ static void Jpeg_write(DilloJpeg *jpeg, void *Buf, uint_t BufSize)
                 }
             }
         }
-        dFree(linebuf);
     }
 }
 
