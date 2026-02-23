@@ -146,7 +146,9 @@ static DilloUrl *Url_object_new(const char *uri_str)
     * a URL string ending in ":80" to ":443".
     */
     int len = strlen(uri_str)+2;
-    s = dNew(char, len);
+    int *ref = (int *)dMalloc(sizeof(int) + len);
+    *ref = 1;
+    s = (char *)(ref + 1);
     memcpy(s, uri_str, len-1);
     s = dStrstrip(s);
 
@@ -211,7 +213,9 @@ void a_Url_free(DilloUrl *url)
             dStr_free(url->url_string, TRUE);
         if (url->hostname != url->authority)
             dFree((char *)url->hostname);
-        dFree((char *)url->buffer);
+        int *ref = ((int *)url->buffer) - 1;
+        if (--(*ref) == 0)
+            dFree(ref);
         dStr_free(url->data, 1);
         dFree(url);
     }
@@ -477,10 +481,20 @@ DilloUrl* a_Url_dup(const DilloUrl *ori)
 {
     DilloUrl *url;
 
-    url = Url_object_new(URL_STR_(ori));
-    dReturn_val_if_fail (url != NULL, NULL);
+    dReturn_val_if_fail (ori != NULL, NULL);
+    url = dNew0(DilloUrl, 1);
 
-    url->url_string           = dStr_new(URL_STR(ori));
+    int *ref = ((int *)ori->buffer) - 1;
+    (*ref)++;
+    url->buffer               = ori->buffer;
+
+    url->url_string           = ori->url_string ? dStr_new(ori->url_string->str) : NULL;
+    url->scheme               = ori->scheme;
+    url->authority            = ori->authority;
+    url->path                 = ori->path;
+    url->query                = ori->query;
+    url->fragment             = ori->fragment;
+    url->hostname             = (ori->hostname != ori->authority) ? dStrdup(ori->hostname) : ori->hostname;
     url->port                 = ori->port;
     url->flags                = ori->flags;
     url->ismap_url_len        = ori->ismap_url_len;
