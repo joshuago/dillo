@@ -272,16 +272,30 @@ static void
                      run_start[4 * run_length + 3] == 255) {
                  run_length++;
               }
-              memcpy(pl, run_start, run_length * 3);
-              pl += run_length * 3;
+              int j;
+              for (j = 0; j < run_length; j++) {
+                 *(pl++) = *(run_start++);
+                 *(pl++) = *(run_start++);
+                 *(pl++) = *(run_start++);
+                 run_start++;
+              }
               data += run_length * 4;
               i += run_length;
            } else if (a == 0) {
-              *(pl++) = bg_red;
-              *(pl++) = bg_green;
-              *(pl++) = bg_blue;
-              data += 4;
-              i++;
+              int run_length = 0;
+              const uint8_t *run_start = data;
+              int j;
+              while (i + run_length < png->width &&
+                     run_start[4 * run_length + 3] == 0) {
+                 run_length++;
+              }
+              for (j = 0; j < run_length; j++) {
+                 *(pl++) = bg_red;
+                 *(pl++) = bg_green;
+                 *(pl++) = bg_blue;
+              }
+              data += run_length * 4;
+              i += run_length;
            } else {
               int inv_alpha = 255 - a;
               *(pl++) = ( *(data++) * a + bg_red * inv_alpha ) / 255;

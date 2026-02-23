@@ -157,24 +157,44 @@ void a_Webp_callback(int Op, void *data)
                         while (j < width) {
                             uint_t alpha = src[3];
                             if (alpha == 255) {
-                                memcpy(dst, src, 3);
-                                src += 4;
-                                dst += 3;
+                                int run_length = 0;
+                                const uint8_t *run_start = src;
+                                int k;
+                                while (j + run_length < width &&
+                                       run_start[4 * run_length + 3] == 255) {
+                                   run_length++;
+                                }
+                                for (k = 0; k < run_length; k++) {
+                                   *(dst++) = *(run_start++);
+                                   *(dst++) = *(run_start++);
+                                   *(dst++) = *(run_start++);
+                                   run_start++; /* skip alpha */
+                                }
+                                src += run_length * 4;
+                                j += run_length;
                             } else if (alpha == 0) {
-                                dst[0] = bg_red;
-                                dst[1] = bg_green;
-                                dst[2] = bg_blue;
-                                src += 4;
-                                dst += 3;
+                                int run_length = 0;
+                                const uint8_t *run_start = src;
+                                int k;
+                                while (j + run_length < width &&
+                                       run_start[4 * run_length + 3] == 0) {
+                                   run_length++;
+                                }
+                                for (k = 0; k < run_length; k++) {
+                                   *(dst++) = bg_red;
+                                   *(dst++) = bg_green;
+                                   *(dst++) = bg_blue;
+                                }
+                                src += run_length * 4;
+                                j += run_length;
                             } else {
                                 uint_t inv_alpha = 255 - alpha;
-                                dst[0] = (src[0] * alpha + bg_red * inv_alpha) / 255;
-                                dst[1] = (src[1] * alpha + bg_green * inv_alpha) / 255;
-                                dst[2] = (src[2] * alpha + bg_blue * inv_alpha) / 255;
-                                src += 4;
-                                dst += 3;
+                                *(dst++) = (*(src++) * alpha + bg_red * inv_alpha) / 255;
+                                *(dst++) = (*(src++) * alpha + bg_green * inv_alpha) / 255;
+                                *(dst++) = (*(src++) * alpha + bg_blue * inv_alpha) / 255;
+                                src++;
+                                j++;
                             }
-                            j++;
                         }
                     } else {
                         line = output + row * stride;
