@@ -236,6 +236,7 @@ Textblock::Textblock (bool limitTextWidth, bool treatAsInline)
     lines = new misc::SimpleVector <Line> (1);
     nonTemporaryLines = 0;
     words = new misc::NotSoSimpleVector <Word> (1);
+    oofWords = new misc::SimpleVector <int> (1);
     anchors = new misc::SimpleVector <Anchor> (1);
 
     wrapRefLines = wrapRefParagraphs = -1;
@@ -292,6 +293,7 @@ Textblock::~Textblock ()
     delete paragraphs;
     delete lines;
     delete words;
+    delete oofWords;
     delete anchors;
  
     /* Make sure we don't own widgets anymore. Necessary before call of
@@ -1749,15 +1751,13 @@ void Textblock::drawLevel (core::View *view, core::Rectangle *area,
         break;
 
     case SL_OOF_REF:
-        // TODO Inefficient. Perhaps store OOF references in separate
-        // (much smaller!) list.
         for (int oofmIndex = 0; oofmIndex < NUM_OOFM; oofmIndex++) {
-            for (int wordIndex = 0; wordIndex < words->size (); wordIndex++) {
+            for (int i = 0; i < oofWords->size (); i++) {
+                int wordIndex = oofWords->get (i);
                 Word *word = words->getRef (wordIndex);
-                if (word->content.type == core::Content::WIDGET_OOF_REF &&
-                getOOFMIndex (word->content.widgetReference->widget)
-                == oofmIndex &&
-                doesWidgetOOFInterruptDrawing (word->content.widget))
+                if (getOOFMIndex (word->content.widgetReference->widget)
+                    == oofmIndex &&
+                    doesWidgetOOFInterruptDrawing (word->content.widget))
                     word->content.widget->drawInterruption (view, area, context);
             }
         }
@@ -2514,6 +2514,8 @@ void Textblock::addWidget (core::Widget *widget, core::style::Style *style)
         word->content.type = core::Content::WIDGET_OOF_REF;
         word->content.widgetReference = new core::WidgetReference (widget);
         widget->setWidgetReference (word->content.widgetReference);
+        oofWords->increase ();
+        oofWords->set (oofWords->size () - 1, words->size () - 1);
 
         // After a out-of-flow reference, breaking is allowed. (This avoids some
         // problems with breaking near float definitions.)
@@ -2920,17 +2922,15 @@ core::Widget *Textblock::getWidgetAtPointLevel (int x, int y, int level,
         break;
 
     case SL_OOF_REF:
-        // TODO Inefficient. Perhaps store OOF references in separate
-        // (much smaller!) list.
         for (int oofmIndex = NUM_OOFM; widgetAtPoint == NULL && oofmIndex >= 0;
            oofmIndex--) {
-            for (int wordIndex = words->size () - 1;
-              widgetAtPoint == NULL && wordIndex >= 0; wordIndex--) {
+            for (int i = oofWords->size () - 1;
+              widgetAtPoint == NULL && i >= 0; i--) {
+                int wordIndex = oofWords->get (i);
                 Word *word = words->getRef (wordIndex);
-                if (word->content.type == core::Content::WIDGET_OOF_REF &&
-                getOOFMIndex (word->content.widgetReference->widget)
-                == oofmIndex &&
-                doesWidgetOOFInterruptDrawing (word->content.widgetReference
+                if (getOOFMIndex (word->content.widgetReference->widget)
+                    == oofmIndex &&
+                    doesWidgetOOFInterruptDrawing (word->content.widgetReference
                                                ->widget))
                     widgetAtPoint = 
                         word->content.widgetReference->widget

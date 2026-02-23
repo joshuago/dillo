@@ -609,6 +609,7 @@ protected:
     lout::misc::SimpleVector <Paragraph> *paragraphs;
     int nonTemporaryLines;
     lout::misc::NotSoSimpleVector <Word> *words;
+    lout::misc::SimpleVector <int> *oofWords; /* indices of OOF words in words vector */
     lout::misc::SimpleVector <Anchor> *anchors;
 
     struct { int index, nChar; }
