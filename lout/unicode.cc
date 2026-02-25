@@ -21,8 +21,6 @@
 #include "unicode.hh"
 #include "misc.hh"
 
-using namespace lout::misc;
-
 namespace lout {
 
 namespace unicode {
