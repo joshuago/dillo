@@ -89,6 +89,11 @@ typedef struct {
     int skey;
 } FdMapEntry_t;
 
+typedef struct {
+    char *str;
+    int len;
+} NoProxyToken_t;
+
 static void Http_socket_enqueue(Server_t *srv, SocketData_t* sock);
 static Server_t *Http_server_get(const char *host, uint_t port, bool_t https);
 static void Http_server_remove(Server_t *srv);
@@ -106,11 +111,82 @@ static DilloUrl *HTTP_Proxy = NULL;
 static char *HTTP_Proxy_Auth_base64 = NULL;
 static char *HTTP_Language_hdr = NULL;
 static Dlist *servers;
+static Dlist *HTTP_NoProxy_tokens;
+static char *HTTP_NoProxy_raw;
 
 /* TODO: If fd_map will stick around in its present form (FDs and SocketData_t)
  * then consider whether having both this and ValidSocks is necessary.
  */
 static Dlist *fd_map;
+
+static void Http_no_proxy_cache_free(void)
+{
+    if (HTTP_NoProxy_tokens) {
+        int i;
+        NoProxyToken_t *tok;
+
+        for (i = 0; (tok = dList_nth_data(HTTP_NoProxy_tokens, i)); ++i) {
+            dFree(tok->str);
+            dFree(tok);
+        }
+        dList_free(HTTP_NoProxy_tokens);
+        HTTP_NoProxy_tokens = NULL;
+    }
+    dFree(HTTP_NoProxy_raw);
+    HTTP_NoProxy_raw = NULL;
+}
+
+static void Http_no_proxy_cache_rebuild(void)
+{
+    char *tmp, *p, *tok;
+
+    Http_no_proxy_cache_free();
+    if (!prefs.no_proxy) {
+        return;
+    }
+
+    HTTP_NoProxy_raw = dStrdup(prefs.no_proxy);
+    HTTP_NoProxy_tokens = dList_new(8);
+
+    tmp = dStrdup(prefs.no_proxy);
+    for (p = tmp; (tok = dStrsep(&p, " ")); ) {
+        NoProxyToken_t *entry = dNew0(NoProxyToken_t, 1);
+
+        entry->str = dStrdup(tok);
+        entry->len = strlen(tok);
+        dList_append(HTTP_NoProxy_tokens, entry);
+    }
+    dFree(tmp);
+}
+
+static void Http_no_proxy_cache_ensure(void)
+{
+    if (!prefs.no_proxy) {
+        Http_no_proxy_cache_free();
+    } else if (!HTTP_NoProxy_raw || strcmp(HTTP_NoProxy_raw, prefs.no_proxy)) {
+        Http_no_proxy_cache_rebuild();
+    }
+}
+
+static int Http_no_proxy_match(const char *hostname)
+{
+    int i, host_len;
+    NoProxyToken_t *tok;
+
+    if (!HTTP_NoProxy_tokens) {
+        return 0;
+    }
+
+    host_len = strlen(hostname);
+    for (i = 0; (tok = dList_nth_data(HTTP_NoProxy_tokens, i)); ++i) {
+        int start = host_len - tok->len;
+
+        if (start >= 0 && dStrAsciiCasecmp(hostname + start, tok->str) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 /**
  * Initialize proxy vars and Accept-Language header
@@ -127,6 +203,8 @@ int a_Http_init(void)
         HTTP_Proxy = a_Url_new(env_proxy, NULL);
     if (!HTTP_Proxy && prefs.http_proxy)
         HTTP_Proxy = a_Url_dup(prefs.http_proxy);
+
+    Http_no_proxy_cache_ensure();
 
 /*  This allows for storing the proxy password in "user:passwd" format
  * in dillorc, but as this constitutes a security problem, it was disabled.
@@ -669,25 +747,16 @@ static void Http_connect_socket(ChainLink *Info)
  */
 static int Http_must_use_proxy(const char *hostname)
 {
-    char *np, *p, *tok;
     int ret = 0;
 
     if (HTTP_Proxy) {
         ret = 1;
         if (prefs.no_proxy) {
-            size_t host_len = strlen(hostname);
-
-            np = dStrdup(prefs.no_proxy);
-            for (p = np; (tok = dStrsep(&p, " "));  ) {
-                int start = host_len - strlen(tok);
-
-                if (start >= 0 && dStrAsciiCasecmp(hostname + start, tok) == 0) {
-                    /* no_proxy token is suffix of host string */
-                    ret = 0;
-                    break;
-                }
+            Http_no_proxy_cache_ensure();
+            if (Http_no_proxy_match(hostname)) {
+                /* no_proxy token is suffix of host string */
+                ret = 0;
             }
-            dFree(np);
         }
     }
     _MSG("Http_must_use_proxy: %s\n  %s\n", hostname, ret ? "YES":"NO");
@@ -1142,6 +1211,7 @@ void a_Http_freeall(void)
 {
     Http_servers_remove_all();
     Http_fd_map_remove_all();
+    Http_no_proxy_cache_free();
     a_Klist_free(&ValidSocks);
     a_Url_free(HTTP_Proxy);
     dFree(HTTP_Proxy_Auth_base64);
