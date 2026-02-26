@@ -148,17 +148,17 @@ int CustInput::handle(int e)
             }
         } else if (modifier == FL_CTRL) {
             if (k == 'e') {
-                position(size());
+                insert_position(size());
                 return 1;
             } else if (k == 'k') {
-                cut(position(), size());
+                cut(insert_position(), size());
                 return 1;
             } else if (k == 'd') {
-                cut(position(), position()+1);
+                cut(insert_position(), insert_position()+1);
                 return 1;
             } else if (k == 'a' || k == 'l') {
                 // Make text selected when already focused.
-                position(size(), 0);
+                insert_position(size(), 0);
                 return 1;
             } else if (k == 'h' || k == 'o' || k == 'r' ||
                     k == FL_Home || k == FL_End) {
@@ -874,7 +874,7 @@ void UI::set_location(const char *str)
 {
     if (!str) str = "";
     Location->value(str);
-    Location->position((Fl::focus() == Location) ? strlen(str) : 0);
+    Location->insert_position((Fl::focus() == Location) ? strlen(str) : 0);
 }
 
 /**
@@ -889,7 +889,7 @@ void UI::focus_location()
     }
     Location->take_focus();
     // Make text selected when already focused.
-    Location->position(Location->size(), 0);
+    Location->insert_position(Location->size(), 0);
 }
 
 /**

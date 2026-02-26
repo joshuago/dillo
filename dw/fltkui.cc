@@ -103,7 +103,7 @@ int CustInput2::show_placeholder()
     Fl_Input::textcolor(fltkui_dimmed(usual_color, color()));
     Fl_Input::input_type(FL_NORMAL_INPUT);
     ret = Fl_Input::value(placeholder);
-    position(0);
+    insert_position(0);
     return ret;
 }
 
@@ -176,13 +176,13 @@ int CustInput2::handle(int e)
         }
         if (modifier == FL_CTRL) {
             if (k == 'e') {
-                position(size());
+                insert_position(size());
                 return 1;
             } else if (k == 'k') {
-                cut(position(), size());
+                cut(insert_position(), size());
                 return 1;
             } else if (k == 'd') {
-                cut(position(), position()+1);
+                cut(insert_position(), insert_position()+1);
                 return 1;
             } else if (k == 'h' || k == 'i' || k == 'j' || k == 'l' || k == 'm') {
                 // Fl_Input wants to use ^H as backspace, and also "insert a few

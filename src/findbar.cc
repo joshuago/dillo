@@ -47,13 +47,13 @@ int MyInput::handle(int e)
             }
         } else if (modifier == FL_CTRL) {
             if (k == 'a' || k == 'e') {
-                position(k == 'a' ? 0 : size());
+                insert_position(k == 'a' ? 0 : size());
                 return 1;
             } else if (k == 'k') {
-                cut(position(), size());
+                cut(insert_position(), size());
                 return 1;
             } else if (k == 'd') {
-                cut(position(), position()+1);
+                cut(insert_position(), insert_position()+1);
                 return 1;
             } else if (k == 'h' || k == 'i' || k == 'j' || k == 'l' || k == 'm') {
                 // Fl_Input wants to use ^H as backspace, and also "insert a few
@@ -205,6 +205,6 @@ void Findbar::show()
 
     /* select text even if already focused */
     i->take_focus();
-    i->position(i->size(), 0);
+    i->insert_position(i->size(), 0);
 }
 

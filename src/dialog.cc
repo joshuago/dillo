@@ -72,13 +72,13 @@ int CustInput3::handle(int e)
 
     if (e == FL_KEYBOARD && modifier == FL_CTRL) {
         if (k == 'a' || k == 'e') {
-            position(k == 'a' ? 0 : size());
+            insert_position(k == 'a' ? 0 : size());
             return 1;
         } else if (k == 'k') {
-            cut(position(), size());
+            cut(insert_position(), size());
             return 1;
         } else if (k == 'd') {
-            cut(position(), position()+1);
+            cut(insert_position(), insert_position()+1);
             return 1;
         }
     }
