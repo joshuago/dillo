@@ -6,7 +6,8 @@ Guidance for AI agents working in the Dillo codebase - a lightweight web browser
 
 ```bash
 ./autogen.sh           # Generate configure script (first time only)
-./configure            # Configure build
+./configure            # Configure build.
+                       # For MacPorts in /opt add: CPPFLAGS="-I/opt/local/include" LDFLAGS="-L/opt/local/lib"
 make                   # Build the project
 make install           # Install to prefix
 
