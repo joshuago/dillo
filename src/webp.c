@@ -255,8 +255,8 @@ void *a_Webp_new(DilloImage *Image, DilloUrl *url, int version)
 
 #else /* ENABLE_WEBP */
 
-void *a_Webp_new() { return 0; }
-void a_Webp_callback() { return; }
+void *a_Webp_new(void) { return 0; }
+void a_Webp_callback(void) { return; }
 const char *a_Webp_version(char *buf, int n) { return 0; }
 
 #endif /* ENABLE_WEBP */
